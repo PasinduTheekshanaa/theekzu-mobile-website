@@ -5,3 +5,5 @@ node_modules/
 !.env.local.example
 .vercel/
 *.log
+Theekzu/
+theekzu-mobile/
