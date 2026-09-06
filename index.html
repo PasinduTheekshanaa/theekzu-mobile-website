@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theekzu Mobile | Your Trusted Destination for Premium iPhones in Sri Lanka</title>
+  <meta name="description" content="Explore brand new and certified pre-owned iPhones, original Apple accessories, fast islandwide delivery and reliable trade-in support at Theekzu Mobile Sri Lanka.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              black: '#070709',
+              dark: '#0e0f14',
+              surface: '#15161e',
+              border: 'rgba(255, 255, 255, 0.08)',
+              blue: '#0071e3',
+              electric: '#2997ff',
+              indigo: '#6366f1'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-[#070709] text-zinc-100 antialiased selection:bg-sky-500 selection:text-white">
+
+  <!-- =========================================================================
+       NAVIGATION BAR (Sticky Glassmorphism)
+       ========================================================================= -->
+  <header class="sticky top-0 z-40 w-full glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" data-nav-target="home" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 p-[1.5px] shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all duration-300">
+          <div class="w-full h-full bg-zinc-950 rounded-[14px] flex items-center justify-center">
+            <!-- Custom Premium Phone Mark -->
+            <svg class="w-6 h-6 text-sky-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="14" height="20" x="5" y="2" rx="3" ry="3"/>
+              <path d="M12 18h.01"/>
+              <path d="M9 5h6"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <span class="text-lg font-black tracking-wider text-white flex items-center gap-1.5">
+            THEEKZU <span class="text-gradient-blue">MOBILE</span>
+          </span>
+          <span class="block text-[10px] text-zinc-400 tracking-widest uppercase font-medium">Sri Lanka's Apple Hub</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="#home" data-nav-target="home" class="text-sm font-semibold text-sky-400 hover:text-white transition-colors">Home</a>
+        <a href="#shop" data-nav-target="shop" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Shop</a>
+        <a href="#iphones" data-nav-target="iphones" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">iPhones</a>
+        <a href="#accessories" data-nav-target="accessories" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Accessories</a>
+        <a href="#offers" data-nav-target="offers" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors flex items-center gap-1">
+          Offers
+          <span class="px-1.5 py-0.5 text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-md">HOT</span>
+        </a>
+        <a href="#about" data-nav-target="about" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">About Us</a>
+        <a href="#contact" data-nav-target="contact" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Contact</a>
+      </nav>
+
+      <!-- Right Action Icons & WhatsApp Order -->
+      <div class="flex items-center gap-3">
+        <!-- Search Trigger -->
+        <button data-action="open-search" class="w-10 h-10 rounded-full bg-zinc-900/80 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/30 transition-colors" title="Search Devices">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Wishlist Trigger -->
+        <button data-action="open-wishlist" class="w-10 h-10 rounded-full bg-zinc-900/80 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/30 transition-colors relative" title="Saved Wishlist">
+          <i data-lucide="heart" class="w-4 h-4"></i>
+          <span class="wishlist-badge hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Cart Trigger -->
+        <button data-action="open-cart" class="w-10 h-10 rounded-full bg-zinc-900/80 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/30 transition-colors relative" title="Shopping Cart">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span class="cart-badge hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-sky-500 text-white text-[10px] font-bold flex items-center justify-center">0</span>
+        </button>
+
+        <!-- WhatsApp Order Button -->
+        <a href="https://wa.me/94771234567?text=Hello%20Theekzu%20Mobile,%20I'm%20interested%20in%20inquiring%20about%20your%20iPhones." target="_blank" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-400 hover:text-emerald-300 text-xs font-bold transition-all">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Order Now</span>
+        </a>
+
+        <!-- Mobile Hamburger Button -->
+        <button id="mobile-menu-btn" class="lg:hidden w-10 h-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden glass-modal border-t border-white/10 px-6 py-5">
+      <div class="flex flex-col gap-4">
+        <a href="#home" data-nav-target="home" class="text-base font-semibold text-sky-400 py-1">Home</a>
+        <a href="#shop" data-nav-target="shop" class="text-base font-medium text-zinc-300 py-1">Shop All Products</a>
+        <a href="#iphones" data-nav-target="iphones" class="text-base font-medium text-zinc-300 py-1">iPhones Collection</a>
+        <a href="#accessories" data-nav-target="accessories" class="text-base font-medium text-zinc-300 py-1">Original Accessories</a>
+        <a href="#offers" data-nav-target="offers" class="text-base font-medium text-rose-400 py-1 flex items-center justify-between">
+          Special Offers <span class="text-xs bg-rose-500/20 border border-rose-500/30 px-2 py-0.5 rounded-full">Save Big</span>
+        </a>
+        <a href="#about" data-nav-target="about" class="text-base font-medium text-zinc-300 py-1">About Theekzu</a>
+        <a href="#contact" data-nav-target="contact" class="text-base font-medium text-zinc-300 py-1">Contact & Store Location</a>
+        
+        <div class="pt-4 border-t border-white/10 flex gap-3">
+          <a href="https://wa.me/94771234567" target="_blank" class="btn-whatsapp-green w-full text-xs py-2.5">
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Chat on WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN CONTENT CONTAINER (SPA VIEWS)
+       ========================================================================= -->
+  <main id="app-main-content">
+
+    <!-- =======================================================================
+         VIEW: HOME
+         ======================================================================= -->
+    <div id="view-home" class="space-y-24 pb-20">
+
+      <!-- 1. HERO SECTION -->
+      <section class="relative min-h-[85vh] flex items-center pt-8 overflow-hidden radial-glow-hero">
+        <!-- Ambient Background Glow Circles -->
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[30rem] h-[30rem] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-12">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Hero Left Copy -->
+            <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+              
+              <!-- Announcement Badge -->
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill border border-white/10 text-xs font-semibold text-sky-300 mb-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Official Sri Lanka Warranty & Trade-In Support
+              </div>
+
+              <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08]">
+                Upgrade Your World with <br>
+                <span class="text-gradient-silver">Theekzu</span> 
+                <span class="text-gradient-blue">Mobile</span>
+              </h1>
+
+              <p class="text-base sm:text-lg text-zinc-400 max-w-xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                Discover premium iPhones, original Apple accessories, and exclusive deals from a trusted mobile destination in Sri Lanka. Certified quality, best market prices, and fast islandwide express delivery.
+              </p>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                <button onclick="navigateTo('shop')" class="btn-apple-primary w-full sm:w-auto text-sm px-8 py-3.5 shadow-xl">
+                  <span>Shop iPhones</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+                <a href="https://wa.me/94771234567?text=Hello%20Theekzu%20Mobile,%20I'm%20looking%20for%20an%20iPhone." target="_blank" class="btn-whatsapp-green w-full sm:w-auto text-sm px-8 py-3.5">
+                  <i data-lucide="message-circle" class="w-4 h-4"></i>
+                  <span>WhatsApp Us</span>
+                </a>
+              </div>
+
+              <!-- Small Trust Badges Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-10 border-t border-white/10">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-sky-400">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-white">Genuine Quality</h4>
+                    <p class="text-[11px] text-zinc-400">100% Original</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <i data-lucide="tag" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-white">Best Prices</h4>
+                    <p class="text-[11px] text-zinc-400">In Sri Lanka</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-white">Trusted Service</h4>
+                    <p class="text-[11px] text-zinc-400">Liberty Plaza Store</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                    <i data-lucide="zap" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-white">Fast Support</h4>
+                    <p class="text-[11px] text-zinc-400">24/7 WhatsApp</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Hero Right Visual Area -->
+            <div class="lg:col-span-5 relative flex items-center justify-center">
+              <!-- Glow Disc Behind Phone -->
+              <div class="absolute w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-gradient-to-tr from-sky-500/30 via-indigo-500/25 to-purple-500/20 blur-3xl animate-pulse-glow"></div>
+
+              <!-- Product Visual Container -->
+              <div class="relative z-10 p-4 w-full max-w-md">
+                <div class="glass-card rounded-[2.5rem] p-6 text-center border-white/15 shadow-2xl relative overflow-hidden group">
+                  
+                  <div class="absolute -top-10 -right-10 w-32 h-32 bg-sky-500/20 rounded-full blur-2xl"></div>
+
+                  <!-- Floating Badge -->
+                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-500/30 text-sky-300 text-xs font-bold mb-4">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> iPhone 16 Pro Max • In Stock
+                  </div>
+
+                  <!-- Phone Image -->
+                  <div class="h-80 w-full flex items-center justify-center py-2 animate-float">
+                    <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80" alt="iPhone 16 Pro Max Desert Titanium" class="max-h-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]">
+                  </div>
+
+                  <!-- Quick Spec highlights -->
+                  <div class="pt-4 border-t border-white/10 text-left">
+                    <div class="flex items-center justify-between mb-2">
+                      <div>
+                        <h4 class="text-base font-bold text-white">iPhone 16 Pro Max</h4>
+                        <p class="text-xs text-zinc-400">A18 Pro • Grade 5 Titanium • 5x Optical</p>
+                      </div>
+                      <span class="text-lg font-black text-sky-400">Rs. 429,900</span>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                      <button class="btn-apple-primary w-full text-xs py-2.5" onclick="openProductModal('iphone-16-pro-max')">
+                        <span>Explore Specs</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. FEATURED PRODUCTS SECTION -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <span class="text-xs font-bold tracking-widest text-sky-400 uppercase">Premium Selection</span>
+            <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Featured iPhones</h2>
+          </div>
+          <button onclick="navigateTo('iphones')" class="inline-flex items-center gap-2 text-sm font-bold text-sky-400 hover:text-sky-300 transition-colors">
+            <span>View All iPhones</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Featured Products Grid -->
+        <div id="featured-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamically populated via js/app.js -->
+        </div>
+      </section>
+
+      <!-- 3. SHOP BY CATEGORY -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold tracking-widest text-sky-400 uppercase">Browse Catalog</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Shop By Category</h2>
+          <p class="text-zinc-400 text-sm mt-2">Find the exact device, gadget or accessory you're looking for with guaranteed genuine Apple authenticity.</p>
+        </div>
+
+        <div id="categories-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamically populated via js/app.js -->
+        </div>
+      </section>
+
+      <!-- 4. SPECIAL OFFERS SECTION WITH COUNTDOWN -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="rounded-[2.5rem] bg-gradient-to-br from-zinc-900 via-zinc-950 to-blue-950/40 border border-blue-500/20 p-8 sm:p-12 relative overflow-hidden">
+          
+          <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-10 pb-8 border-b border-white/10">
+            <div>
+              <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold mb-3">
+                <i data-lucide="flame" class="w-3.5 h-3.5"></i> Limited Time Specials
+              </span>
+              <h2 class="text-3xl sm:text-4xl font-black text-white">Weekend iPhone Deals</h2>
+              <p class="text-zinc-400 text-sm mt-1">Exclusive prices and trade-in booster vouchers ending soon.</p>
+            </div>
+
+            <!-- Countdown Timer Blocks -->
+            <div class="flex items-center gap-3">
+              <div class="text-center">
+                <div id="deal-days" class="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-xl font-extrabold text-white shadow-lg">02</div>
+                <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold mt-1 block">Days</span>
+              </div>
+              <span class="text-xl font-bold text-zinc-600">:</span>
+              <div class="text-center">
+                <div id="deal-hours" class="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-xl font-extrabold text-white shadow-lg">14</div>
+                <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold mt-1 block">Hours</span>
+              </div>
+              <span class="text-xl font-bold text-zinc-600">:</span>
+              <div class="text-center">
+                <div id="deal-mins" class="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-xl font-extrabold text-white shadow-lg">45</div>
+                <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold mt-1 block">Mins</span>
+              </div>
+              <span class="text-xl font-bold text-zinc-600">:</span>
+              <div class="text-center">
+                <div id="deal-secs" class="w-14 h-14 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-xl font-extrabold text-rose-400 shadow-lg">20</div>
+                <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold mt-1 block">Secs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deals Grid -->
+          <div id="special-offers-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Dynamically populated via js/app.js -->
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 5. WHY CHOOSE THEEKZU MOBILE -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="text-xs font-bold tracking-widest text-sky-400 uppercase">The Theekzu Advantage</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Why Choose Theekzu Mobile?</h2>
+          <p class="text-zinc-400 text-sm mt-2">We combine authentic devices with unmatched customer care across Sri Lanka.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <div class="glass-card p-8 rounded-3xl">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center mb-6">
+              <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Quality Checked Devices</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Every device undergoes strict 32-point hardware, display, and battery testing with transparent health reports before sale.</p>
+          </div>
+
+          <div class="glass-card p-8 rounded-3xl">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6">
+              <i data-lucide="badge-dollar-sign" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Competitive Prices</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">We bring you the most transparent Sri Lankan Rupee pricing without hidden fees or surprise taxes.</p>
+          </div>
+
+          <div class="glass-card p-8 rounded-3xl">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-6">
+              <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Reliable After-Sales Support</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Enjoy 1-year Apple international and store warranty plus our 14-day direct unit replacement guarantee.</p>
+          </div>
+
+          <div class="glass-card p-8 rounded-3xl">
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-6">
+              <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Secure Purchasing</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Bank transfers, cash on delivery, card payments at our Colombo store, and installment options via Koko & Mintpay.</p>
+          </div>
+
+          <div class="glass-card p-8 rounded-3xl">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-6">
+              <i data-lucide="headphones" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Fast Customer Support</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Direct WhatsApp assistance from phone experts ready to answer your questions, send photos, and guide your purchase.</p>
+          </div>
+
+          <div class="glass-card p-8 rounded-3xl">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mb-6">
+              <i data-lucide="truck" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Islandwide Delivery</h3>
+            <p class="text-sm text-zinc-400 leading-relaxed">Express same-day delivery in Colombo and trusted insured courier delivery across all 25 districts in Sri Lanka.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 6. TRADE-IN SECTION WITH INTERACTIVE CALCULATOR -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass-card rounded-[2.5rem] p-8 sm:p-12 border-blue-500/30 relative overflow-hidden">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            
+            <div class="lg:col-span-5 space-y-4">
+              <span class="px-3.5 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-sky-400 text-xs font-bold">
+                Smart Upgrades
+              </span>
+              <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+                Trade Your Old iPhone. <br><span class="text-gradient-blue">Upgrade Smarter.</span>
+              </h2>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Get an estimated value for your current device and upgrade to your next iPhone without the hassle of selling online. Bring your old phone to our store or ship it safely.
+              </p>
+              
+              <div class="p-4 rounded-2xl bg-zinc-900/60 border border-white/5 space-y-2 text-xs text-zinc-300">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Fair market valuations based on current Sri Lankan rates</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Instant deduction on the spot from your new iPhone</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Free data transfer from your old iPhone to your new one</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Calculator Form -->
+            <div class="lg:col-span-7 bg-zinc-950/80 border border-white/10 rounded-3xl p-6 sm:p-8">
+              <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <i data-lucide="calculator" class="w-5 h-5 text-sky-400"></i>
+                Instant Trade-In Valuation Calculator
+              </h3>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <!-- Current Model -->
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Current iPhone</label>
+                  <select id="trade-model-select" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                    <!-- populated via js -->
+                  </select>
+                </div>
+
+                <!-- Storage -->
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Storage Capacity</label>
+                  <select id="trade-storage-select" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                    <!-- populated via js -->
+                  </select>
+                </div>
+
+                <!-- Condition -->
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Physical & Battery Condition</label>
+                  <select id="trade-condition-select" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                    <!-- populated via js -->
+                  </select>
+                </div>
+
+                <!-- Target Model -->
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Upgrade Target Device</label>
+                  <select id="trade-target-select" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                    <!-- populated via js -->
+                  </select>
+                </div>
+              </div>
+
+              <!-- Calculation Result Card -->
+              <div class="p-5 rounded-2xl bg-zinc-900/90 border border-white/10 mb-6 grid grid-cols-2 gap-4">
+                <div>
+                  <span class="text-xs text-zinc-400 block mb-1">Est. Trade-In Value:</span>
+                  <span id="trade-estimated-value" class="text-xl sm:text-2xl font-black text-emerald-400">Rs. 0</span>
+                </div>
+                <div>
+                  <span class="text-xs text-zinc-400 block mb-1">Balance to Pay:</span>
+                  <span id="trade-balance-pay" class="text-xl sm:text-2xl font-black text-sky-400">Rs. 0</span>
+                </div>
+              </div>
+
+              <!-- WhatsApp Trade-In Inquiry Button -->
+              <a id="trade-whatsapp-submit-btn" href="#" target="_blank" class="btn-whatsapp-green w-full text-center text-sm py-3.5 shadow-xl">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>Get Trade-In Value on WhatsApp</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 7. FLAGSHIP SHOWCASE SECTION (iPhone 16 Pro Max) -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass-card rounded-[3rem] p-8 sm:p-16 border-white/15 relative overflow-hidden">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-6 space-y-6">
+              <span class="px-3.5 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-sky-400 text-xs font-bold uppercase tracking-wider">
+                Flagship Showcase
+              </span>
+              
+              <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                iPhone 16 Pro Max <br>
+                <span class="text-gradient-silver">Titanium. A18 Pro. Infinite.</span>
+              </h2>
+
+              <p class="text-zinc-300 text-sm sm:text-base leading-relaxed">
+                Featuring Grade 5 Titanium construction, the thinnest borders ever seen on an Apple product, revolutionary Camera Control button, and Apple Intelligence built from the ground up.
+              </p>
+
+              <!-- Feature Highlights Grid -->
+              <div class="grid grid-cols-2 gap-4 pt-2">
+                <div class="p-4 rounded-2xl bg-zinc-900/60 border border-white/5">
+                  <h4 class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">Display</h4>
+                  <p class="text-sm font-semibold text-white">6.9" ProMotion 120Hz</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-900/60 border border-white/5">
+                  <h4 class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">Chip</h4>
+                  <p class="text-sm font-semibold text-white">A18 Pro with 6-core GPU</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-900/60 border border-white/5">
+                  <h4 class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">Camera</h4>
+                  <p class="text-sm font-semibold text-white">48MP Fusion + 5x Optical</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-zinc-900/60 border border-white/5">
+                  <h4 class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">Battery</h4>
+                  <p class="text-sm font-semibold text-white">Up to 33 hrs playback</p>
+                </div>
+              </div>
+
+              <!-- Price & CTA -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4">
+                <div>
+                  <span class="text-xs text-zinc-400">Starting from</span>
+                  <div class="text-3xl font-black text-white">Rs. 429,900</div>
+                  <span class="text-xs text-emerald-400 font-medium">Available in 256GB, 512GB, 1TB</span>
+                </div>
+                <button class="btn-apple-primary px-8 py-3.5" onclick="openProductModal('iphone-16-pro-max')">
+                  <span>Shop Now</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+            </div>
+
+            <div class="lg:col-span-6 flex justify-center relative">
+              <div class="w-80 sm:w-[26rem] h-80 sm:h-[26rem] rounded-full bg-blue-500/15 blur-3xl absolute"></div>
+              <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=1000&q=80" alt="iPhone 16 Pro Max Flagship" class="relative z-10 max-h-[460px] object-contain filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)]">
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 8. CUSTOMER REVIEWS -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold tracking-widest text-sky-400 uppercase">Trusted Stories</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">What Sri Lankan Customers Say</h2>
+          <p class="text-zinc-400 text-sm mt-2">Over 15,000+ satisfied iPhone buyers across Colombo, Kandy, Galle, and beyond.</p>
+        </div>
+
+        <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Dynamically populated via js/app.js -->
+        </div>
+      </section>
+
+      <!-- 9. INSTAGRAM / SOCIAL MEDIA SECTION -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+          <div>
+            <span class="text-xs font-bold tracking-widest text-sky-400 uppercase">Stay Connected</span>
+            <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Follow Theekzu Mobile</h2>
+            <p class="text-zinc-400 text-sm mt-1">Catch daily unboxing reels, customer deliveries, and flash drops.</p>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-pink-400 hover:border-pink-500/40 transition-colors" title="Instagram">
+              <i data-lucide="instagram" class="w-4 h-4"></i>
+            </a>
+            <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-blue-400 hover:border-blue-500/40 transition-colors" title="Facebook">
+              <i data-lucide="facebook" class="w-4 h-4"></i>
+            </a>
+            <a href="https://tiktok.com" target="_blank" class="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white hover:border-white/40 transition-colors" title="TikTok">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+            <a href="https://wa.me/94771234567" target="_blank" class="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-emerald-400 hover:border-emerald-500/40 transition-colors" title="WhatsApp Channel">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Instagram Photos Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="glass-card rounded-2xl overflow-hidden aspect-square relative group">
+            <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80" alt="iPhone unboxing" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <i data-lucide="instagram" class="w-6 h-6 text-white"></i>
+            </div>
+          </div>
+          <div class="glass-card rounded-2xl overflow-hidden aspect-square relative group">
+            <img src="https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=600&q=80" alt="AirPods Pro" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <i data-lucide="instagram" class="w-6 h-6 text-white"></i>
+            </div>
+          </div>
+          <div class="glass-card rounded-2xl overflow-hidden aspect-square relative group">
+            <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=600&q=80" alt="Apple Watch Ultra" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <i data-lucide="instagram" class="w-6 h-6 text-white"></i>
+            </div>
+          </div>
+          <div class="glass-card rounded-2xl overflow-hidden aspect-square relative group">
+            <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=600&q=80" alt="iPhone delivery" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <i data-lucide="instagram" class="w-6 h-6 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. CTA SECTION -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="rounded-[3rem] bg-gradient-to-r from-blue-900/60 via-indigo-950/80 to-zinc-950 border border-blue-500/30 p-10 sm:p-16 text-center relative overflow-hidden">
+          <div class="max-w-3xl mx-auto space-y-6 relative z-10">
+            <span class="px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+              Your Next Phone Is One Message Away
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-black text-white">
+              Looking for Your Next iPhone?
+            </h2>
+            <p class="text-zinc-300 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+              Message Theekzu Mobile today and let us help you find the perfect device with the best available deals, genuine warranty, and instant doorstep dispatch.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <a href="https://wa.me/94771234567?text=Hello%20Theekzu%20Mobile,%20I'm%20looking%20for%20an%20iPhone." target="_blank" class="btn-whatsapp-green text-sm px-8 py-4 shadow-xl">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                <span>Chat on WhatsApp</span>
+              </a>
+              <button onclick="navigateTo('shop')" class="btn-apple-secondary text-sm px-8 py-4">
+                <i data-lucide="grid" class="w-5 h-5"></i>
+                <span>Browse Products</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- =======================================================================
+         VIEW: SHOP (ECOMMERCE FILTER GRID)
+         ======================================================================= -->
+    <div id="view-shop" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      
+      <!-- Shop Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/10">
+        <div>
+          <span class="text-xs font-bold text-sky-400 tracking-widest uppercase">Theekzu Storefront</span>
+          <h1 class="text-3xl sm:text-4xl font-black text-white mt-1">Shop All Products</h1>
+          <p class="text-zinc-400 text-sm mt-1">Browse authentic iPhones, pre-owned gems, and genuine Apple accessories in Sri Lanka.</p>
+        </div>
+        <div id="shop-results-count" class="text-sm text-zinc-400 font-medium">
+          Showing all products
+        </div>
+      </div>
+
+      <!-- Filters & Sorting Bar -->
+      <div class="glass-card p-6 rounded-3xl space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          
+          <!-- Category Filter -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-1.5">Category</label>
+            <select id="filter-category" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-sky-500 focus:outline-none" onchange="AppState.shopFilters.category = this.value; renderShopView();">
+              <option value="all">All Categories</option>
+              <option value="iphones">iPhones</option>
+              <option value="latest-iphones">Latest iPhones</option>
+              <option value="used-iphones">Used / Pre-Owned</option>
+              <option value="accessories">Accessories</option>
+              <option value="airpods">AirPods</option>
+              <option value="apple-watch">Apple Watch</option>
+              <option value="chargers-cables">Chargers & Cables</option>
+              <option value="cases-protection">Cases & Protection</option>
+            </select>
+          </div>
+
+          <!-- Condition Filter -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-1.5">Condition</label>
+            <select id="filter-condition" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-sky-500 focus:outline-none" onchange="AppState.shopFilters.condition = this.value; renderShopView();">
+              <option value="all">All Conditions</option>
+              <option value="Brand New">Brand New Sealed</option>
+              <option value="Used">Certified Pre-Owned</option>
+            </select>
+          </div>
+
+          <!-- Storage Filter -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-1.5">Storage</label>
+            <select id="filter-storage" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-sky-500 focus:outline-none" onchange="AppState.shopFilters.storage = this.value; renderShopView();">
+              <option value="all">Any Storage</option>
+              <option value="128GB">128GB</option>
+              <option value="256GB">256GB</option>
+              <option value="512GB">512GB</option>
+              <option value="1TB">1TB</option>
+            </select>
+          </div>
+
+          <!-- Sort Order -->
+          <div>
+            <label class="block text-xs uppercase tracking-wider text-zinc-400 font-bold mb-1.5">Sort By</label>
+            <select id="filter-sort" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-sky-500 focus:outline-none" onchange="AppState.shopFilters.sortBy = this.value; renderShopView();">
+              <option value="popular">Most Popular</option>
+              <option value="newest">Newest First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+          </div>
+
+          <!-- Max Price Slider -->
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="text-xs uppercase tracking-wider text-zinc-400 font-bold">Max Price</label>
+              <span id="filter-price-display" class="text-xs font-bold text-sky-400">Rs. 500,000</span>
+            </div>
+            <input id="filter-price-range" type="range" min="5000" max="500000" step="5000" value="500000" class="w-full accent-sky-500 cursor-pointer" oninput="AppState.shopFilters.maxPrice = Number(this.value); document.getElementById('filter-price-display').textContent = formatLKR(this.value); renderShopView();">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="shop-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- populated via js/app.js -->
+      </div>
+
+    </div>
+
+    <!-- =======================================================================
+         VIEW: IPHONES (DEDICATED)
+         ======================================================================= -->
+    <div id="view-iphones" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div class="rounded-3xl bg-gradient-to-r from-blue-950/60 to-zinc-950 p-8 sm:p-12 border border-blue-500/20">
+        <span class="text-xs font-bold text-sky-400 tracking-widest uppercase">Apple Lineup</span>
+        <h1 class="text-3xl sm:text-5xl font-black text-white mt-1">Apple iPhones</h1>
+        <p class="text-zinc-400 text-sm mt-2 max-w-2xl">From the boundary-pushing iPhone 16 Pro Max to certified budget kings like iPhone 13. Every device is covered by official Apple or comprehensive store warranty.</p>
+      </div>
+
+      <div id="iphones-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- populated via js/app.js -->
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         VIEW: ACCESSORIES (DEDICATED)
+         ======================================================================= -->
+    <div id="view-accessories" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div class="rounded-3xl bg-gradient-to-r from-indigo-950/60 to-zinc-950 p-8 sm:p-12 border border-indigo-500/20">
+        <span class="text-xs font-bold text-indigo-400 tracking-widest uppercase">Apple Ecosystem</span>
+        <h1 class="text-3xl sm:text-5xl font-black text-white mt-1">Accessories & Audio</h1>
+        <p class="text-zinc-400 text-sm mt-2 max-w-2xl">Enhance your iPhone with original Apple AirPods Pro 2, Apple Watch Ultra 2, official 20W chargers, and military-grade drop-proof MagSafe cases.</p>
+      </div>
+
+      <div id="accessories-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- populated via js/app.js -->
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         VIEW: OFFERS (DEDICATED)
+         ======================================================================= -->
+    <div id="view-offers" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div class="rounded-3xl bg-gradient-to-r from-rose-950/60 to-zinc-950 p-8 sm:p-12 border border-rose-500/20">
+        <span class="text-xs font-bold text-rose-400 tracking-widest uppercase">Exclusive Promotions</span>
+        <h1 class="text-3xl sm:text-5xl font-black text-white mt-1">Special Deals & Bundles</h1>
+        <p class="text-zinc-400 text-sm mt-2 max-w-2xl">Save up to 30% on select iPhones, accessory combos, and flash weekend promotions.</p>
+      </div>
+
+      <div id="offers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- populated via js/app.js -->
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         VIEW: ABOUT US
+         ======================================================================= -->
+    <div id="view-about" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+      
+      <!-- Story Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <span class="text-xs font-bold text-sky-400 tracking-widest uppercase">Our Story</span>
+          <h1 class="text-4xl sm:text-5xl font-black text-white">About Theekzu Mobile</h1>
+          <p class="text-zinc-300 text-base leading-relaxed">
+            Theekzu Mobile is dedicated to providing quality mobile devices, premium iPhones, original accessories, and reliable customer service to customers across Sri Lanka.
+          </p>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            Founded with a passion for genuine Apple technology and transparent retail ethics, we bridge the gap between high-end smartphones and accessible, trustworthy customer service in Sri Lanka. From sealed flagship purchases to certified pre-owned phones and trade-ins, we treat every customer with integrity.
+          </p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <div class="glass-card p-5 rounded-2xl">
+              <h4 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                <i data-lucide="target" class="w-4 h-4 text-sky-400"></i> Our Mission
+              </h4>
+              <p class="text-xs text-zinc-400">To make authentic Apple devices accessible across Sri Lanka with transparent pricing, reliable warranties, and genuine care.</p>
+            </div>
+            <div class="glass-card p-5 rounded-2xl">
+              <h4 class="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                <i data-lucide="eye" class="w-4 h-4 text-indigo-400"></i> Our Vision
+              </h4>
+              <p class="text-xs text-zinc-400">To be Sri Lanka's most trusted, innovative, and customer-loved smartphone destination.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="glass-card p-6 rounded-[2.5rem] border-white/10 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?auto=format&fit=crop&w=800&q=80" alt="Theekzu Mobile Store" class="rounded-3xl w-full h-80 object-cover mb-4">
+            <div class="text-center">
+              <h4 class="text-base font-bold text-white">Theekzu Mobile Storefront</h4>
+              <p class="text-xs text-zinc-400">Liberty Plaza, Colombo 03, Sri Lanka</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Counters -->
+      <div class="glass-card rounded-3xl p-8 sm:p-12 border-white/10">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-3xl sm:text-5xl font-black text-white mb-1">
+              <span class="stat-counter" data-target="15000">15,000</span>+
+            </div>
+            <p class="text-xs uppercase tracking-wider text-zinc-400 font-bold">Happy Customers</p>
+          </div>
+          <div>
+            <div class="text-3xl sm:text-5xl font-black text-sky-400 mb-1">
+              <span class="stat-counter" data-target="22000">22,000</span>+
+            </div>
+            <p class="text-xs uppercase tracking-wider text-zinc-400 font-bold">Devices Sold</p>
+          </div>
+          <div>
+            <div class="text-3xl sm:text-5xl font-black text-indigo-400 mb-1">
+              <span class="stat-counter" data-target="8">8</span>+
+            </div>
+            <p class="text-xs uppercase tracking-wider text-zinc-400 font-bold">Years of Experience</p>
+          </div>
+          <div>
+            <div class="text-3xl sm:text-5xl font-black text-emerald-400 mb-1">
+              <span class="stat-counter" data-target="99">99</span>.4%
+            </div>
+            <p class="text-xs uppercase tracking-wider text-zinc-400 font-bold">Satisfaction Rate</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =======================================================================
+         VIEW: CONTACT US
+         ======================================================================= -->
+    <div id="view-contact" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+      
+      <div>
+        <span class="text-xs font-bold text-sky-400 tracking-widest uppercase">Get in Touch</span>
+        <h1 class="text-3xl sm:text-5xl font-black text-white mt-1">Contact Theekzu Mobile</h1>
+        <p class="text-zinc-400 text-sm mt-1">Have a question or want to check stock? Visit our store or message us directly on WhatsApp.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Contact Information (5 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="glass-card p-6 rounded-3xl space-y-5">
+            <h3 class="text-lg font-bold text-white border-b border-white/10 pb-3">Store Details</h3>
+            
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-white block">Location:</strong>
+                <span class="text-zinc-400 text-xs">No. 45, 1st Floor, Liberty Plaza, Colombo 03, Sri Lanka</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="phone" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-white block">Phone / WhatsApp:</strong>
+                <span class="text-zinc-400 text-xs">+94 77 123 4567 / +94 11 234 5678</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-white block">Email:</strong>
+                <span class="text-zinc-400 text-xs">sales@theekzumobile.lk</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 text-sm">
+              <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="clock" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <strong class="text-white block">Business Hours:</strong>
+                <span class="text-zinc-400 text-xs">Mon - Sat: 9:30 AM - 7:30 PM<br>Sun: 10:00 AM - 5:00 PM</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <a href="https://wa.me/94771234567" target="_blank" class="btn-whatsapp-green w-full text-xs py-3">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>Direct WhatsApp Chat</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Google Maps Interactive Visual Placeholder -->
+          <div class="glass-card p-4 rounded-3xl relative overflow-hidden">
+            <div class="w-full h-48 rounded-2xl bg-zinc-900 flex flex-col items-center justify-center text-center p-4 border border-white/5 relative">
+              <i data-lucide="map" class="w-8 h-8 text-sky-400 mb-2"></i>
+              <h4 class="text-sm font-bold text-white">Liberty Plaza, Colombo 03</h4>
+              <p class="text-xs text-zinc-400 mt-1">Centrally located with safe customer parking & easy access.</p>
+              <a href="https://maps.google.com/?q=Liberty+Plaza+Colombo" target="_blank" class="mt-3 text-xs font-bold text-sky-400 hover:text-sky-300 flex items-center gap-1">
+                Open in Google Maps <i data-lucide="external-link" class="w-3 h-3"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form (7 cols) -->
+        <div class="lg:col-span-7">
+          <div class="glass-card p-8 rounded-3xl border-white/10">
+            <h3 class="text-xl font-bold text-white mb-2">Send Us a Direct Message</h3>
+            <p class="text-zinc-400 text-xs mb-6">Fill out the details below and our team will get back to you immediately via WhatsApp or phone call.</p>
+
+            <form id="contact-form" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Your Full Name</label>
+                <input id="contact-name" type="text" required placeholder="e.g. Kasun Fernando" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-sky-500 focus:outline-none">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Phone / WhatsApp Number</label>
+                  <input id="contact-phone" type="tel" required placeholder="077 123 4567" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-sky-500 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Email Address</label>
+                  <input id="contact-email" type="email" placeholder="kasun@example.com" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-sky-500 focus:outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">Your Message or Device Inquiry</label>
+                <textarea id="contact-message" rows="4" required placeholder="Which model are you looking for? (e.g. iPhone 16 Pro 256GB Desert Titanium)" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-sky-500 focus:outline-none"></textarea>
+              </div>
+
+              <button type="submit" class="btn-apple-primary w-full text-sm py-3.5 mt-2">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Submit Inquiry via WhatsApp</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="glass-card border-t border-white/10 pt-16 pb-12 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
+        
+        <!-- Brand Summary (2 cols on lg) -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black">
+              T
+            </div>
+            <span class="text-lg font-black tracking-wider text-white">THEEKZU <span class="text-gradient-blue">MOBILE</span></span>
+          </div>
+          <p class="text-zinc-400 text-xs leading-relaxed max-w-sm">
+            Sri Lanka’s trusted mobile phone destination for brand new iPhones, certified pre-owned devices, original Apple accessories, and expert customer service.
+          </p>
+          <div class="text-xs text-zinc-400 space-y-1">
+            <p><strong class="text-zinc-200">Address:</strong> Liberty Plaza, Colombo 03, Sri Lanka</p>
+            <p><strong class="text-zinc-200">Hotline:</strong> +94 77 123 4567</p>
+            <p><strong class="text-zinc-200">Email:</strong> sales@theekzumobile.lk</p>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-xs text-zinc-400">
+            <li><a href="#" onclick="navigateTo('home')" class="hover:text-sky-400 transition-colors">Home</a></li>
+            <li><a href="#" onclick="navigateTo('shop')" class="hover:text-sky-400 transition-colors">Shop All Products</a></li>
+            <li><a href="#" onclick="navigateTo('iphones')" class="hover:text-sky-400 transition-colors">iPhones Collection</a></li>
+            <li><a href="#" onclick="navigateTo('accessories')" class="hover:text-sky-400 transition-colors">Apple Accessories</a></li>
+            <li><a href="#" onclick="navigateTo('offers')" class="hover:text-sky-400 transition-colors">Weekend Offers</a></li>
+            <li><a href="#" onclick="navigateTo('about')" class="hover:text-sky-400 transition-colors">About Our Business</a></li>
+            <li><a href="#" onclick="navigateTo('contact')" class="hover:text-sky-400 transition-colors">Contact & Store</a></li>
+          </ul>
+        </div>
+
+        <!-- Categories -->
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">Categories</h4>
+          <ul class="space-y-2 text-xs text-zinc-400">
+            <li><a href="#" onclick="navigateTo('iphones')" class="hover:text-sky-400 transition-colors">iPhone 16 Series</a></li>
+            <li><a href="#" onclick="navigateTo('iphones')" class="hover:text-sky-400 transition-colors">iPhone 15 Series</a></li>
+            <li><a href="#" onclick="navigateTo('iphones')" class="hover:text-sky-400 transition-colors">Certified Pre-Owned</a></li>
+            <li><a href="#" onclick="navigateTo('accessories')" class="hover:text-sky-400 transition-colors">AirPods Pro & Gen 4</a></li>
+            <li><a href="#" onclick="navigateTo('accessories')" class="hover:text-sky-400 transition-colors">Apple Watch Ultra 2</a></li>
+            <li><a href="#" onclick="navigateTo('accessories')" class="hover:text-sky-400 transition-colors">Fast 20W Chargers</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Care & Policies -->
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-4">Customer Care</h4>
+          <ul class="space-y-2 text-xs text-zinc-400">
+            <li><a href="#" onclick="navigateTo('contact')" class="hover:text-sky-400 transition-colors">Warranty Claim & Policy</a></li>
+            <li><a href="#" onclick="navigateTo('home')" class="hover:text-sky-400 transition-colors">Trade-In Guidelines</a></li>
+            <li><a href="#" onclick="navigateTo('contact')" class="hover:text-sky-400 transition-colors">Islandwide Courier Tracking</a></li>
+            <li><a href="#" onclick="navigateTo('contact')" class="hover:text-sky-400 transition-colors">32-Point Inspection Report</a></li>
+            <li><a href="https://wa.me/94771234567" target="_blank" class="hover:text-emerald-400 transition-colors flex items-center gap-1">
+              <i data-lucide="message-circle" class="w-3 h-3"></i> WhatsApp Support 24/7
+            </a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Payment Badges & Copyright -->
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-xs text-zinc-500">
+          © 2026 Theekzu Mobile. All Rights Reserved. Designed for Sri Lankan Apple enthusiasts.
+        </p>
+
+        <!-- Payment icons -->
+        <div class="flex items-center gap-3 text-zinc-400 text-xs">
+          <span class="px-2 py-1 rounded bg-zinc-900 border border-white/10 font-semibold">VISA</span>
+          <span class="px-2 py-1 rounded bg-zinc-900 border border-white/10 font-semibold">Mastercard</span>
+          <span class="px-2 py-1 rounded bg-zinc-900 border border-white/10 font-semibold text-sky-400">Koko BNPL</span>
+          <span class="px-2 py-1 rounded bg-zinc-900 border border-white/10 font-semibold text-purple-400">Mintpay</span>
+          <span class="px-2 py-1 rounded bg-zinc-900 border border-white/10 font-semibold text-emerald-400">Cash on Delivery</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       FLOATING WHATSAPP BUTTON (Always Visible)
+       ========================================================================= -->
+  <a href="https://wa.me/94771234567?text=Hello%20Theekzu%20Mobile,%20I'm%20visiting%20your%20website%20and%20would%20like%20to%20inquire%20about%20a%20device." target="_blank" class="fixed bottom-6 right-6 z-50 floating-whatsapp-btn w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center shadow-2xl transition-transform hover:scale-110" title="Chat with us on WhatsApp">
+    <i data-lucide="message-circle" class="w-7 h-7 fill-current"></i>
+  </a>
+
+  <!-- =========================================================================
+       CART DRAWER
+       ========================================================================= -->
+  <div id="cart-drawer-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md glass-drawer z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shopping-bag" class="w-5 h-5 text-sky-400"></i>
+        <h3 class="text-base font-bold text-white">Your Shopping Cart</h3>
+      </div>
+      <button id="close-cart-btn" class="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:text-white">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Items List -->
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3">
+      <!-- populated via js/cart.js -->
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-5 border-t border-white/10 bg-zinc-950/80 space-y-4">
+      <div>
+        <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1">Delivery / Special Instructions</label>
+        <input id="cart-delivery-notes" type="text" placeholder="e.g. Delivery to Kandy, please pack sealed" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500">
+      </div>
+
+      <div class="flex justify-between items-center text-xs text-zinc-400">
+        <span>Delivery:</span>
+        <span class="text-emerald-400 font-bold">Islandwide Express Courier</span>
+      </div>
+
+      <div class="flex justify-between items-baseline pt-2 border-t border-white/10">
+        <span class="text-sm font-bold text-white">Estimated Total:</span>
+        <span id="cart-total-display" class="text-xl font-black text-white">Rs. 0</span>
+      </div>
+
+      <button id="cart-whatsapp-checkout-btn" class="btn-whatsapp-green w-full py-3.5 text-xs font-bold">
+        <i data-lucide="message-circle" class="w-4 h-4"></i>
+        <span>Proceed to WhatsApp Checkout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       WISHLIST DRAWER
+       ========================================================================= -->
+  <div id="wishlist-drawer-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+  <aside id="wishlist-drawer" class="fixed top-0 right-0 h-full w-full max-w-md glass-drawer z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i data-lucide="heart" class="w-5 h-5 text-rose-500 fill-rose-500"></i>
+        <h3 class="text-base font-bold text-white">Saved Wishlist</h3>
+      </div>
+      <button id="close-wishlist-btn" class="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400 hover:text-white">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div id="wishlist-items-container" class="flex-1 overflow-y-auto p-5 space-y-3">
+      <!-- populated via js/wishlist.js -->
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       SEARCH MODAL
+       ========================================================================= -->
+  <div id="search-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-start justify-center p-4 sm:p-6 pt-20">
+    <div class="glass-modal rounded-3xl w-full max-w-2xl border-white/15 p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3 flex-1">
+          <i data-lucide="search" class="w-5 h-5 text-sky-400"></i>
+          <input id="search-query-input" type="text" placeholder="Search iPhone 16 Pro, 15, AirPods, Chargers..." class="bg-transparent border-none text-white text-base focus:outline-none w-full placeholder-zinc-500">
+        </div>
+        <button id="close-search-btn" class="text-zinc-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div id="search-results-container" class="max-h-96 overflow-y-auto pt-2">
+        <div class="text-center py-8 text-zinc-500 text-xs">
+          Type iPhone model name (e.g. "16 Pro Max", "AirPods", "MagSafe", "15")...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PRODUCT DETAILS MODAL
+       ========================================================================= -->
+  <div id="product-detail-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div class="glass-modal rounded-[2.5rem] w-full max-w-4xl border-white/15 p-6 sm:p-10 relative my-8 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button onclick="closeProductModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/30 z-20">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Content populated via js/app.js -->
+      <div id="product-detail-content"></div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Core Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/trade-in.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
