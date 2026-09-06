@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Heart, ShoppingBag, MessageCircle, Menu, X, Sun, Moon } from "lucide-react";
+import { Search, Heart, ShoppingBag, MessageCircle, Menu, X, Sun, Moon, ArrowRight, ShieldCheck } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -22,14 +22,43 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // Scroll detection
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Body scroll lock when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
+  // Escape key handler to close mobile menu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -49,222 +78,298 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   };
 
   return (
-    <header
-      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-        isScrolled
-          ? "glass-nav py-2.5 shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
-          : "bg-white/80 dark:bg-[#040711]/80 backdrop-blur-md py-4 border-b border-slate-200/70 dark:border-cyan-500/10"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-        
-        {/* LEFT: Theekzu Mobile Official Brand Logo */}
-        <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-          <div className="relative w-10 sm:w-11 h-10 sm:h-11 rounded-2xl p-[1px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-[0_0_15px_rgba(0,102,255,0.2)] dark:shadow-[0_0_20px_rgba(0,180,255,0.35)] group-hover:scale-105 transition-all">
-            <div className="w-full h-full bg-[#040711] rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
-              <Image
-                src="/logo.png"
-                alt="Theekzu Mobile Logo"
-                width={44}
-                height={44}
-                className="w-full h-full object-cover rounded-lg"
-                priority
-              />
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5 leading-none">
-              <span className="text-base sm:text-lg font-black tracking-wider text-slate-900 dark:text-white">
-                THEEKZU
-              </span>
-              <span className="text-base sm:text-lg font-black tracking-wider text-gradient-neon">
-                MOBILE
-              </span>
-            </div>
-            <span className="text-[9px] sm:text-[10px] text-blue-600 dark:text-cyan-300/80 tracking-widest uppercase font-semibold flex items-center gap-1 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-cyan-400 animate-ping inline-block" />
-              {storeConfig.tagline}
-            </span>
-          </div>
-        </Link>
-
-        {/* CENTER: Desktop Navigation Links (Centered, single-line Trade-In) */}
-        <nav className="hidden xl:flex items-center justify-center gap-7">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`text-sm font-medium transition-all duration-200 relative py-1.5 whitespace-nowrap flex items-center gap-1.5 group ${
-                isActive(link.href)
-                  ? "text-blue-600 dark:text-cyan-400 font-bold drop-shadow-[0_0_12px_rgba(0,102,255,0.2)] dark:drop-shadow-[0_0_12px_rgba(0,210,255,0.5)]"
-                  : "text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-white"
-              }`}
-            >
-              <span>{link.name}</span>
-              {link.badge && (
-                <span className="px-1.5 py-0.2 text-[8px] font-black bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-md shadow-xs">
-                  {link.badge}
-                </span>
-              )}
-              {/* Subtle animated underline */}
-              <span
-                className={`absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-300 ${
-                  isActive(link.href)
-                    ? "w-full bg-gradient-to-r from-blue-600 to-cyan-400 dark:from-cyan-400 dark:to-blue-600"
-                    : "w-0 bg-blue-500/40 dark:bg-cyan-400/40 group-hover:w-full"
-                }`}
-              />
-            </Link>
-          ))}
-        </nav>
-
-        {/* RIGHT: Action Icons Grouped & WhatsApp Quick Chat */}
-        <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
+    <>
+      <header
+        className={`sticky top-0 left-0 right-0 z-40 w-full transition-all duration-300 min-h-[64px] sm:min-h-[70px] flex items-center ${
+          isScrolled
+            ? "glass-nav py-2 shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
+            : "bg-white/85 dark:bg-[#040711]/85 backdrop-blur-md py-2.5 sm:py-3.5 border-b border-slate-200/70 dark:border-cyan-500/10"
+        }`}
+      >
+        <div className="container-custom flex items-center justify-between gap-2 sm:gap-4">
           
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            className="w-9 sm:w-10 h-9 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-cyan-300 transition-all duration-300 relative overflow-hidden group shadow-xs"
-            title={mounted && theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            aria-label="Toggle Dark and Light Mode"
-          >
-            {mounted ? (
-              theme === "dark" ? (
-                <Sun className="w-4 h-4 text-amber-400 animate-in spin-in-180 duration-300 transition-transform group-hover:rotate-45" />
-              ) : (
-                <Moon className="w-4 h-4 text-slate-700 animate-in spin-in-180 duration-300 transition-transform group-hover:-rotate-12" />
-              )
-            ) : (
-              <span className="w-4 h-4" />
-            )}
-          </button>
-
-          {/* Search Trigger */}
-          <button
-            onClick={onOpenSearch}
-            className="w-9 sm:w-10 h-9 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors shadow-xs"
-            title="Search Products"
-            aria-label="Search Products"
-          >
-            <Search className="w-4 h-4" />
-          </button>
-
-          {/* Wishlist Trigger */}
-          <button
-            onClick={() => setIsWishlistOpen(true)}
-            className="w-9 sm:w-10 h-9 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-rose-500 transition-colors relative shadow-xs"
-            title="Saved Wishlist"
-            aria-label="Saved Wishlist"
-          >
-            <Heart className="w-4 h-4" />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
-                {wishlistCount}
-              </span>
-            )}
-          </button>
-
-          {/* Cart Trigger */}
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="w-9 sm:w-10 h-9 sm:h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors relative shadow-xs"
-            title="Shopping Cart"
-            aria-label="Shopping Cart"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-cyan-500 dark:to-blue-600 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
-                {cartCount}
-              </span>
-            )}
-          </button>
-
-          {/* Slim WhatsApp Button */}
-          <a
-            href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20 dark:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02]"
-            title="Chat on WhatsApp"
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>Chat</span>
-          </a>
-
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden w-9 sm:w-10 h-9 sm:h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-slate-700 dark:text-zinc-300 shadow-xs"
-            aria-label="Toggle Mobile Menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-blue-600 dark:text-cyan-400" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-
-      </div>
-
-      {/* Mobile Slide-Down Menu */}
-      {mobileMenuOpen && (
-        <div className="xl:hidden glass-modal border-t border-slate-200 dark:border-cyan-500/20 px-6 py-6 animate-in slide-in-from-top-2 duration-200">
-          <div className="flex flex-col gap-3">
-            
-            {/* Mobile Theme Toggle Banner */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-cyan-500/15">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-zinc-400">
-                Theme Appearance
-              </span>
-              <button
-                onClick={toggleTheme}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-cyan-500/30 text-xs font-bold text-slate-800 dark:text-white"
-              >
-                {theme === "dark" ? (
-                  <>
-                    <Sun className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Light Mode</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-3.5 h-3.5 text-slate-700" />
-                    <span>Dark Mode</span>
-                  </>
-                )}
-              </button>
+          {/* LEFT: Theekzu Mobile Official Brand Logo */}
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0 min-w-0">
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl p-[1px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-[0_0_15px_rgba(0,102,255,0.2)] dark:shadow-[0_0_20px_rgba(0,180,255,0.35)] group-hover:scale-105 transition-all flex-shrink-0">
+              <div className="w-full h-full bg-[#040711] rounded-[11px] sm:rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
+                <Image
+                  src="/logo.png"
+                  alt="Theekzu Mobile Logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-cover rounded-lg"
+                  priority
+                />
+              </div>
             </div>
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-1 sm:gap-1.5 leading-none whitespace-nowrap">
+                <span className="text-sm sm:text-base md:text-lg font-black tracking-wider text-slate-900 dark:text-white">
+                  THEEKZU
+                </span>
+                <span className="text-sm sm:text-base md:text-lg font-black tracking-wider text-gradient-neon">
+                  MOBILE
+                </span>
+              </div>
+              <span className="hidden sm:flex text-[9px] sm:text-[10px] text-blue-600 dark:text-cyan-300/80 tracking-widest uppercase font-semibold items-center gap-1 mt-0.5 whitespace-nowrap">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-cyan-400 animate-ping inline-block" />
+                {storeConfig.tagline}
+              </span>
+            </div>
+          </Link>
 
+          {/* CENTER: Desktop Navigation Links (Visible >= 1024px) */}
+          <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-6 2xl:gap-7">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`text-base font-semibold py-1.5 flex items-center justify-between transition-colors ${
+                className={`text-xs xl:text-sm font-medium transition-all duration-200 relative py-1.5 whitespace-nowrap flex items-center gap-1.5 group ${
                   isActive(link.href)
-                    ? "text-blue-600 dark:text-cyan-400 font-bold"
-                    : "text-slate-700 hover:text-slate-900 dark:text-zinc-200 dark:hover:text-white"
+                    ? "text-blue-600 dark:text-cyan-400 font-bold drop-shadow-[0_0_12px_rgba(0,102,255,0.2)] dark:drop-shadow-[0_0_12px_rgba(0,210,255,0.5)]"
+                    : "text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-white"
                 }`}
               >
                 <span>{link.name}</span>
                 {link.badge && (
-                  <span className="text-xs bg-rose-500/15 border border-rose-500/30 text-rose-600 dark:text-rose-300 px-2 py-0.5 rounded-full font-bold">
+                  <span className="px-1.5 py-0.2 text-[8px] font-black bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-md shadow-xs">
                     {link.badge}
                   </span>
                 )}
+                {/* Subtle animated underline */}
+                <span
+                  className={`absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-300 ${
+                    isActive(link.href)
+                      ? "w-full bg-gradient-to-r from-blue-600 to-cyan-400 dark:from-cyan-400 dark:to-blue-600"
+                      : "w-0 bg-blue-500/40 dark:bg-cyan-400/40 group-hover:w-full"
+                  }`}
+                />
               </Link>
             ))}
+          </nav>
 
-            <div className="pt-3 border-t border-slate-200 dark:border-cyan-500/15">
+          {/* RIGHT: Action Icons */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            
+            {/* Search Trigger */}
+            <button
+              onClick={onOpenSearch}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors shadow-xs active:scale-95"
+              title="Search Products"
+              aria-label="Search Products"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-cyan-300 transition-all duration-300 relative overflow-hidden group shadow-xs active:scale-95"
+              title={mounted && theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              aria-label="Toggle Dark and Light Mode"
+            >
+              {mounted ? (
+                theme === "dark" ? (
+                  <Sun className="w-4 h-4 text-amber-400 animate-in spin-in-180 duration-300 transition-transform group-hover:rotate-45" />
+                ) : (
+                  <Moon className="w-4 h-4 text-slate-700 animate-in spin-in-180 duration-300 transition-transform group-hover:-rotate-12" />
+                )
+              ) : (
+                <span className="w-4 h-4" />
+              )}
+            </button>
+
+            {/* Desktop Wishlist Trigger (Visible >= 1024px) */}
+            <button
+              onClick={() => setIsWishlistOpen(true)}
+              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 items-center justify-center text-slate-700 dark:text-slate-300 hover:text-rose-500 transition-colors relative shadow-xs active:scale-95"
+              title="Saved Wishlist"
+              aria-label="Saved Wishlist"
+            >
+              <Heart className="w-4 h-4" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
+                  {wishlistCount}
+                </span>
+              )}
+            </button>
+
+            {/* Cart Trigger (Always visible on mobile, tablet, desktop) */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors relative shadow-xs active:scale-95"
+              title="Shopping Cart"
+              aria-label="Shopping Cart"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-cyan-500 dark:to-blue-600 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Desktop WhatsApp Quick Chat (>= 1024px) */}
+            <a
+              href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20 dark:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+              title="Chat on WhatsApp"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Chat</span>
+            </a>
+
+            {/* Mobile / Tablet Hamburger Button (< 1024px) */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-slate-800 dark:text-zinc-200 shadow-xs active:scale-95 transition-colors"
+              aria-label={mobileMenuOpen ? "Close Menu" : "Open Navigation Menu"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5 text-blue-600 dark:text-cyan-400" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+
+        </div>
+      </header>
+
+      {/* Mobile Drawer Navigation Backdrop & Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Dimmed backdrop - click to close */}
+          <div
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Drawer Sheet */}
+          <div className="relative ml-auto w-full max-w-sm sm:max-w-md h-full bg-white dark:bg-[#070c18] border-l border-slate-200 dark:border-cyan-500/20 shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-250 overflow-hidden">
+            
+            {/* Drawer Header */}
+            <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/80 dark:bg-slate-950/60">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl p-[1px] bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center overflow-hidden">
+                  <Image
+                    src="/logo.png"
+                    alt="Logo"
+                    width={32}
+                    height={32}
+                    className="w-full h-full object-cover rounded-[10px]"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white">
+                    THEEKZU <span className="text-gradient-neon">MOBILE</span>
+                  </span>
+                  <span className="text-[9px] text-blue-600 dark:text-cyan-400 font-semibold uppercase">
+                    Navigation Menu
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-9 h-9 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors"
+                aria-label="Close Navigation"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Quick Actions Bar inside Mobile Drawer */}
+            <div className="grid grid-cols-2 gap-2 p-4 border-b border-slate-200 dark:border-white/10 bg-slate-100/50 dark:bg-slate-900/40">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsWishlistOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs"
+              >
+                <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" />
+                <span>Wishlist ({wishlistCount})</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsCartOpen(true);
+                }}
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs"
+              >
+                <ShoppingBag className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
+                <span>Cart ({cartCount})</span>
+              </button>
+            </div>
+
+            {/* Nav Links Scroll Area */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 px-3 py-1 block">
+                Explore Store
+              </span>
+              
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                      active
+                        ? "bg-blue-50 dark:bg-cyan-500/15 text-blue-700 dark:text-cyan-300 font-bold border border-blue-200 dark:border-cyan-500/30"
+                        : "text-slate-700 hover:bg-slate-100 dark:text-zinc-300 dark:hover:bg-slate-900/60 dark:hover:text-white"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      {link.name}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {link.badge && (
+                        <span className="text-[9px] bg-rose-500 text-white font-black px-1.5 py-0.5 rounded shadow-xs">
+                          {link.badge}
+                        </span>
+                      )}
+                      <ArrowRight className={`w-3.5 h-3.5 ${active ? "text-blue-600 dark:text-cyan-400" : "text-slate-400 dark:text-zinc-600"}`} />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Drawer Footer CTA */}
+            <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/80 space-y-3">
               <a
-                href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
+                href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to inquire about your available iPhones.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-bold shadow-md"
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/20 active:scale-98 transition-all"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>Chat With Us on WhatsApp</span>
+                <span>Chat with Us on WhatsApp</span>
               </a>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 px-1 pt-1">
+                <span>Hotline: {storeConfig.phone}</span>
+                <Link
+                  href="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="hover:text-blue-600 dark:hover:text-cyan-400 underline font-medium"
+                >
+                  Admin Portal
+                </Link>
+              </div>
             </div>
+
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };

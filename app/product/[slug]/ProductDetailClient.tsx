@@ -148,7 +148,7 @@ Can you please confirm order details and delivery?`;
         
         {/* LEFT COLUMN: Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="w-full h-96 sm:h-[480px] rounded-[2.5rem] bg-slate-50 dark:bg-gradient-to-b dark:from-slate-900/60 dark:to-slate-950/80 border border-slate-200 dark:border-cyan-500/25 p-6 flex items-center justify-center relative overflow-hidden shadow-sm dark:shadow-[0_0_35px_rgba(0,102,255,0.2)]">
+          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-slate-50 dark:bg-gradient-to-b dark:from-slate-900/60 dark:to-slate-950/80 border border-slate-200 dark:border-cyan-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden shadow-sm dark:shadow-[0_0_35px_rgba(0,102,255,0.2)]">
             {activeImage ? (
               <Image
                 src={activeImage}
@@ -247,12 +247,12 @@ Can you please confirm order details and delivery?`;
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2">
               {liveProduct.name}
             </h1>
 
             {/* Rating */}
-            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-zinc-400 mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 text-xs text-slate-500 dark:text-zinc-400 mb-5 sm:mb-6 flex-wrap">
               <div className="flex items-center text-amber-500 dark:text-amber-400">
                 {Array.from({ length: Math.floor(liveProduct.rating) }).map((_, i) => (
                   <Star key={i} className="w-3.5 h-3.5 fill-amber-500 dark:fill-amber-400" />
@@ -266,16 +266,16 @@ Can you please confirm order details and delivery?`;
             </div>
 
             {/* Price Display */}
-            <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/25 mb-6 flex items-baseline gap-3 shadow-xs">
-              <span className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-blue-700 dark:from-white dark:via-slate-100 dark:to-cyan-300">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/25 mb-6 flex flex-wrap sm:flex-nowrap items-baseline gap-2.5 sm:gap-3 shadow-xs">
+              <span className="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-blue-700 dark:from-white dark:via-slate-100 dark:to-cyan-300">
                 {formatCurrency(currentPrice)}
               </span>
               {oldPrice && (
-                <span className="text-sm text-slate-400 dark:text-zinc-500 line-through">
+                <span className="text-xs sm:text-sm text-slate-400 dark:text-zinc-500 line-through">
                   {formatCurrency(oldPrice)}
                 </span>
               )}
-              <span className="text-xs text-blue-600 dark:text-cyan-400/80 ml-auto font-medium">
+              <span className="text-[11px] sm:text-xs text-blue-600 dark:text-cyan-400/80 sm:ml-auto font-medium">
                 Variant Price (LKR)
               </span>
             </div>
@@ -384,13 +384,13 @@ Can you please confirm order details and delivery?`;
                 <button
                   onClick={handleAddToCart}
                   disabled={isOutOfStock}
-                  className={`flex-1 py-3.5 px-6 rounded-full text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] ${
+                  className={`flex-1 min-h-[44px] py-3.5 px-6 rounded-full text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] ${
                     isOutOfStock
                       ? "bg-slate-400 dark:bg-slate-700 cursor-not-allowed opacity-60"
                       : "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:to-blue-600 dark:hover:from-cyan-400 dark:hover:to-blue-500 shadow-blue-500/20"
                   }`}
                 >
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="w-4 h-4 shrink-0" />
                   <span>{isOutOfStock ? "Out of Stock" : "Add to Cart"}</span>
                 </button>
               </div>
@@ -398,9 +398,9 @@ Can you please confirm order details and delivery?`;
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={handleBuyNow}
-                  className="py-3.5 px-4 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 border border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-white text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.98]"
+                  className="min-h-[44px] py-3.5 px-4 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 border border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-white text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.98]"
                 >
-                  <Zap className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                  <Zap className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0" />
                   <span>{isOutOfStock ? "Inquire on WhatsApp" : "Buy Now (Instant WhatsApp)"}</span>
                 </button>
 
@@ -408,9 +408,9 @@ Can you please confirm order details and delivery?`;
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all active:scale-[0.98]"
+                  className="min-h-[44px] py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all active:scale-[0.98]"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="w-4 h-4 shrink-0" />
                   <span>Order via WhatsApp</span>
                 </a>
               </div>
@@ -433,7 +433,7 @@ Can you please confirm order details and delivery?`;
       </div>
 
       {/* Specifications Detailed Accordion / Table */}
-      <div className="glass-card rounded-[2.5rem] p-8 sm:p-10 border border-slate-200 dark:border-cyan-500/20 space-y-6 shadow-sm">
+      <div className="glass-card rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-slate-200 dark:border-cyan-500/20 space-y-6 shadow-sm">
         <h3 className="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-cyan-500/15 pb-4 flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
           <span>Detailed Specifications</span>

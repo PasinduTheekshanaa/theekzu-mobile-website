@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import { Flame } from "lucide-react";
@@ -11,17 +11,17 @@ export default function OffersPage() {
   const deals = products.filter((p) => p.isWeekendDeal || p.oldPrice);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 transition-colors duration-300">
+    <div className="container-custom py-6 sm:py-10 space-y-10 sm:space-y-16 transition-colors duration-300">
       
       {/* Top Banner */}
-      <div className="rounded-[2.5rem] bg-gradient-to-r from-rose-100 via-pink-50 to-slate-100 dark:from-rose-950/60 dark:to-zinc-950 p-8 sm:p-12 border border-rose-200 dark:border-rose-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold mb-3">
+      <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-r from-rose-100 via-pink-50 to-slate-100 dark:from-rose-950/60 dark:to-zinc-950 p-5 sm:p-8 md:p-12 border border-rose-200 dark:border-rose-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold mb-3 shadow-xs">
           <Flame className="w-3.5 h-3.5" /> Sri Lanka Flash Promotions
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mt-1">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mt-1">
           Special Offers & Weekend Deals
         </h1>
-        <p className="text-slate-600 dark:text-zinc-400 text-sm mt-2 max-w-2xl">
+        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
           Save on brand new sealed flagships, certified pre-owned phones, and high-speed fast charging kits. Order on WhatsApp for instant confirmation.
         </p>
       </div>

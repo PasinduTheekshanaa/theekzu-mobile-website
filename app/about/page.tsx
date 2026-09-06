@@ -17,7 +17,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16 transition-colors duration-300">
+    <div className="container-custom py-8 sm:py-12 space-y-12 sm:space-y-16 transition-colors duration-300">
       
       {/* Story Hero */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -70,10 +70,10 @@ export default function AboutPage() {
 
         {/* Right Column: Official Brand Logo Presentation */}
         <div className="lg:col-span-5">
-          <div className="glass-card-glow p-8 rounded-[3rem] border border-slate-200 dark:border-cyan-500/30 text-center relative overflow-hidden shadow-xl dark:shadow-[0_0_50px_rgba(0,102,255,0.25)]">
+          <div className="glass-card-glow p-5 sm:p-8 rounded-2xl sm:rounded-[3rem] border border-slate-200 dark:border-cyan-500/30 text-center relative overflow-hidden shadow-xl dark:shadow-[0_0_50px_rgba(0,102,255,0.25)]">
             <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 dark:bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative w-64 h-64 mx-auto rounded-3xl p-1 bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-md dark:shadow-[0_0_35px_rgba(0,210,255,0.5)] mb-6">
+            <div className="relative w-44 h-44 sm:w-60 sm:h-60 mx-auto rounded-3xl p-1 bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-md dark:shadow-[0_0_35px_rgba(0,210,255,0.5)] mb-6">
               <div className="w-full h-full bg-[#040711] rounded-[22px] p-2 flex items-center justify-center overflow-hidden">
                 <Image
                   src="/logo.png"
@@ -98,15 +98,15 @@ export default function AboutPage() {
       </div>
 
       {/* Statistics Counters */}
-      <div className="glass-card rounded-3xl p-8 sm:p-12 border border-slate-200 dark:border-cyan-500/20 shadow-md dark:shadow-[0_0_30px_rgba(0,102,255,0.15)]">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <div className="glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-cyan-500/20 shadow-md dark:shadow-[0_0_30px_rgba(0,102,255,0.15)]">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
           {stats.map((st) => {
             const Icon = st.icon;
             return (
-              <div key={st.label} className="space-y-2">
-                <Icon className={`w-6 h-6 mx-auto ${st.color} mb-2`} />
-                <div className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white">{st.value}</div>
-                <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
+              <div key={st.label} className="space-y-1.5 sm:space-y-2">
+                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto ${st.color} mb-1.5 sm:mb-2`} />
+                <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white">{st.value}</div>
+                <p className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
                   {st.label}
                 </p>
               </div>

@@ -125,8 +125,8 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center px-4 py-12 transition-colors duration-300">
-      <div className="w-full max-w-md glass-card-glow rounded-[2.5rem] p-8 sm:p-10 border border-slate-200 dark:border-cyan-500/30 text-center relative overflow-hidden shadow-2xl">
+    <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 transition-colors duration-300">
+      <div className="w-full max-w-md glass-card-glow rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-slate-200 dark:border-cyan-500/30 text-center relative overflow-hidden shadow-2xl">
         
         {/* Glow backdrop */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 dark:bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />

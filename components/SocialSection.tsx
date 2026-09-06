@@ -44,23 +44,23 @@ export const SocialSection: React.FC = () => {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+    <section className="container-custom transition-colors duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
         <div>
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
             <Sparkles className="w-3 h-3" /> Official Channels
           </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
             Follow Theekzu Mobile
           </h2>
-          <p className="text-slate-600 dark:text-zinc-400 text-sm mt-1">
+          <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-1">
             Stay connected for new arrivals, unboxings, offers and community drops.
           </p>
         </div>
       </div>
 
       {/* Social Links Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {socialCards.map((sc) => {
           const Icon = sc.icon;
           return (
@@ -69,7 +69,7 @@ export const SocialSection: React.FC = () => {
               href={sc.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`glass-card p-6 rounded-[2rem] border border-slate-200 dark:border-cyan-500/20 transition-all duration-300 block group hover:-translate-y-1 shadow-sm hover:shadow-xl ${sc.color}`}
+              className={`glass-card p-5 sm:p-6 rounded-2xl sm:rounded-[2rem] border border-slate-200 dark:border-cyan-500/20 transition-all duration-300 block group hover:-translate-y-1 shadow-sm hover:shadow-xl active:scale-98 ${sc.color}`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center group-hover:scale-110 transition-all ${sc.iconBg}`}>

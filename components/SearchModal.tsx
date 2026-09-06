@@ -41,11 +41,27 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
     setResults(matches);
   }, [query, products]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start justify-center p-4 sm:p-6 pt-20 animate-in fade-in duration-200">
-      <div className="glass-modal rounded-[2.5rem] w-full max-w-2xl border border-slate-200 dark:border-cyan-500/20 p-6 space-y-4 shadow-2xl">
+    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start justify-center p-3 sm:p-6 pt-16 sm:pt-20 animate-in fade-in duration-200">
+      <div className="glass-modal rounded-2xl sm:rounded-[2.5rem] w-full max-w-2xl border border-slate-200 dark:border-cyan-500/20 p-4 sm:p-6 space-y-4 shadow-2xl">
         
         {/* Search Input Bar */}
         <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyan-500/15 pb-4">

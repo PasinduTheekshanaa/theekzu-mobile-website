@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Image from "next/image";
@@ -11,6 +11,22 @@ import { formatCurrency } from "@/lib/formatCurrency";
 export const WishlistDrawer: React.FC = () => {
   const { wishlistProducts, isWishlistOpen, setIsWishlistOpen, removeFromWishlist } = useWishlist();
   const { addItem } = useCart();
+
+  React.useEffect(() => {
+    if (isWishlistOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setIsWishlistOpen(false);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isWishlistOpen, setIsWishlistOpen]);
 
   if (!isWishlistOpen) return null;
 

@@ -67,7 +67,7 @@ Can you confirm availability and latest variant pricing?`;
         transform: `perspective(800px) rotateY(${tilt.x}deg) rotateX(${-tilt.y}deg)`,
         transition: "transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease",
       }}
-      className="glass-card rounded-[2rem] p-5 flex flex-col justify-between group relative border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500/50 dark:hover:border-cyan-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(0,102,255,0.35)]"
+      className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500/50 dark:hover:border-cyan-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(0,102,255,0.35)]"
     >
       {/* Top badges & Wishlist */}
       <div className="flex items-center justify-between gap-2 mb-3 z-10">
@@ -194,9 +194,9 @@ Can you confirm availability and latest variant pricing?`;
           <div className="grid grid-cols-2 gap-2">
             <Link
               href={`/product/${product.slug}`}
-              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98]"
+              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98]"
             >
-              <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
+              <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 shrink-0" />
               <span>Details</span>
             </Link>
 
@@ -204,9 +204,9 @@ Can you confirm availability and latest variant pricing?`;
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs font-bold text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20 active:scale-[0.98]"
+              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs font-bold text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20 active:scale-[0.98]"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5 shrink-0" />
               <span>WhatsApp</span>
             </a>
           </div>

@@ -179,23 +179,23 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 transition-colors duration-300">
+    <div className="container-custom py-6 sm:py-10 space-y-8 sm:space-y-12 transition-colors duration-300">
       
       {/* Header */}
       <div>
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold text-blue-700 dark:text-cyan-400 tracking-widest uppercase shadow-xs">
           <Sparkles className="w-3.5 h-3.5" /> Get in Touch
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mt-3">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mt-3">
           Contact <span className="text-gradient-chrome">Theekzu</span> <span className="text-gradient-neon">Mobile</span>
         </h1>
-        <p className="text-slate-600 dark:text-zinc-400 text-sm mt-1 max-w-xl">
+        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-1 max-w-xl">
           Have a question about an iPhone model, price, stock availability, trade-in, or delivery? We're here to assist you daily.
         </p>
       </div>
 
       {/* 5 Contact Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {contactCards.map((c) => {
           const Icon = c.icon;
           return (
@@ -204,27 +204,27 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
               href={c.href}
               target={c.href.startsWith("http") ? "_blank" : undefined}
               rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="glass-card p-5 rounded-[2rem] block border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500 dark:hover:border-cyan-400/60 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md"
+              className="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-[2rem] block border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500 dark:hover:border-cyan-400/60 transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md active:scale-98"
             >
-              <div className={`w-11 h-11 rounded-2xl border flex items-center justify-center mb-4 ${c.color}`}>
-                <Icon className="w-5 h-5" />
+              <div className={`w-10 sm:w-11 h-10 sm:h-11 rounded-2xl border flex items-center justify-center mb-3 sm:mb-4 ${c.color}`}>
+                <Icon className="w-4 sm:w-5 h-4 sm:h-5" />
               </div>
-              <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-400 mb-1">
+              <h4 className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-400 mb-1">
                 {c.title}
               </h4>
-              <p className="text-sm font-bold text-slate-900 dark:text-white break-words">{c.val}</p>
-              <p className="text-[11px] text-blue-600 dark:text-cyan-300/80 mt-1 font-medium">{c.sub}</p>
+              <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white break-words">{c.val}</p>
+              <p className="text-[10px] sm:text-[11px] text-blue-600 dark:text-cyan-300/80 mt-1 font-medium">{c.sub}</p>
             </a>
           );
         })}
       </div>
 
       {/* Contact Form Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         
         {/* Left Information & Brand Card */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="glass-card-glow p-8 rounded-[2.5rem] border border-slate-200 dark:border-cyan-500/30 space-y-5 shadow-sm dark:shadow-none">
+          <div className="glass-card-glow p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-cyan-500/30 space-y-4 sm:space-y-5 shadow-sm dark:shadow-none">
             <div className="flex items-center gap-3.5 pb-4 border-b border-slate-200 dark:border-cyan-500/20">
               <div className="w-12 h-12 rounded-2xl p-[1px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-sm dark:shadow-[0_0_15px_rgba(0,210,255,0.4)]">
                 <div className="w-full h-full bg-[#040711] rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
@@ -279,9 +279,9 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
 
         {/* Right Form with direct Formspree integration */}
         <div className="lg:col-span-7">
-          <div className="glass-card p-8 rounded-[2.5rem] border border-slate-200 dark:border-cyan-500/20 shadow-sm dark:shadow-none relative overflow-hidden">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Send a Direct Message</h3>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mb-6">
+          <div className="glass-card p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] border border-slate-200 dark:border-cyan-500/20 shadow-sm dark:shadow-none relative overflow-hidden">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-1">Send a Direct Message</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mb-5 sm:mb-6">
               Fill out the details below to reach our team immediately. Messages are delivered directly to our official inbox.
             </p>
 
@@ -455,9 +455,9 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
                 <button
                   type="button"
                   onClick={handleWhatsAppSend}
-                  className="py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  className="min-h-[44px] py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all hover:scale-[1.01] active:scale-[0.98]"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="w-4 h-4 shrink-0" />
                   <span>Send via WhatsApp</span>
                 </button>
 
@@ -465,20 +465,20 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
                 <button
                   type="submit"
                   disabled={status === "submitting"}
-                  className={`py-3.5 px-4 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
+                  className={`min-h-[44px] py-3.5 px-4 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
                     status === "submitting"
                       ? "bg-slate-400 dark:bg-slate-700 text-slate-200 cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 hover:from-blue-500 hover:via-cyan-400 hover:to-teal-400 text-white shadow-blue-600/25 dark:shadow-[0_0_25px_rgba(0,180,255,0.4)] hover:scale-[1.01] active:scale-[0.99]"
+                      : "bg-gradient-to-r from-blue-600 via-cyan-500 to-teal-500 hover:from-blue-500 hover:via-cyan-400 hover:to-teal-400 text-white shadow-blue-600/25 dark:shadow-[0_0_25px_rgba(0,180,255,0.4)] hover:scale-[1.01] active:scale-[0.98]"
                   }`}
                 >
                   {status === "submitting" ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <Loader2 className="w-4 h-4 animate-spin text-white shrink-0" />
                       <span>Sending...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4" />
+                      <Send className="w-4 h-4 shrink-0" />
                       <span>Send Message</span>
                     </>
                   )}

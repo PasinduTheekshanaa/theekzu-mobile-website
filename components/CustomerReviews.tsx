@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { Star, CheckCircle2, Quote, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
@@ -45,15 +45,15 @@ export const CustomerReviews: React.FC = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="text-center max-w-2xl mx-auto mb-10">
+    <section className="container-custom transition-colors duration-300">
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
           <Sparkles className="w-3 h-3" /> Real Client Feedback
         </span>
-        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-3">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
           What Our Customers Say
         </h2>
-        <p className="text-slate-600 dark:text-zinc-400 text-sm mt-2">
+        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2">
           Read genuine experiences from iPhone buyers across all 25 districts in Sri Lanka.
         </p>
       </div>
@@ -68,17 +68,17 @@ export const CustomerReviews: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         {/* Main Review Card */}
-        <div className="glass-card-glow rounded-[2.5rem] p-8 sm:p-12 border border-slate-200 dark:border-cyan-500/25 shadow-xl relative overflow-hidden transition-all duration-500">
+        <div className="glass-card-glow rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-cyan-500/25 shadow-xl relative overflow-hidden transition-all duration-500">
           
           {/* Ambient Lighting */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 dark:bg-cyan-500/15 rounded-full blur-[90px] pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col justify-between min-h-[200px]">
+          <div className="relative z-10 flex flex-col justify-between min-h-[180px] sm:min-h-[200px]">
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <div className="flex text-amber-500 dark:text-amber-400 gap-1">
                   {Array.from({ length: customerReviews[currentIndex].rating }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-4 sm:w-5 h-4 sm:h-5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
 
@@ -89,16 +89,16 @@ export const CustomerReviews: React.FC = () => {
                 )}
               </div>
 
-              <Quote className="w-8 h-8 text-blue-500/30 dark:text-cyan-500/30 mb-3" />
+              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-blue-500/30 dark:text-cyan-500/30 mb-2 sm:mb-3" />
 
-              <p className="text-base sm:text-xl text-slate-800 dark:text-zinc-200 italic leading-relaxed font-normal">
+              <p className="text-sm sm:text-lg md:text-xl text-slate-800 dark:text-zinc-200 italic leading-relaxed font-normal">
                 "{customerReviews[currentIndex].reviewText}"
               </p>
             </div>
 
-            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-cyan-500/15 flex items-center justify-between">
+            <div className="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-slate-200 dark:border-cyan-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                   {customerReviews[currentIndex].name}
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
@@ -110,17 +110,17 @@ export const CustomerReviews: React.FC = () => {
               </div>
 
               {/* Navigation Arrows */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 self-end sm:self-auto">
                 <button
                   onClick={prevSlide}
-                  className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
+                  className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
                   aria-label="Previous review"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
+                  className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
                   aria-label="Next review"
                 >
                   <ChevronRight className="w-5 h-5" />

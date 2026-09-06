@@ -48,26 +48,26 @@ export const WhyChooseUs: React.FC = () => {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="text-center max-w-2xl mx-auto mb-14">
+    <section className="container-custom transition-colors duration-300">
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
           <Sparkles className="w-3.5 h-3.5" /> The Theekzu Advantage
         </span>
-        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-3">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
           Why Choose Theekzu Mobile?
         </h2>
-        <p className="text-slate-600 dark:text-zinc-400 text-sm mt-2">
+        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2">
           We combine authentic Apple products with dependable, friendly customer service and transparent pricing across Sri Lanka.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {points.map((p) => {
           const Icon = p.icon;
           return (
             <div
               key={p.title}
-              className={`glass-card p-8 rounded-[2rem] flex flex-col justify-between border border-slate-200 dark:border-cyan-500/20 ${p.glowBorder} shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5`}
+              className={`glass-card p-5 sm:p-8 rounded-2xl sm:rounded-[2rem] flex flex-col justify-between border border-slate-200 dark:border-cyan-500/20 ${p.glowBorder} shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5`}
             >
               <div>
                 <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center mb-6 transition-transform group-hover:scale-105 ${p.color}`}>

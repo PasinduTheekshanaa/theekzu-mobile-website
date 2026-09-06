@@ -73,27 +73,27 @@ export const CategoryGrid: React.FC = () => {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="text-center max-w-2xl mx-auto mb-12">
+    <section className="container-custom transition-colors duration-300">
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
           <Sparkles className="w-3 h-3" /> Explore Ecosystem
         </span>
-        <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white mt-3">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
           Shop By Category
         </h2>
-        <p className="text-slate-600 dark:text-zinc-400 text-sm mt-2">
+        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2">
           Find your ideal iPhone or original Apple accessory with guaranteed authenticity and Sri Lanka warranty.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {categories.map((cat) => {
           const Icon = cat.icon;
           return (
             <Link
               key={cat.name}
               href={cat.href}
-              className={`glass-card group p-7 rounded-[2rem] transition-all duration-300 relative overflow-hidden flex flex-col justify-between border ${cat.borderColor} shadow-sm hover:shadow-xl`}
+              className={`glass-card group p-5 sm:p-7 rounded-2xl sm:rounded-[2rem] transition-all duration-300 relative overflow-hidden flex flex-col justify-between border ${cat.borderColor} shadow-sm hover:shadow-xl`}
             >
               {/* Background ambient lighting */}
               <div className={`absolute -right-8 -bottom-8 w-36 h-36 rounded-full bg-gradient-to-br ${cat.glow} blur-2xl group-hover:scale-150 transition-transform duration-500`} />

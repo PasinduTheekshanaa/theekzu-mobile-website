@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -69,58 +69,58 @@ export const SpecialOffers: React.FC = () => {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="rounded-[2.5rem] bg-gradient-to-br from-slate-100 via-blue-50/50 to-indigo-50/40 dark:from-[#070c18] dark:via-[#0b1428] dark:to-[#040711] border border-blue-200/80 dark:border-cyan-500/30 p-8 sm:p-12 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
+    <section className="container-custom transition-colors duration-300">
+      <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-slate-100 via-blue-50/50 to-indigo-50/40 dark:from-[#070c18] dark:via-[#0b1428] dark:to-[#040711] border border-blue-200/80 dark:border-cyan-500/30 p-5 sm:p-8 md:p-12 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
         
         {/* Glow Flares */}
         <div className="absolute top-0 right-1/4 w-80 h-80 bg-blue-500/10 dark:bg-cyan-500/15 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-10 w-72 h-72 bg-rose-500/5 dark:bg-rose-500/10 rounded-full blur-[100px] pointer-events-none" />
 
         {/* Header with Countdown */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mb-10 pb-8 border-b border-slate-200 dark:border-cyan-500/20 relative z-10">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-8 mb-8 sm:mb-10 pb-6 sm:pb-8 border-b border-slate-200 dark:border-cyan-500/20 relative z-10">
           <div>
             <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-500/15 dark:bg-rose-500/20 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold mb-3 shadow-xs">
               <Flame className="w-4 h-4 text-rose-600 dark:text-rose-400 animate-pulse" /> Limited Time Weekend Specials
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
               Special Offers & Exclusive Deals
             </h2>
-            <p className="text-slate-600 dark:text-zinc-400 text-sm mt-1">
+            <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-1">
               Save big on authentic iPhones, trade-in vouchers, and original Apple bundled accessories.
             </p>
           </div>
 
           {/* Countdown Blocks */}
-          <div className="flex items-center gap-2.5 sm:gap-3 bg-white/90 dark:bg-slate-950/70 p-3 rounded-2xl border border-slate-200 dark:border-cyan-500/30 shadow-md">
+          <div className="flex items-center gap-1.5 sm:gap-3 bg-white/90 dark:bg-slate-950/70 p-2.5 sm:p-3 rounded-2xl border border-slate-200 dark:border-cyan-500/30 shadow-md">
             <div className="text-center">
-              <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-lg sm:text-xl font-black text-slate-900 dark:text-white shadow-inner">
+              <div className="w-11 sm:w-14 h-11 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-base sm:text-xl font-black text-slate-900 dark:text-white shadow-inner">
                 {String(timeLeft.days).padStart(2, "0")}
               </div>
               <span className="text-[9px] text-blue-600 dark:text-cyan-300 uppercase tracking-wider font-bold mt-1 block">
                 Days
               </span>
             </div>
-            <span className="text-lg font-bold text-blue-600 dark:text-cyan-500">:</span>
+            <span className="text-base sm:text-lg font-bold text-blue-600 dark:text-cyan-500">:</span>
             <div className="text-center">
-              <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-lg sm:text-xl font-black text-slate-900 dark:text-white shadow-inner">
+              <div className="w-11 sm:w-14 h-11 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-base sm:text-xl font-black text-slate-900 dark:text-white shadow-inner">
                 {String(timeLeft.hours).padStart(2, "0")}
               </div>
               <span className="text-[9px] text-blue-600 dark:text-cyan-300 uppercase tracking-wider font-bold mt-1 block">
                 Hours
               </span>
             </div>
-            <span className="text-lg font-bold text-blue-600 dark:text-cyan-500">:</span>
+            <span className="text-base sm:text-lg font-bold text-blue-600 dark:text-cyan-500">:</span>
             <div className="text-center">
-              <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-lg sm:text-xl font-black text-slate-900 dark:text-white shadow-inner">
+              <div className="w-11 sm:w-14 h-11 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-base sm:text-xl font-black text-slate-900 dark:text-white shadow-inner">
                 {String(timeLeft.mins).padStart(2, "0")}
               </div>
               <span className="text-[9px] text-blue-600 dark:text-cyan-300 uppercase tracking-wider font-bold mt-1 block">
                 Mins
               </span>
             </div>
-            <span className="text-lg font-bold text-blue-600 dark:text-cyan-500">:</span>
+            <span className="text-base sm:text-lg font-bold text-blue-600 dark:text-cyan-500">:</span>
             <div className="text-center">
-              <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-rose-500/30 flex items-center justify-center text-lg sm:text-xl font-black text-rose-600 dark:text-rose-400 shadow-xs">
+              <div className="w-11 sm:w-14 h-11 sm:h-14 rounded-xl bg-slate-100 dark:bg-slate-900 border border-rose-500/30 flex items-center justify-center text-base sm:text-xl font-black text-rose-600 dark:text-rose-400 shadow-xs">
                 {String(timeLeft.secs).padStart(2, "0")}
               </div>
               <span className="text-[9px] text-rose-600 dark:text-rose-300 uppercase tracking-wider font-bold mt-1 block">
@@ -131,7 +131,7 @@ export const SpecialOffers: React.FC = () => {
         </div>
 
         {/* 4 Offers Cards with Animated Shine */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative z-10">
           {offers.map((offer) => {
             const Icon = offer.icon;
             return (

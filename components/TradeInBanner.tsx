@@ -37,28 +37,28 @@ export const TradeInBanner: React.FC = () => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="glass-card rounded-[3rem] p-8 sm:p-12 border border-slate-200 dark:border-cyan-500/30 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
+    <section className="container-custom transition-colors duration-300">
+      <div className="glass-card rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-cyan-500/30 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
         {/* Glow ambient */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 dark:bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
           
           {/* Left Text */}
-          <div className="lg:col-span-5 space-y-5">
+          <div className="lg:col-span-5 space-y-4 sm:space-y-5">
             <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/15 border border-blue-500/20 dark:border-cyan-500/30 text-blue-700 dark:text-cyan-300 text-xs font-bold shadow-xs">
               <RefreshCw className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
               <span>Smart Mobile Upgrades</span>
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
               Trade Your Old iPhone. <br />
               <span className="text-gradient-neon">Upgrade Smarter.</span>
             </h2>
-            <p className="text-slate-600 dark:text-zinc-300 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-zinc-300 text-xs sm:text-sm leading-relaxed">
               Tell us about your current device and get an instant, fair market valuation toward your brand new or certified pre-owned iPhone.
             </p>
 
-            <div className="p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-950/70 border border-slate-200 dark:border-cyan-500/20 space-y-3 text-xs text-slate-700 dark:text-zinc-300 shadow-sm">
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-950/70 border border-slate-200 dark:border-cyan-500/20 space-y-2.5 sm:space-y-3 text-xs text-slate-700 dark:text-zinc-300 shadow-sm">
               <div className="flex items-center gap-2.5">
                 <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>Fair market valuation based on current Sri Lankan exchange rates</span>
@@ -75,9 +75,9 @@ export const TradeInBanner: React.FC = () => {
           </div>
 
           {/* Right Form */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#070c18]/90 border border-slate-200 dark:border-cyan-500/30 rounded-[2.5rem] p-6 sm:p-8 shadow-md dark:shadow-[0_0_30px_rgba(0,102,255,0.15)]">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2.5">
-              <Calculator className="w-5 h-5 text-blue-600 dark:text-cyan-400" />
+          <div className="lg:col-span-7 bg-white dark:bg-[#070c18]/90 border border-slate-200 dark:border-cyan-500/30 rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 shadow-md dark:shadow-[0_0_30px_rgba(0,102,255,0.15)]">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-5 sm:mb-6 flex items-center gap-2.5">
+              <Calculator className="w-5 h-5 text-blue-600 dark:text-cyan-400 shrink-0" />
               <span>Get Your Instant Trade-In Estimate</span>
             </h3>
 
@@ -201,9 +201,9 @@ export const TradeInBanner: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full mt-2 inline-flex items-center justify-center gap-2.5 py-4 px-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-bold shadow-md shadow-emerald-500/25 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all"
+                className="w-full mt-2 min-h-[44px] inline-flex items-center justify-center gap-2.5 py-3.5 sm:py-4 px-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/25 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all active:scale-[0.98]"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4 shrink-0" />
                 <span>Get Trade-In Value on WhatsApp</span>
               </button>
             </form>

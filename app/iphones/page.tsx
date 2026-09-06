@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import { Sparkles } from "lucide-react";
@@ -17,17 +17,17 @@ export default function IPhonesPage() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 transition-colors duration-300">
+    <div className="container-custom py-6 sm:py-10 space-y-8 sm:space-y-10 transition-colors duration-300">
       
       {/* Header Banner */}
-      <div className="rounded-[2.5rem] bg-gradient-to-r from-blue-100 via-indigo-50 to-slate-100 dark:from-blue-950/60 dark:to-zinc-950 p-8 sm:p-12 border border-slate-200 dark:border-blue-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold text-blue-700 dark:text-cyan-400 tracking-widest uppercase mb-2">
+      <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-r from-blue-100 via-indigo-50 to-slate-100 dark:from-blue-950/60 dark:to-zinc-950 p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-blue-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold text-blue-700 dark:text-cyan-400 tracking-widest uppercase mb-2 shadow-xs">
           <Sparkles className="w-3 h-3" /> Apple Smartphone Lineup
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mt-1">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mt-1">
           Apple iPhones in Sri Lanka
         </h1>
-        <p className="text-slate-600 dark:text-zinc-400 text-sm mt-2 max-w-2xl">
+        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
           From the flagship titanium iPhone 16 Pro Max to certified pre-owned iPhone 13 models. All devices covered with Apple warranty or Theekzu Mobile store warranty.
         </p>
 

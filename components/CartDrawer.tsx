@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Image from "next/image";
@@ -17,6 +17,22 @@ export const CartDrawer: React.FC = () => {
     subtotal,
     getWhatsAppCheckoutUrl,
   } = useCart();
+
+  React.useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setIsCartOpen(false);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isCartOpen, setIsCartOpen]);
 
   if (!isCartOpen) return null;
 

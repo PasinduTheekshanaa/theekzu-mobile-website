@@ -132,7 +132,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
       {/* 2. Floating Futuristic HUD Cards & Floating Pills */}
       {/* Top Left: AI Mascot Status */}
       <div 
-        className="absolute -top-3 -left-2 sm:-left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-cyan-500/30 text-[11px] font-bold text-slate-800 dark:text-cyan-300 shadow-lg shadow-cyan-500/10 animate-float"
+        className="absolute top-1 left-1 sm:-top-3 sm:-left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-cyan-500/30 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-cyan-300 shadow-lg shadow-cyan-500/10 animate-float max-w-[55%]"
         style={{ animationDuration: "5s" }}
       >
         <span className="relative flex h-2 w-2">
@@ -145,7 +145,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
 
       {/* Top Right: Live Showroom Stock */}
       <div 
-        className="absolute top-8 -right-2 sm:-right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-emerald-500/30 text-[10px] font-bold text-slate-800 dark:text-emerald-400 shadow-md animate-float"
+        className="absolute top-1 right-1 sm:top-8 sm:-right-4 z-20 flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-emerald-500/30 text-[9px] sm:text-[10px] font-bold text-slate-800 dark:text-emerald-400 shadow-md animate-float"
         style={{ animationDuration: "6s", animationDelay: "1.5s" }}
       >
         <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -168,7 +168,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
 
       {/* 3. Central Robot Stage */}
       <div 
-        className="relative w-full aspect-[3/4] max-w-[370px] sm:max-w-[400px] flex items-center justify-center"
+        className="relative w-full aspect-[3/4] max-w-[320px] sm:max-w-[380px] lg:max-w-[400px] flex items-center justify-center mx-auto"
         style={{
           transform: `perspective(1000px) rotateY(${bodyTiltY}deg) rotateX(${bodyTiltX}deg)`,
           transition: "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
