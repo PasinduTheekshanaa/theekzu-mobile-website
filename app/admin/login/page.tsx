@@ -39,6 +39,8 @@ export default function AdminLoginPage() {
             console.error("Supabase admin_users query error:", error);
           } else if (admin) {
             router.replace("/admin/products");
+          } else {
+            await supabase.auth.signOut();
           }
         }
       } catch (err) {
@@ -102,7 +104,7 @@ export default function AdminLoginPage() {
             console.error("Supabase getUser error:", userError);
           }
           await supabase.auth.signOut();
-          setErrorMsg("Authentication failed. Unable to retrieve user profile.");
+          setErrorMsg("Access denied.");
           setLoading(false);
           return;
         }
@@ -115,8 +117,6 @@ export default function AdminLoginPage() {
           .maybeSingle();
 
         if (adminError) {
-          // If the query returns an actual Supabase error:
-          // display the real error in development console instead of incorrectly saying the account is not listed.
           console.error("Supabase admin_users query error:", adminError);
           setErrorMsg("Database error checking admin authorization: " + (adminError.message || "Query failed"));
           setLoading(false);
@@ -125,13 +125,7 @@ export default function AdminLoginPage() {
 
         if (!admin) {
           await supabase.auth.signOut();
-          setErrorMsg(
-            "Access Denied: Your account (" +
-              user.email +
-              ") is authenticated, but is NOT listed in the \"public.admin_users\" table in Supabase. Please add this user ID (" +
-              user.id +
-              ") to public.admin_users."
-          );
+          setErrorMsg("Access denied.");
           setLoading(false);
           return;
         }

@@ -370,13 +370,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
               <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 px-1 pt-1">
                 <span>Hotline: {storeConfig.phone}</span>
-                <Link
-                  href="/admin"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="hover:text-blue-600 dark:hover:text-cyan-400 underline font-medium"
-                >
-                  Admin Portal
-                </Link>
+                <span>Mon - Sun: 9AM - 9PM</span>
               </div>
             </div>
 

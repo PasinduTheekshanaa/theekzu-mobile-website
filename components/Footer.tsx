@@ -209,10 +209,6 @@ export const Footer: React.FC = () => {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-zinc-500 text-center sm:text-left">
             <span>© 2026 Theekzu Mobile. All Rights Reserved. Engineered with precision.</span>
-            <span>•</span>
-            <Link href="/admin" className="hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors opacity-60 hover:opacity-100">
-              Admin Portal
-            </Link>
           </div>
 
           {/* Payment Method Badges */}

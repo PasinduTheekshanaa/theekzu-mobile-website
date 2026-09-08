@@ -124,8 +124,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     async function verifyAuth() {
       if (!isSupabaseConfigured()) {
-        // If Supabase not yet configured, allow viewing dashboard with config warning
-        setIsVerifyingAuth(false);
+        router.replace("/admin/login");
         return;
       }
 
@@ -149,6 +148,7 @@ export default function AdminProductsPage() {
 
         if (adminError) {
           console.error("Supabase admin_users query error:", adminError);
+          await supabase.auth.signOut();
           router.replace("/admin/login");
           return;
         }

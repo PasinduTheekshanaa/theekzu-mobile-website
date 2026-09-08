@@ -41,6 +41,7 @@ export default function AdminIndexPage() {
         if (admin) {
           router.replace("/admin/products");
         } else {
+          await supabase.auth.signOut();
           router.replace("/admin/login");
         }
       } catch (err) {
