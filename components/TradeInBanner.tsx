@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ArrowRight, Calculator, Check, MessageCircle, Sparkles, RefreshCw } from "lucide-react";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const TradeInBanner: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +39,8 @@ export const TradeInBanner: React.FC = () => {
 
   return (
     <section className="container-custom transition-colors duration-300">
-      <div className="glass-card rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-cyan-500/30 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
+      <ScrollReveal direction="up">
+        <div className="glass-card rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-cyan-500/30 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
         {/* Glow ambient */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 dark:bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
 
@@ -211,6 +213,7 @@ export const TradeInBanner: React.FC = () => {
 
         </div>
       </div>
+      </ScrollReveal>
     </section>
   );
 };

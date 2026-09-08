@@ -8,13 +8,17 @@ import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig } from "@/config/store";
 import { useProducts } from "@/context/ProductContext";
 
+import { ScrollReveal } from "@/components/ScrollReveal";
+
 export const FlagshipShowcase: React.FC = () => {
   const { products } = useProducts();
   const flagship = products.find((p) => p.slug === "iphone-16-pro-max") || products[0];
+  const flagshipImg = (flagship?.images && flagship.images[0]) || "/theekzu-robot.jpg";
 
   return (
     <section className="container-custom transition-colors duration-300">
-      <div className="glass-card-glow rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 lg:p-16 border border-slate-200 dark:border-cyan-500/30 relative overflow-hidden shadow-xl dark:shadow-[0_0_60px_rgba(0,102,255,0.25)]">
+      <ScrollReveal direction="up">
+        <div className="glass-card-glow rounded-2xl sm:rounded-[3rem] p-5 sm:p-8 md:p-12 lg:p-16 border border-slate-200 dark:border-cyan-500/30 relative overflow-hidden shadow-xl dark:shadow-[0_0_60px_rgba(0,102,255,0.25)]">
         
         {/* Dynamic Background Flare */}
         <div className="absolute top-1/2 -right-20 w-[30rem] h-[30rem] bg-gradient-to-br from-cyan-500/10 to-blue-600/15 dark:from-cyan-500/20 dark:to-blue-600/25 rounded-full blur-[120px] pointer-events-none" />
@@ -115,7 +119,7 @@ export const FlagshipShowcase: React.FC = () => {
             <div className="w-64 sm:w-80 lg:w-[28rem] h-64 sm:h-80 lg:h-[28rem] rounded-full bg-gradient-to-tr from-cyan-500/15 to-blue-600/20 dark:from-cyan-500/30 dark:to-blue-600/30 blur-3xl absolute animate-pulse-glow" />
             <div className="relative z-10 w-full max-w-xs sm:max-w-md lg:max-w-lg flex items-center justify-center">
               <Image
-                src={flagship.images[0]}
+                src={flagshipImg}
                 alt={flagship.name}
                 width={500}
                 height={500}
@@ -127,6 +131,7 @@ export const FlagshipShowcase: React.FC = () => {
         </div>
 
       </div>
+      </ScrollReveal>
     </section>
   );
 };

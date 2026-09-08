@@ -14,7 +14,7 @@ import { DeliveryInfo } from "@/components/DeliveryInfo";
 
 export default function HomePage() {
   return (
-    <div className="space-y-24 pb-12">
+    <div className="space-y-10 sm:space-y-14 md:space-y-20 lg:space-y-24 pb-12">
       {/* 1. Hero Section */}
       <Hero />
 

@@ -9,10 +9,10 @@ export const FloatingWhatsApp: React.FC = () => {
       target="_blank"
       rel="noopener noreferrer"
       style={{
-        bottom: "max(16px, env(safe-area-inset-bottom, 16px))",
-        right: "max(16px, env(safe-area-inset-right, 16px))",
+        bottom: "calc(20px + env(safe-area-inset-bottom, 0px))",
+        right: "calc(16px + env(safe-area-inset-right, 0px))",
       }}
-      className="fixed z-40 floating-whatsapp-btn w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center shadow-2xl transition-transform hover:scale-110 group active:scale-95"
+      className="fixed z-40 floating-whatsapp-btn w-[56px] h-[56px] sm:w-[60px] sm:h-[60px] rounded-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 group"
       title="Chat with Theekzu Mobile"
       aria-label="Chat with Theekzu Mobile on WhatsApp"
     >

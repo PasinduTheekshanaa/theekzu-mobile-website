@@ -80,23 +80,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   return (
     <>
       <header
-        className={`sticky top-0 left-0 right-0 z-40 w-full transition-all duration-300 min-h-[64px] sm:min-h-[70px] flex items-center ${
+        className={`sticky top-0 left-0 right-0 z-40 w-full transition-all duration-300 h-[64px] flex items-center px-[14px] sm:px-6 ${
           isScrolled
-            ? "glass-nav py-2 shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
-            : "bg-white/85 dark:bg-[#040711]/85 backdrop-blur-md py-2.5 sm:py-3.5 border-b border-slate-200/70 dark:border-cyan-500/10"
+            ? "glass-nav shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
+            : "bg-white/90 dark:bg-[#040711]/90 backdrop-blur-md border-b border-slate-200/70 dark:border-cyan-500/10"
         }`}
       >
-        <div className="container-custom flex items-center justify-between gap-2 sm:gap-4">
+        <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between gap-2">
           
           {/* LEFT: Theekzu Mobile Official Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0 min-w-0">
-            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl p-[1px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-[0_0_15px_rgba(0,102,255,0.2)] dark:shadow-[0_0_20px_rgba(0,180,255,0.35)] group-hover:scale-105 transition-all flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 min-w-0">
+            <div className="relative w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-xl sm:rounded-2xl p-[1px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-[0_0_15px_rgba(0,102,255,0.2)] dark:shadow-[0_0_20px_rgba(0,180,255,0.35)] group-hover:scale-105 transition-all flex-shrink-0">
               <div className="w-full h-full bg-[#040711] rounded-[11px] sm:rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
                 <Image
                   src="/logo.png"
                   alt="Theekzu Mobile Logo"
-                  width={40}
-                  height={40}
+                  width={38}
+                  height={38}
                   className="w-full h-full object-cover rounded-lg"
                   priority
                 />
@@ -104,14 +104,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             </div>
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1 sm:gap-1.5 leading-none whitespace-nowrap">
-                <span className="text-sm sm:text-base md:text-lg font-black tracking-wider text-slate-900 dark:text-white">
+                <span className="text-[15px] sm:text-base md:text-lg font-black tracking-wider text-slate-900 dark:text-white">
                   THEEKZU
                 </span>
-                <span className="text-sm sm:text-base md:text-lg font-black tracking-wider text-gradient-neon">
+                <span className="text-[15px] sm:text-base md:text-lg font-black tracking-wider text-gradient-neon">
                   MOBILE
                 </span>
               </div>
-              <span className="hidden sm:flex text-[9px] sm:text-[10px] text-blue-600 dark:text-cyan-300/80 tracking-widest uppercase font-semibold items-center gap-1 mt-0.5 whitespace-nowrap">
+              <span className="hidden min-[420px]:flex text-[9px] sm:text-[10px] text-blue-600 dark:text-cyan-300/80 tracking-widest uppercase font-semibold items-center gap-1 mt-0.5 whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-cyan-400 animate-ping inline-block" />
                 {storeConfig.tagline}
               </span>
@@ -151,10 +151,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           {/* RIGHT: Action Icons */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             
-            {/* Search Trigger */}
+            {/* Desktop-only Search Trigger */}
             <button
               onClick={onOpenSearch}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors shadow-xs active:scale-95"
+              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors shadow-xs active:scale-95"
               title="Search Products"
               aria-label="Search Products"
             >
@@ -244,13 +244,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
         <div className="fixed inset-0 z-50 lg:hidden flex">
           {/* Dimmed backdrop - click to close */}
           <div
-            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer Sheet */}
-          <div className="relative ml-auto w-full max-w-sm sm:max-w-md h-full bg-white dark:bg-[#070c18] border-l border-slate-200 dark:border-cyan-500/20 shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-250 overflow-hidden">
+          <div className="relative ml-auto w-[min(88vw,360px)] h-full bg-white dark:bg-[#070c18] border-l border-slate-200 dark:border-cyan-500/20 shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-250 overflow-hidden">
             
             {/* Drawer Header */}
             <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/80 dark:bg-slate-950/60">
@@ -284,28 +284,41 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             </div>
 
             {/* Quick Actions Bar inside Mobile Drawer */}
-            <div className="grid grid-cols-2 gap-2 p-4 border-b border-slate-200 dark:border-white/10 bg-slate-100/50 dark:bg-slate-900/40">
+            <div className="p-3 sm:p-4 border-b border-slate-200 dark:border-white/10 bg-slate-100/50 dark:bg-slate-900/40 space-y-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setIsWishlistOpen(true);
+                  onOpenSearch();
                 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs"
+                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-500 dark:text-zinc-400 shadow-xs hover:border-blue-500/40 dark:hover:border-cyan-400/40 transition-colors text-left"
               >
-                <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" />
-                <span>Wishlist ({wishlistCount})</span>
+                <Search className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 flex-shrink-0" />
+                <span className="truncate">Search iPhones, models, SKUs...</span>
               </button>
 
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsCartOpen(true);
-                }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs"
-              >
-                <ShoppingBag className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-                <span>Cart ({cartCount})</span>
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsWishlistOpen(true);
+                  }}
+                  className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs"
+                >
+                  <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" />
+                  <span>Wishlist ({wishlistCount})</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsCartOpen(true);
+                  }}
+                  className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-slate-200 shadow-xs"
+                >
+                  <ShoppingBag className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
+                  <span>Cart ({cartCount})</span>
+                </button>
+              </div>
             </div>
 
             {/* Nav Links Scroll Area */}

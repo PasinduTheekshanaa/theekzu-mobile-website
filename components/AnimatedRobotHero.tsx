@@ -20,9 +20,13 @@ import { useProducts } from "@/context/ProductContext";
 
 interface AnimatedRobotHeroProps {
   className?: string;
+  mode?: "auto" | "desktop" | "mobile";
 }
 
-export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className = "" }) => {
+export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ 
+  className = "",
+  mode = "auto"
+}) => {
   const { products } = useProducts();
   const flagship = products.find((p) => p.slug === "iphone-16-pro-max") || products[0];
 
@@ -101,36 +105,144 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
   const bodyTiltY = reducedMotion ? 0 : cursor.x * 4;
   const bodyTiltX = reducedMotion ? 0 : -cursor.y * 3;
 
-  return (
+  // 1. DEDICATED MOBILE RENDER FLOW (< 768px):
+  // - Aspect-ratio: 4 / 5, max-height: 520px
+  // - Centered robot with subtle idle float (no jerky touch tracking)
+  // - Floating badges scaled down (11px-12px) strictly INSIDE the container
+  // - Compact product info card placed directly BELOW robot in normal document flow
+  // - Stacks buttons on <= 390px with 12px gap, 2 columns on >= 414px
+  const renderMobile = () => (
+    <div className={`w-full max-w-[360px] mx-auto space-y-3 pt-2 select-none ${className}`}>
+      {/* Mobile Robot Visual Container */}
+      <div className="relative w-full aspect-[4/5] max-h-[520px] rounded-[24px] overflow-hidden border border-slate-200/80 dark:border-cyan-500/30 shadow-xl bg-gradient-to-b from-slate-900/90 via-slate-950/95 to-black animate-subtle-float">
+        {/* Holographic Cyan Ambient Aura */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-56 h-56 rounded-full bg-gradient-to-tr from-cyan-500/20 via-blue-600/15 to-purple-600/20 blur-2xl animate-pulse-glow" />
+        </div>
+
+        {/* Top Cyan Accent Line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent z-20" />
+
+        {/* Base Robot Full Body Image */}
+        <Image
+          src="/theekzu-robot.jpg"
+          alt="Theekzu Mobile AI Robot Assistant"
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 360px"
+          className="object-cover object-center"
+        />
+
+        {/* Floating Badges strictly INSIDE the image container */}
+        {/* Top Left: Theekzu AI Concierge */}
+        <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/85 backdrop-blur-md border border-cyan-500/30 text-[11px] font-bold text-cyan-300 shadow-md">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+          </span>
+          <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Theekzu AI Concierge</span>
+        </div>
+
+        {/* Top Right: Flagship In Stock */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-slate-900/85 backdrop-blur-md border border-emerald-500/30 text-[10px] font-bold text-emerald-400 shadow-md">
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <span>Flagship In Stock</span>
+        </div>
+
+        {/* Bottom Left: Cyber Status */}
+        <div className="absolute bottom-3 left-3 z-20 flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-cyan-500/20 text-[9px] text-cyan-300 font-mono">
+          <Radio className="w-3 h-3 animate-pulse text-cyan-400" />
+          <span>THEEKZU-BOT</span>
+        </div>
+
+        {/* Bottom Right: Apple Chip (hidden on small mobile < 360px) */}
+        <div className="absolute bottom-3 right-3 z-20 hidden min-[360px]:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/85 backdrop-blur-md border border-blue-500/30 text-[10px] font-bold text-slate-200 shadow-md">
+          <Zap className="w-3 h-3 text-cyan-400" />
+          <span>A18 Pro Max</span>
+        </div>
+      </div>
+
+      {/* Compact Product Info Card in Normal Document Flow */}
+      <div className="w-full glass-card-glow rounded-[22px] p-3.5 sm:p-4 border border-slate-200 dark:border-cyan-500/30 shadow-xl space-y-2.5 text-left">
+        {/* Top Row: [Model Badge] Product Name | Price */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="px-2 py-0.5 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 text-[10px] font-black text-slate-950 shadow-xs shrink-0">
+              16 Pro
+            </span>
+            <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+              {flagship.name}
+            </h4>
+          </div>
+          <div className="text-right shrink-0">
+            <span className="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-600 dark:from-cyan-300 dark:to-blue-400 font-mono">
+              {formatCurrency(flagship.price)}
+            </span>
+          </div>
+        </div>
+
+        {/* Second Row: Storage / Condition | Stock Status */}
+        <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-slate-500 dark:text-zinc-400 pt-1 border-t border-slate-200/60 dark:border-white/10">
+          <span>{flagship.storage} • {flagship.condition}</span>
+          <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping" />
+            Islandwide Stock
+          </span>
+        </div>
+
+        {/* Bottom Row: View Specs & Order on WhatsApp */}
+        <div className="flex flex-col min-[414px]:grid min-[414px]:grid-cols-2 gap-3 pt-1 border-t border-slate-200/60 dark:border-white/10">
+          <Link
+            href={`/product/${flagship.slug}`}
+            className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-white flex items-center justify-center gap-1 active:scale-[0.98] transition-transform"
+          >
+            <span>View Specs</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+
+          <a
+            href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(
+              `Hello Theekzu Mobile,\n\nI am inquiring about the ${flagship.name} (${formatCurrency(flagship.price)}).\n\nCan you please confirm stock and delivery details?`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs font-bold text-white flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/20 active:scale-[0.98] transition-transform"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Order on WhatsApp</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 2. PRESERVED DESKTOP RENDER FLOW (Screens >= 768px):
+  const renderDesktop = () => (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={`relative flex items-center justify-center select-none w-full max-w-lg mx-auto ${className}`}
     >
-      {/* 1. Futuristic Holographic Multi-Layer Rings in Background */}
+      {/* Futuristic Holographic Multi-Layer Rings in Background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
-        {/* Deep ambient pulsing neon aura */}
         <div className="absolute w-80 sm:w-[28rem] h-80 sm:h-[28rem] rounded-full bg-gradient-to-tr from-cyan-500/25 via-blue-600/20 to-purple-600/25 blur-3xl animate-pulse-glow" />
         
-        {/* Outer Tech Orbit Ring */}
         <div 
           className="absolute w-[22rem] sm:w-[27rem] h-[22rem] sm:h-[27rem] rounded-full border border-cyan-500/20 dark:border-cyan-400/25 border-dashed animate-spin"
           style={{ animationDuration: "35s" }}
         />
         
-        {/* Secondary Inner Cyan Ring */}
         <div 
           className="absolute w-[17rem] sm:w-[21rem] h-[17rem] sm:h-[21rem] rounded-full border border-blue-500/20 dark:border-blue-400/30 animate-spin"
           style={{ animationDuration: "25s", animationDirection: "reverse" }}
         />
 
-        {/* Diagonal Tech Scan Line */}
         <div className="absolute w-72 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 dark:via-cyan-300/70 to-transparent rotate-45 animate-pulse" />
       </div>
 
-      {/* 2. Floating Futuristic HUD Cards & Floating Pills */}
-      {/* Top Left: AI Mascot Status */}
+      {/* Floating Futuristic HUD Cards */}
       <div 
         className="absolute top-1 left-1 sm:-top-3 sm:-left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-cyan-500/30 text-[10px] sm:text-[11px] font-bold text-slate-800 dark:text-cyan-300 shadow-lg shadow-cyan-500/10 animate-float max-w-[55%]"
         style={{ animationDuration: "5s" }}
@@ -143,7 +255,6 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
         <span>Theekzu AI Concierge</span>
       </div>
 
-      {/* Top Right: Live Showroom Stock */}
       <div 
         className="absolute top-1 right-1 sm:top-8 sm:-right-4 z-20 flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-emerald-500/30 text-[9px] sm:text-[10px] font-bold text-slate-800 dark:text-emerald-400 shadow-md animate-float"
         style={{ animationDuration: "6s", animationDelay: "1.5s" }}
@@ -152,7 +263,6 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
         <span>Flagship In Stock</span>
       </div>
 
-      {/* Middle Right: Spec Floating Badge */}
       <div 
         className="absolute bottom-28 -right-3 sm:-right-6 z-20 hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-blue-500/30 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xl animate-float"
         style={{ animationDuration: "5.5s", animationDelay: "0.8s" }}
@@ -166,7 +276,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
         </div>
       </div>
 
-      {/* 3. Central Robot Stage */}
+      {/* Central Robot Stage */}
       <div 
         className="relative w-full aspect-[3/4] max-w-[320px] sm:max-w-[380px] lg:max-w-[400px] flex items-center justify-center mx-auto"
         style={{
@@ -174,16 +284,10 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
           transition: "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
       >
-        {/* Robot Main Container with Ambient Float Motion */}
         <div className="relative w-full h-full animate-float flex items-center justify-center">
-          
-          {/* Main Robot Body Asset with glowing cyber lighting & Phone presented */}
           <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-slate-200/80 dark:border-cyan-500/30 shadow-2xl dark:shadow-[0_0_50px_rgba(0,102,255,0.35)] bg-gradient-to-b from-slate-900/90 via-slate-950/95 to-black">
-            
-            {/* Top Cyan Accent Line */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent z-20" />
             
-            {/* Base Robot Full Body & Hand Image */}
             <Image
               src="/theekzu-robot.jpg"
               alt="Theekzu Mobile Futuristic AI Robot Assistant holding iPhone"
@@ -193,7 +297,6 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
               className="object-cover object-center transform transition-transform duration-700 hover:scale-[1.02]"
             />
 
-            {/* Dynamic Interactive Head & Visor Overlay (Turns with Cursor on Desktop) */}
             {isMounted && (
               <div
                 className="absolute top-[3%] left-[34%] w-[33%] h-[30%] pointer-events-none transition-transform ease-out z-10 hidden sm:block"
@@ -202,10 +305,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
                   transitionDuration: "0.15s",
                 }}
               >
-                {/* Robot Helmet Digital Visor & Pupil Follower */}
                 <div className="relative w-full h-full flex items-center justify-center">
-                  
-                  {/* Visor Cyan Digital HUD Scanning Reticle */}
                   <div 
                     className="absolute top-[33%] w-[68%] h-[24%] rounded-full overflow-hidden flex items-center justify-center transition-all duration-100"
                     style={{
@@ -213,35 +313,26 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
                       boxShadow: "0 0 15px rgba(0,210,255,0.6)",
                     }}
                   >
-                    {/* Glowing Cyan Digital Eyes that track the cursor */}
                     <div 
                       className={`flex items-center justify-between w-full px-2 transition-transform duration-75 ${isBlinking ? "scale-y-0 opacity-20" : "scale-y-100 opacity-100"}`}
                       style={{
                         transform: `translate3d(${eyeShiftX}px, ${eyeShiftY}px, 0px)`,
                       }}
                     >
-                      {/* Left Eye */}
                       <span className="w-3 h-2 rounded-full bg-cyan-300 shadow-[0_0_10px_#00f0ff] animate-pulse" />
-                      {/* Center Scanner Beam */}
                       <span className="w-1.5 h-1 rounded-full bg-blue-400/80 shadow-[0_0_6px_#0066ff]" />
-                      {/* Right Eye */}
                       <span className="w-3 h-2 rounded-full bg-cyan-300 shadow-[0_0_10px_#00f0ff] animate-pulse" />
                     </div>
                   </div>
 
-                  {/* Subtle Visor Glass Reflection */}
                   <div className="absolute top-[28%] left-[18%] w-[35%] h-[12%] bg-white/20 rounded-full blur-[1px] rotate-[-15deg] pointer-events-none" />
                 </div>
               </div>
             )}
 
-            {/* Glowing Chest Core Pulse Highlight Overlay */}
             <div className="absolute top-[43%] left-[43%] w-14 h-14 rounded-full bg-cyan-400/20 blur-md pointer-events-none animate-pulse-glow" />
-
-            {/* Phone Screen Glow Shimmer on the iPhone held in hand */}
             <div className="absolute top-[40%] right-[22%] w-24 h-40 rounded-2xl bg-cyan-400/10 blur-xl pointer-events-none animate-pulse" />
 
-            {/* Futuristic Tech Corner Accents */}
             <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md border border-cyan-500/20 text-[10px] text-cyan-300 font-mono">
               <Radio className="w-3 h-3 animate-pulse text-cyan-400" />
               <span>THEEKZU-BOT // READY</span>
@@ -255,7 +346,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
         </div>
       </div>
 
-      {/* 4. Bottom Showcase Card: Instant WhatsApp & Details Bar */}
+      {/* Desktop Bottom Showcase Card */}
       <div className="absolute -bottom-6 sm:-bottom-8 left-2 right-2 sm:left-4 sm:right-4 z-20">
         <div className="glass-card-glow p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-cyan-500/30 shadow-xl backdrop-blur-xl">
           <div className="flex items-center justify-between gap-3">
@@ -294,11 +385,7 @@ export const AnimatedRobotHero: React.FC<AnimatedRobotHeroProps> = ({ className 
 
             <a
               href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(
-                `Hello Theekzu Mobile,
-
-I saw your AI showroom assistant presenting the ${flagship.name} (${formatCurrency(flagship.price)}).
-
-Can you please confirm current stock and delivery details?`
+                `Hello Theekzu Mobile,\n\nI saw your AI showroom assistant presenting the ${flagship.name} (${formatCurrency(flagship.price)}).\n\nCan you please confirm current stock and delivery details?`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -310,8 +397,22 @@ Can you please confirm current stock and delivery details?`
           </div>
         </div>
       </div>
-
     </div>
+  );
+
+  if (mode === "mobile") {
+    return renderMobile();
+  }
+
+  if (mode === "desktop") {
+    return renderDesktop();
+  }
+
+  return (
+    <>
+      <div className="md:hidden w-full">{renderMobile()}</div>
+      <div className="hidden md:block w-full">{renderDesktop()}</div>
+    </>
   );
 };
 

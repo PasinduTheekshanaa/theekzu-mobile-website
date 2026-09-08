@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Tag, ArrowRight, Zap, Flame, Sparkles } from "lucide-react";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const SpecialOffers: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 2, hours: 14, mins: 45, secs: 10 });
@@ -70,7 +71,8 @@ export const SpecialOffers: React.FC = () => {
 
   return (
     <section className="container-custom transition-colors duration-300">
-      <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-slate-100 via-blue-50/50 to-indigo-50/40 dark:from-[#070c18] dark:via-[#0b1428] dark:to-[#040711] border border-blue-200/80 dark:border-cyan-500/30 p-5 sm:p-8 md:p-12 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
+      <ScrollReveal direction="up">
+        <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-br from-slate-100 via-blue-50/50 to-indigo-50/40 dark:from-[#070c18] dark:via-[#0b1428] dark:to-[#040711] border border-blue-200/80 dark:border-cyan-500/30 p-5 sm:p-8 md:p-12 relative overflow-hidden shadow-lg dark:shadow-[0_0_50px_rgba(0,102,255,0.2)]">
         
         {/* Glow Flares */}
         <div className="absolute top-0 right-1/4 w-80 h-80 bg-blue-500/10 dark:bg-cyan-500/15 rounded-full blur-[100px] pointer-events-none" />
@@ -169,8 +171,8 @@ export const SpecialOffers: React.FC = () => {
             );
           })}
         </div>
-
       </div>
+      </ScrollReveal>
     </section>
   );
 };

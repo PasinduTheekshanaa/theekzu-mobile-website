@@ -253,13 +253,13 @@ body {
   background: radial-gradient(circle at 65% 45%, rgba(0, 102, 255, 0.22) 0%, rgba(0, 210, 255, 0.12) 35%, transparent 70%);
 }
 
-/* Floating WhatsApp Pulse */
+/* Floating WhatsApp Pulse - Compact & Elegant for Mobile */
 @keyframes ring-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
   }
   70% {
-    box-shadow: 0 0 0 18px rgba(37, 211, 102, 0);
+    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
@@ -268,6 +268,52 @@ body {
 
 .floating-whatsapp-btn {
   animation: ring-pulse 2.2s infinite;
+}
+
+/* Mobile-Safe Subtle Robot Idle Float */
+@keyframes subtle-float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.008);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtle-float 4.5s ease-in-out infinite;
+}
+
+/* Mobile Fade Up Animation */
+@keyframes mobile-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: mobile-fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Mobile Soft Scale In */
+@keyframes soft-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-soft-scale {
+  animation: soft-scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Subtle tech grid */

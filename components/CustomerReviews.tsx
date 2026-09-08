@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Star, CheckCircle2, Quote, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { customerReviews } from "@/data/reviews";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const CustomerReviews: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,17 +47,19 @@ export const CustomerReviews: React.FC = () => {
 
   return (
     <section className="container-custom transition-colors duration-300">
-      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-        <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
-          <Sparkles className="w-3 h-3" /> Real Client Feedback
-        </span>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
-          What Our Customers Say
-        </h2>
-        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2">
-          Read genuine experiences from iPhone buyers across all 25 districts in Sri Lanka.
-        </p>
-      </div>
+      <ScrollReveal direction="up">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
+            <Sparkles className="w-3 h-3" /> Real Client Feedback
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
+            What Our Customers Say
+          </h2>
+          <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2">
+            Read genuine experiences from iPhone buyers across all 25 districts in Sri Lanka.
+          </p>
+        </div>
+      </ScrollReveal>
 
       {/* Carousel Container */}
       <div
