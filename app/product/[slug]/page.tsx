@@ -1,9 +1,8 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { products, getProductBySlug, getRelatedProducts } from "@/data/products";
+import { loadProductsFromSupabase } from "@/lib/supabaseService";
 import { ProductDetailClient } from "./ProductDetailClient";
 import type { Metadata } from "next";
-import { storeConfig } from "@/config/store";
 
 interface Props {
   params: {
@@ -11,19 +10,19 @@ interface Props {
   };
 }
 
-export async function generateStaticParams() {
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = getProductBySlug(params.slug);
+  const { products } = await loadProductsFromSupabase();
+  const product = products.find((p) => p.slug === params.slug);
   if (!product) {
     return {
       title: "Product Not Found | Theekzu Mobile",
     };
   }
+
+  const primaryImage = product.images?.[0] || "/logo.png";
 
   return {
     title: `${product.name} | Theekzu Mobile Sri Lanka`,
@@ -33,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: product.description,
       images: [
         {
-          url: product.images[0],
+          url: primaryImage,
           width: 800,
           height: 800,
           alt: product.name,
@@ -43,14 +42,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function ProductDetailPage({ params }: Props) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductDetailPage({ params }: Props) {
+  const { products } = await loadProductsFromSupabase();
+  const product = products.find((p) => p.slug === params.slug);
 
   if (!product) {
     notFound();
   }
 
-  const related = getRelatedProducts(product, 3);
+  const related = products
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .slice(0, 3);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">

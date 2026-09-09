@@ -21,14 +21,15 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   product: initialProduct,
   related: initialRelated,
 }) => {
-  const { getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages } = useProducts();
+  const { getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages, isLiveDatabase } = useProducts();
   const { addItem } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
 
-  // Use live product from context if modified
-  const liveProduct = getProductBySlug(initialProduct.slug) || initialProduct;
+  // Use live product from context if context has confirmed database load, else initialProduct (from server Supabase query)
+  const contextProduct = getProductBySlug(initialProduct.slug);
+  const liveProduct = (isLiveDatabase && contextProduct) ? contextProduct : initialProduct;
   const liveRelated =
-    getRelatedProducts(liveProduct, 3).length > 0
+    (isLiveDatabase && getRelatedProducts(liveProduct, 3).length > 0)
       ? getRelatedProducts(liveProduct, 3)
       : initialRelated;
 
@@ -115,16 +116,16 @@ Can you please confirm order details and delivery?`;
     window.open(waUrl, "_blank");
   };
 
-  // Combine product gallery images with custom uploaded images
+  // Combine product gallery images with live database images (primary image first)
   const allImages = React.useMemo(() => {
     const list: string[] = [];
+    (liveProduct.images || []).forEach((img) => {
+      if (img && !list.includes(img)) list.push(img);
+    });
     const customList = customImages[liveProduct.id] || [];
     customList.forEach((c: any) => {
       const url = c.image_url || c.url || c.dataUrl;
       if (url && !list.includes(url)) list.push(url);
-    });
-    (liveProduct.images || []).forEach((img) => {
-      if (img && !list.includes(img)) list.push(img);
     });
     return list;
   }, [customImages, liveProduct]);

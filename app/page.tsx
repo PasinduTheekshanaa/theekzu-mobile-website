@@ -12,6 +12,9 @@ import { FinalCTA } from "@/components/FinalCTA";
 import { FAQSection } from "@/components/FAQSection";
 import { DeliveryInfo } from "@/components/DeliveryInfo";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function HomePage() {
   return (
     <div className="space-y-10 sm:space-y-14 md:space-y-20 lg:space-y-24 pb-12">

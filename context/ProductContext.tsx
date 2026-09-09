@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { products as baseProducts, Product, ProductVariant } from "@/data/products";
 import {
+  loadProductsFromSupabase,
   fetchCatalogFromSupabase,
   updateVariantInSupabase,
   deleteVariantFromSupabase,
@@ -71,31 +72,36 @@ export function computeHighestPrice(product: Product): number {
   return product.price || 0;
 }
 
-export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>(baseProducts);
-  const [imagesMap, setImagesMap] = useState<Record<string, SupabaseProductImageRecord[]>>({});
-  const [isLiveDatabase, setIsLiveDatabase] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+export const ProductProvider: React.FC<{
+  children: React.ReactNode;
+  initialProducts?: Product[];
+  initialImagesMap?: Record<string, SupabaseProductImageRecord[]>;
+}> = ({ children, initialProducts, initialImagesMap }) => {
+  const [products, setProducts] = useState<Product[]>(
+    initialProducts && initialProducts.length > 0 ? initialProducts : []
+  );
+  const [imagesMap, setImagesMap] = useState<Record<string, SupabaseProductImageRecord[]>>(
+    initialImagesMap || {}
+  );
+  const [isLiveDatabase, setIsLiveDatabase] = useState(
+    Boolean(initialProducts && initialProducts.length > 0)
+  );
+  const [isLoading, setIsLoading] = useState(!initialProducts || initialProducts.length === 0);
 
-  // Load from Supabase
+  // Load from Supabase as single source of truth
   const loadCatalog = useCallback(async () => {
     setIsLoading(true);
     try {
-      const result = await fetchCatalogFromSupabase();
-      if (result.isFromDatabase && result.products.length > 0) {
+      const result = await loadProductsFromSupabase();
+      if (result.products.length > 0) {
         setProducts(result.products);
         setImagesMap(result.imagesMap);
-        setIsLiveDatabase(true);
-      } else {
-        // Supabase products table is empty: show default catalog as temporary fallback
-        setProducts(baseProducts);
-        setImagesMap({});
-        setIsLiveDatabase(false);
+        setIsLiveDatabase(result.source === "Supabase");
       }
     } catch (err) {
-      console.error("Failed to load catalog from Supabase:", err);
-      setProducts(baseProducts);
-      setIsLiveDatabase(false);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to load catalog from Supabase:", err);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -139,68 +145,32 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Update a variant
   const updateVariant = async (productId: string, updatedVariant: ProductVariant): Promise<boolean> => {
-    // 1. Optimistic local update
-    setProducts((prev) =>
-      prev.map((p) => {
-        if (p.id !== productId) return p;
-        const variants = p.variants ? [...p.variants] : [];
-        const idx = variants.findIndex((v) => v.id === updatedVariant.id);
-        if (idx !== -1) variants[idx] = updatedVariant;
-        else variants.push(updatedVariant);
-
-        const hasAnyStock = variants.some((v) => v.stock > 0);
-        return {
-          ...p,
-          variants,
-          stock: hasAnyStock ? "In Stock" : "Out of Stock",
-          price: Math.min(...variants.map((v) => v.price).filter((pr) => pr > 0)),
-        };
-      })
-    );
-
-    // 2. Persist to Supabase
     const ok = await updateVariantInSupabase(productId, updatedVariant);
-    if (!ok && isSupabaseConfigured()) {
-      await loadCatalog(); // rollback if failed
-      return false;
+    if (ok) {
+      await loadCatalog();
+      return true;
     }
-    return true;
+    return false;
   };
 
   // Add a variant
   const addVariant = async (productId: string, variant: ProductVariant): Promise<boolean> => {
-    setProducts((prev) =>
-      prev.map((p) => {
-        if (p.id !== productId) return p;
-        const variants = p.variants ? [...p.variants, variant] : [variant];
-        return {
-          ...p,
-          variants,
-          price: Math.min(...variants.map((v) => v.price).filter((pr) => pr > 0)),
-        };
-      })
-    );
-
     const ok = await updateVariantInSupabase(productId, variant);
-    return ok;
+    if (ok) {
+      await loadCatalog();
+      return true;
+    }
+    return false;
   };
 
   // Delete a variant
   const deleteVariant = async (productId: string, variantId: string): Promise<boolean> => {
-    setProducts((prev) =>
-      prev.map((p) => {
-        if (p.id !== productId) return p;
-        const variants = (p.variants || []).filter((v) => v.id !== variantId);
-        return {
-          ...p,
-          variants,
-          price: variants.length > 0 ? Math.min(...variants.map((v) => v.price)) : p.price,
-        };
-      })
-    );
-
     const ok = await deleteVariantFromSupabase(variantId);
-    return ok;
+    if (ok) {
+      await loadCatalog();
+      return true;
+    }
+    return false;
   };
 
   // Generate variants for storage x color
@@ -238,42 +208,41 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
     });
 
-    const updatedProduct = {
-      ...product,
-      storageOptions: Array.from(new Set([...product.storageOptions, ...storages])),
-      variants: newVariants,
-      price: Math.min(...newVariants.map((v) => v.price)),
-    };
-
-    setProducts((prev) => prev.map((p) => (p.id === productId ? updatedProduct : p)));
-
-    // Save all to Supabase
     for (const v of newVariants) {
       await updateVariantInSupabase(productId, v);
     }
-    await updateProductInSupabase(updatedProduct);
+    await loadCatalog();
     return true;
   };
 
   // Update general product
   const updateProduct = async (updatedProduct: Product): Promise<boolean> => {
-    setProducts((prev) => prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)));
     const ok = await updateProductInSupabase(updatedProduct);
-    return ok;
+    if (ok) {
+      await loadCatalog();
+      return true;
+    }
+    return false;
   };
 
   // Add product
   const addProduct = async (newProduct: Product): Promise<boolean> => {
-    setProducts((prev) => [newProduct, ...prev]);
     const ok = await addProductToSupabase(newProduct);
-    return ok;
+    if (ok) {
+      await loadCatalog();
+      return true;
+    }
+    return false;
   };
 
   // Delete product
   const deleteProduct = async (productId: string): Promise<boolean> => {
-    setProducts((prev) => prev.filter((p) => p.id !== productId));
     const ok = await deleteProductFromSupabase(productId);
-    return ok;
+    if (ok) {
+      await loadCatalog();
+      return true;
+    }
+    return false;
   };
 
   const updatePrice = async (productId: string, newPrice: number, newOldPrice?: number): Promise<boolean> => {
@@ -316,28 +285,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   ): Promise<boolean> => {
     const res = await uploadImageToSupabase(productId, file, color, isPrimary);
     if (res.success && res.imageRecord) {
-      // Update local imagesMap
-      setImagesMap((prev) => {
-        const currentList = prev[productId] ? [...prev[productId]] : [];
-        if (isPrimary) {
-          currentList.forEach((img) => (img.is_primary = false));
-        }
-        currentList.push(res.imageRecord!);
-        return { ...prev, [productId]: currentList };
-      });
-
-      // If primary, also update product image list
-      if (isPrimary) {
-        setProducts((prev) =>
-          prev.map((p) => {
-            if (p.id !== productId) return p;
-            return {
-              ...p,
-              images: [res.imageRecord!.image_url, ...(p.images || []).filter((u) => u !== res.imageRecord!.image_url)],
-            };
-          })
-        );
-      }
+      await loadCatalog();
       return true;
     }
     return false;
@@ -346,58 +294,31 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Delete image
   const deleteImage = async (imageId: string, imageUrl?: string, productId?: string): Promise<boolean> => {
     const ok = await deleteImageFromSupabase(imageId, imageUrl);
-    if (productId) {
-      setImagesMap((prev) => ({
-        ...prev,
-        [productId]: (prev[productId] || []).filter((img) => img.id !== imageId),
-      }));
+    if (ok) {
+      await loadCatalog();
+      return true;
     }
-    return ok;
+    return false;
   };
 
   // Set primary image
   const setPrimaryImage = async (productId: string, imageId: string): Promise<boolean> => {
     const ok = await setPrimaryImageInSupabase(productId, imageId);
     if (ok) {
-      setImagesMap((prev) => {
-        const list = (prev[productId] || []).map((img) => ({
-          ...img,
-          is_primary: img.id === imageId,
-        }));
-        return { ...prev, [productId]: list };
-      });
-
-      const matchedImg = (imagesMap[productId] || []).find((i) => i.id === imageId);
-      if (matchedImg) {
-        setProducts((prev) =>
-          prev.map((p) => {
-            if (p.id !== productId) return p;
-            return {
-              ...p,
-              images: [matchedImg.image_url, ...(p.images || []).filter((u) => u !== matchedImg.image_url)],
-            };
-          })
-        );
-      }
+      await loadCatalog();
+      return true;
     }
-    return ok;
+    return false;
   };
 
   // Assign image to color
   const assignImageToColor = async (imageId: string, color?: string, productId?: string): Promise<boolean> => {
     const ok = await assignImageColorInSupabase(imageId, color);
-    if (ok && productId) {
-      setImagesMap((prev) => {
-        const list = (prev[productId] || []).map((img) => {
-          if (img.id === imageId) {
-            return { ...img, color: color && color.trim() ? color.trim() : null };
-          }
-          return img;
-        });
-        return { ...prev, [productId]: list };
-      });
+    if (ok) {
+      await loadCatalog();
+      return true;
     }
-    return ok;
+    return false;
   };
 
   const getProductPrimaryImage = (product: Product): string => {

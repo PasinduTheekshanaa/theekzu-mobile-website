@@ -10,9 +10,13 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const FeaturedProducts: React.FC = () => {
   const { products } = useProducts();
-  const featuredIphones = products
-    .filter((p) => p.category === "iphones" && p.featured)
-    .slice(0, 6);
+  const featuredIphones = React.useMemo(() => {
+    let list = products.filter((p) => p.category === "iphones" && p.featured);
+    if (list.length === 0) {
+      list = products.filter((p) => p.category === "iphones");
+    }
+    return list.slice(0, 6);
+  }, [products]);
 
   return (
     <section className="container-custom transition-colors duration-300 pb-2 sm:pb-4">

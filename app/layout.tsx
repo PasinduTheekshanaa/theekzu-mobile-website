@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ProductProvider } from "@/context/ProductContext";
@@ -11,6 +11,10 @@ import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { Footer } from "@/components/Footer";
 import { BrandedLoader } from "@/components/BrandedLoader";
 import { storeConfig } from "@/config/store";
+import { loadProductsFromSupabase } from "@/lib/supabaseService";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://theekzumobile.lk"),
@@ -50,11 +54,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { products: initialProducts, imagesMap: initialImagesMap } = await loadProductsFromSupabase();
+
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
@@ -82,7 +88,7 @@ export default function RootLayout({
       </head>
       <body className="bg-[#f8fafc] text-slate-900 dark:bg-[#040711] dark:text-slate-100 antialiased selection:bg-cyan-500 selection:text-white flex flex-col min-h-screen transition-colors duration-300">
         <ThemeProvider>
-          <ProductProvider>
+          <ProductProvider initialProducts={initialProducts} initialImagesMap={initialImagesMap}>
             <CartProvider>
               <WishlistProvider>
                 <BrandedLoader />

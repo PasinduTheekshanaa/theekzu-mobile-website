@@ -258,9 +258,9 @@ export default function AdminProductsPage() {
 
     const ok = await updateVariant(product.id, updated);
     if (ok) {
-      showToast(`Saved variant ${variant.storage} (${variant.color}) to Supabase globally!`, "success");
+      showToast(`Saved variant ${variant.storage} (${variant.color}) to Supabase!`, "success");
     } else {
-      showToast("Saved locally, but failed to sync to Supabase database.", "error");
+      showToast("Failed to sync variant update to Supabase database.", "error");
     }
   };
 

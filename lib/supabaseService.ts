@@ -70,6 +70,18 @@ export async function checkIsAdminUser(): Promise<boolean> {
 }
 
 /**
+ * Helper to resolve public Supabase Storage URL from storage_path
+ */
+export function resolveStorageImageUrl(storagePath?: string | null): string {
+  if (!storagePath) return "";
+  if (storagePath.startsWith("http://") || storagePath.startsWith("https://")) {
+    return storagePath;
+  }
+  const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(storagePath);
+  return data?.publicUrl || storagePath;
+}
+
+/**
  * Map database product row + variant rows + image rows into frontend Product object
  */
 export function mapSupabaseToProduct(
@@ -85,30 +97,46 @@ export function mapSupabaseToProduct(
     color: v.color || "Standard",
     price: Number(v.price) || 0,
     oldPrice: v.old_price !== undefined && v.old_price !== null ? Number(v.old_price) : null,
-    stock: v.stock !== undefined ? Number(v.stock) : 5,
+    stock: v.stock !== undefined && v.stock !== null ? Number(v.stock) : 0,
     sku: v.sku || `TM-${p.slug}-${v.storage}-${v.color}`,
   }));
 
-  // Calculate lowest variant price
+  // Calculate starting price strictly from minimum active variant price
+  const activePrices = mappedVariants.map((v) => v.price).filter((pr) => pr > 0);
   const lowestPrice =
-    mappedVariants.length > 0
-      ? Math.min(...mappedVariants.map((v) => v.price).filter((pr) => pr > 0))
-      : baseMatch?.price || 0;
+    activePrices.length > 0
+      ? Math.min(...activePrices)
+      : (baseMatch?.price || 0);
 
-  // Image list from images table or product images array or baseMatch
+  // Old price: from the lowest priced variant with oldPrice, or any variant with oldPrice
+  const lowestVariantWithOldPrice = mappedVariants.find((v) => v.price === lowestPrice && v.oldPrice);
+  const lowestOldPrice =
+    lowestVariantWithOldPrice?.oldPrice ??
+    (mappedVariants.find((v) => v.oldPrice)?.oldPrice ?? baseMatch?.oldPrice ?? null);
+
+  // Calculated discount percentage
+  const discount =
+    lowestOldPrice && lowestOldPrice > lowestPrice
+      ? `${Math.round(((lowestOldPrice - lowestPrice) / lowestOldPrice) * 100)}% OFF`
+      : baseMatch?.discount;
+
+  // Image list: public.product_images takes precedence, primary image is first
   const imageList: string[] = [];
-  const primaryFromTable = images.find((img) => img.is_primary);
-  if (primaryFromTable) {
-    const pUrl = primaryFromTable.image_url || primaryFromTable.storage_path;
-    if (pUrl) imageList.push(pUrl);
-  }
-  images.forEach((img) => {
-    const url = img.image_url || img.storage_path;
-    if (url && !imageList.includes(url)) {
-      imageList.push(url);
+  if (images && images.length > 0) {
+    const primaryFromTable = images.find((img) => img.is_primary);
+    if (primaryFromTable) {
+      const pUrl = resolveStorageImageUrl(primaryFromTable.image_url || primaryFromTable.storage_path);
+      if (pUrl) imageList.push(pUrl);
     }
-  });
+    images.forEach((img) => {
+      const url = resolveStorageImageUrl(img.image_url || img.storage_path);
+      if (url && !imageList.includes(url)) {
+        imageList.push(url);
+      }
+    });
+  }
 
+  // Fallback to local images ONLY if no images exist in public.product_images for this product
   if (imageList.length === 0 && baseMatch && baseMatch.images && baseMatch.images.length > 0) {
     baseMatch.images.forEach((img) => {
       if (img && !imageList.includes(img)) {
@@ -118,15 +146,15 @@ export function mapSupabaseToProduct(
   }
 
   // Parse colors from variants
-  const variantColorNames = Array.from(new Set(mappedVariants.map((v) => v.color)));
+  const variantColorNames = Array.from(new Set(mappedVariants.map((v) => v.color).filter(Boolean)));
   let colors: ProductColor[] = [];
-  if (baseMatch && baseMatch.colors && baseMatch.colors.length > 0) {
+  if (variantColorNames.length > 0) {
+    colors = variantColorNames.map((cName) => {
+      const matchedColor = baseMatch?.colors.find((c) => c.name.toLowerCase() === cName.toLowerCase());
+      return matchedColor || { name: cName, hex: "#2563eb" };
+    });
+  } else if (baseMatch && baseMatch.colors && baseMatch.colors.length > 0) {
     colors = baseMatch.colors;
-  } else if (variantColorNames.length > 0) {
-    colors = variantColorNames.map((cName) => ({
-      name: cName,
-      hex: "#2563eb",
-    }));
   } else {
     colors = [{ name: "Standard", hex: "#0066ff" }];
   }
@@ -134,12 +162,16 @@ export function mapSupabaseToProduct(
   // Parse storage options from variants
   let storageOptions: string[] = [];
   if (mappedVariants.length > 0) {
-    storageOptions = Array.from(new Set(mappedVariants.map((v) => v.storage)));
+    storageOptions = Array.from(new Set(mappedVariants.map((v) => v.storage).filter(Boolean)));
   } else if (baseMatch && baseMatch.storageOptions) {
     storageOptions = baseMatch.storageOptions;
   } else {
     storageOptions = ["128GB", "256GB", "512GB"];
   }
+
+  // Stock: In Stock if any active variant has stock > 0
+  const hasStock = mappedVariants.length > 0 ? mappedVariants.some((v) => v.stock > 0) : true;
+  const stock = hasStock ? "In Stock" : "Out of Stock";
 
   return {
     id: p.id,
@@ -152,15 +184,15 @@ export function mapSupabaseToProduct(
     condition: p.condition || "Brand New",
     conditionBadge: p.condition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
     price: lowestPrice,
-    oldPrice: mappedVariants.find((v) => v.oldPrice)?.oldPrice || baseMatch?.oldPrice,
-    discount: baseMatch?.discount,
+    oldPrice: lowestOldPrice ? Number(lowestOldPrice) : undefined,
+    discount,
     storage: storageOptions[0] || "128GB",
     storageOptions,
     colors,
     images: imageList.length > 0 ? imageList : [PLACEHOLDER_IMAGE],
     description: p.description || baseMatch?.description || "",
     specifications: baseMatch?.specifications || {},
-    stock: mappedVariants.some((v) => v.stock > 0) ? "In Stock" : "Out of Stock",
+    stock,
     featured: Boolean(p.featured),
     rating: baseMatch?.rating || 5.0,
     reviewsCount: baseMatch?.reviewsCount || 10,
@@ -168,66 +200,83 @@ export function mapSupabaseToProduct(
   };
 }
 
-/**
- * Fetch all products with their variants and images from Supabase
- */
-export async function fetchCatalogFromSupabase(): Promise<{
+export interface StorefrontCatalogResult {
   products: Product[];
   imagesMap: Record<string, SupabaseProductImageRecord[]>;
-  isFromDatabase: boolean;
-}> {
+  source: "Supabase" | "fallback";
+  error?: string;
+}
+
+/**
+ * Shared loader for public storefront: queries products, variants, images from Supabase,
+ * normalizes them into storefront products.
+ */
+export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResult> {
   if (!isSupabaseConfigured()) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[Storefront Data] Supabase is not configured in .env.local; falling back to local data.");
+    }
     return {
       products: baseProducts,
       imagesMap: {},
-      isFromDatabase: false,
+      source: "fallback",
+      error: "Supabase credentials not configured in .env.local",
     };
   }
 
   try {
-    // 1. Fetch products from public.products
+    // 1. Query active products from public.products
     const { data: dbProducts, error: prodErr } = await supabase
       .from("products")
       .select("id, slug, name, series, category, condition, description, featured, active, created_at, updated_at")
+      .eq("active", true)
       .order("created_at", { ascending: false });
 
     if (prodErr) {
-      console.error("Supabase fetch products error:", prodErr);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("[Storefront Data] Supabase fetch products query failed:", prodErr);
+      }
       return {
         products: baseProducts,
         imagesMap: {},
-        isFromDatabase: false,
+        source: "fallback",
+        error: prodErr.message,
       };
     }
 
     if (!dbProducts || dbProducts.length === 0) {
-      // Products table is empty in Supabase: fallback to default catalog
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("[Storefront Data] Supabase returned 0 active products; falling back to local data.");
+      }
       return {
         products: baseProducts,
         imagesMap: {},
-        isFromDatabase: false,
+        source: "fallback",
+        error: "Supabase products table returned 0 active rows",
       };
     }
 
-    // 2. Fetch variants from public.product_variants
+    // 2. Query active product variants from public.product_variants
     const { data: dbVariants, error: varErr } = await supabase
       .from("product_variants")
-      .select("id, product_id, storage, color, price, old_price, stock, sku, active");
+      .select("id, product_id, storage, color, price, old_price, stock, sku, active")
+      .eq("active", true);
 
-    if (varErr) {
-      console.error("Supabase fetch product_variants error:", varErr);
+    if (varErr && process.env.NODE_ENV !== "production") {
+      console.error("[Storefront Data] Supabase fetch product_variants notice:", varErr);
     }
 
-    // 3. Fetch images from public.product_images
+    // 3. Query product images from public.product_images (primary images first)
     const { data: dbImages, error: imgErr } = await supabase
       .from("product_images")
-      .select("id, product_id, storage_path, color, is_primary, created_at");
+      .select("id, product_id, storage_path, color, is_primary, created_at")
+      .order("is_primary", { ascending: false });
 
-    if (imgErr) {
-      console.warn("Supabase fetch product_images notice:", imgErr.message);
+    if (imgErr && process.env.NODE_ENV !== "production") {
+      console.warn("[Storefront Data] Supabase fetch product_images notice:", imgErr.message);
     }
 
-    // Group variants and images by product_id
+    // 4. Group variants and images by product_id
     const variantsByProduct: Record<string, any[]> = {};
     (dbVariants || []).forEach((v) => {
       const pid = v.product_id;
@@ -239,35 +288,70 @@ export async function fetchCatalogFromSupabase(): Promise<{
     (dbImages || []).forEach((img) => {
       const pid = img.product_id;
       if (!imagesByProduct[pid]) imagesByProduct[pid] = [];
+      const publicUrl = resolveStorageImageUrl(img.storage_path);
       imagesByProduct[pid].push({
         id: img.id,
         product_id: img.product_id,
-        image_url: img.storage_path || "",
+        image_url: publicUrl,
         storage_path: img.storage_path,
         color: img.color,
-        is_primary: img.is_primary,
+        is_primary: Boolean(img.is_primary),
         created_at: img.created_at,
       });
     });
 
-    // Map each product row
+    // 5. Map and normalize each product
     const mapped = dbProducts.map((p) =>
       mapSupabaseToProduct(p, variantsByProduct[p.id] || [], imagesByProduct[p.id] || [])
     );
 
+    // Requirement 11: Development-only debugging logs
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        `[Storefront Data] source: "Supabase" | products: ${mapped.length} | variants: ${dbVariants?.length || 0} | images: ${dbImages?.length || 0}`
+      );
+    }
+
     return {
       products: mapped,
       imagesMap: imagesByProduct,
-      isFromDatabase: true,
+      source: "Supabase",
     };
-  } catch (e) {
-    console.error("fetchCatalogFromSupabase failed, falling back to base catalog:", e);
+  } catch (e: any) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[Storefront Data] Exception loading from Supabase, falling back:", e);
+    }
     return {
       products: baseProducts,
       imagesMap: {},
-      isFromDatabase: false,
+      source: "fallback",
+      error: e.message || "Unknown error",
     };
   }
+}
+
+/**
+ * Shared loader for single product by slug
+ */
+export async function loadProductBySlugFromSupabase(slug: string): Promise<Product | undefined> {
+  const result = await loadProductsFromSupabase();
+  return result.products.find((p) => p.slug === slug);
+}
+
+/**
+ * Legacy wrapper: Fetch all products with their variants and images from Supabase
+ */
+export async function fetchCatalogFromSupabase(): Promise<{
+  products: Product[];
+  imagesMap: Record<string, SupabaseProductImageRecord[]>;
+  isFromDatabase: boolean;
+}> {
+  const result = await loadProductsFromSupabase();
+  return {
+    products: result.products,
+    imagesMap: result.imagesMap,
+    isFromDatabase: result.source === "Supabase",
+  };
 }
 
 /**
@@ -640,21 +724,24 @@ export async function updateVariantInSupabase(
   if (!isSupabaseConfigured()) return false;
 
   try {
+    const payload: any = {
+      product_id: productId,
+      storage: variant.storage,
+      color: variant.color,
+      price: Number(variant.price) || 0,
+      old_price: variant.oldPrice !== undefined && variant.oldPrice !== null ? Number(variant.oldPrice) : null,
+      stock: Number(variant.stock) || 0,
+      sku: variant.sku,
+      active: true,
+    };
+
+    if (variant.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(variant.id)) {
+      payload.id = variant.id;
+    }
+
     const { error } = await supabase
       .from("product_variants")
-      .upsert(
-        {
-          product_id: productId,
-          storage: variant.storage,
-          color: variant.color,
-          price: Number(variant.price) || 0,
-          old_price: variant.oldPrice !== undefined && variant.oldPrice !== null ? Number(variant.oldPrice) : null,
-          stock: Number(variant.stock) || 0,
-          sku: variant.sku,
-          active: true,
-        },
-        { onConflict: "product_id,storage,color" }
-      );
+      .upsert(payload, { onConflict: "product_id,storage,color" });
 
     if (error) {
       console.error("Error updating variant in Supabase:", error);
