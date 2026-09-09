@@ -719,38 +719,105 @@ export async function assignImageColorInSupabase(imageId: string, color?: string
  */
 export async function updateVariantInSupabase(
   productId: string,
-  variant: ProductVariant
-): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+  variant: ProductVariant | any
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase is not configured" };
+  }
 
   try {
-    const payload: any = {
-      product_id: productId,
-      storage: variant.storage,
-      color: variant.color,
-      price: Number(variant.price) || 0,
-      old_price: variant.oldPrice !== undefined && variant.oldPrice !== null ? Number(variant.oldPrice) : null,
-      stock: Number(variant.stock) || 0,
-      sku: variant.sku,
-      active: true,
-    };
+    const isUUID =
+      variant.id &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(variant.id);
 
-    if (variant.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(variant.id)) {
-      payload.id = variant.id;
+    const price = Number(variant.price);
+    const rawOldPrice = variant.oldPrice !== undefined ? variant.oldPrice : variant.old_price;
+    const old_price =
+      rawOldPrice !== undefined && rawOldPrice !== null && rawOldPrice !== ""
+        ? Number(rawOldPrice)
+        : null;
+    const stock = Number(variant.stock);
+
+    if (isUUID) {
+      const payload = {
+        price,
+        old_price,
+        stock,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[updateVariantInSupabase] Updating variant by UUID:", {
+          variantId: variant.id,
+          productId,
+          payload,
+        });
+      }
+
+      const { data, error } = await supabase
+        .from("product_variants")
+        .update(payload)
+        .eq("id", variant.id)
+        .select()
+        .single();
+
+      if (error) {
+        if (process.env.NODE_ENV !== "production") {
+          console.error("[updateVariantInSupabase] Error updating variant:", {
+            variantId: variant.id,
+            productId,
+            error,
+          });
+        }
+        return { success: false, error: error.message };
+      }
+
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[updateVariantInSupabase] Successfully updated variant:", {
+          variantId: variant.id,
+          productId,
+          data,
+        });
+      }
+
+      return { success: true, data };
+    } else {
+      const insertPayload: any = {
+        product_id: productId,
+        storage: variant.storage,
+        color: variant.color,
+        price,
+        old_price,
+        stock,
+        sku: variant.sku || `TM-${productId}-${variant.storage}-${variant.color}`,
+        active: true,
+      };
+
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[updateVariantInSupabase] Inserting new variant:", {
+          productId,
+          insertPayload,
+        });
+      }
+
+      const { data, error } = await supabase
+        .from("product_variants")
+        .insert(insertPayload)
+        .select()
+        .single();
+
+      if (error) {
+        if (process.env.NODE_ENV !== "production") {
+          console.error("[updateVariantInSupabase] Error inserting variant:", error);
+        }
+        return { success: false, error: error.message };
+      }
+
+      return { success: true, data };
     }
-
-    const { error } = await supabase
-      .from("product_variants")
-      .upsert(payload, { onConflict: "product_id,storage,color" });
-
-    if (error) {
-      console.error("Error updating variant in Supabase:", error);
-      return false;
-    }
-    return true;
-  } catch (e) {
+  } catch (e: any) {
     console.error("updateVariantInSupabase exception:", e);
-    return false;
+    return { success: false, error: e?.message || "Unknown exception" };
   }
 }
 

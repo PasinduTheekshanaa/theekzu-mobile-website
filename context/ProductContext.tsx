@@ -30,7 +30,7 @@ export interface ProductContextType {
   updateProduct: (updatedProduct: Product) => Promise<boolean>;
   addProduct: (product: Product) => Promise<boolean>;
   deleteProduct: (productId: string) => Promise<boolean>;
-  updateVariant: (productId: string, variant: ProductVariant) => Promise<boolean>;
+  updateVariant: (productId: string, variant: ProductVariant) => Promise<{ success: boolean; data?: any; error?: string }>;
   addVariant: (productId: string, variant: ProductVariant) => Promise<boolean>;
   deleteVariant: (productId: string, variantId: string) => Promise<boolean>;
   generateVariants: (productId: string, storages: string[], colors: string[], basePrice?: number) => Promise<boolean>;
@@ -144,19 +144,21 @@ export const ProductProvider: React.FC<{
   }, [loadCatalog]);
 
   // Update a variant
-  const updateVariant = async (productId: string, updatedVariant: ProductVariant): Promise<boolean> => {
-    const ok = await updateVariantInSupabase(productId, updatedVariant);
-    if (ok) {
+  const updateVariant = async (
+    productId: string,
+    updatedVariant: ProductVariant
+  ): Promise<{ success: boolean; data?: any; error?: string }> => {
+    const res = await updateVariantInSupabase(productId, updatedVariant);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Add a variant
   const addVariant = async (productId: string, variant: ProductVariant): Promise<boolean> => {
-    const ok = await updateVariantInSupabase(productId, variant);
-    if (ok) {
+    const res = await updateVariantInSupabase(productId, variant);
+    if (res.success) {
       await loadCatalog();
       return true;
     }

@@ -8,7 +8,7 @@ import { useProducts } from "@/context/ProductContext";
 import { Product, ProductVariant, ProductColor } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "@/lib/supabaseClient";
-import { checkIsAdminUser } from "@/lib/supabaseService";
+import { checkIsAdminUser, updateVariantInSupabase } from "@/lib/supabaseService";
 import {
   Edit,
   Search,
@@ -74,6 +74,15 @@ export default function AdminProductsPage() {
   const [inlineVariantEdits, setInlineVariantEdits] = useState<
     Record<string, { price: string; oldPrice: string; stock: string }>
   >({});
+
+  // Individual saving state per variant ID
+  const [savingVariantIds, setSavingVariantIds] = useState<Record<string, boolean>>({});
+
+  // Recently saved indicator per variant ID (green feedback for 3 seconds)
+  const [recentlySavedVariantIds, setRecentlySavedVariantIds] = useState<Record<string, boolean>>({});
+
+  // Batch saving state per product ID (for "Save All Changes" button)
+  const [isSavingProductBatch, setIsSavingProductBatch] = useState<Record<string, boolean>>({});
 
   // Toast Notification
   const [toast, setToast] = useState<{ message: string; type: "success" | "info" | "error" } | null>(null);
@@ -206,6 +215,74 @@ export default function AdminProductsPage() {
     });
   }, [products, searchQuery, selectedSeries, selectedCondition, selectedStock, onlyFeatured]);
 
+  // Check if a variant has unsaved modifications
+  const isVariantDirty = (v: ProductVariant) => {
+    const edit = inlineVariantEdits[v.id];
+    if (!edit) return false;
+
+    const currentPriceStr = edit.price.trim();
+    const currentOldPriceStr = edit.oldPrice.trim();
+    const currentStockStr = edit.stock.trim();
+
+    const origPriceStr = v.price.toString();
+    const origOldPriceStr = v.oldPrice !== undefined && v.oldPrice !== null ? v.oldPrice.toString() : "";
+    const origStockStr = v.stock.toString();
+
+    return (
+      currentPriceStr !== origPriceStr ||
+      currentOldPriceStr !== origOldPriceStr ||
+      currentStockStr !== origStockStr
+    );
+  };
+
+  const getDirtyVariantsForProduct = (product: Product): ProductVariant[] => {
+    return (product.variants || []).filter(isVariantDirty);
+  };
+
+  // Validate variant edit inputs
+  const validateVariantEdit = (
+    edit: { price: string; oldPrice: string; stock: string },
+    label: string
+  ): { isValid: boolean; error?: string; price: number; oldPrice: number | null; stock: number } => {
+    const price = Number(edit.price);
+    if (isNaN(price) || price <= 0) {
+      return {
+        isValid: false,
+        error: `Price must be greater than 0 for ${label}`,
+        price: 0,
+        oldPrice: null,
+        stock: 0,
+      };
+    }
+
+    let oldPrice: number | null = null;
+    if (edit.oldPrice && edit.oldPrice.trim() !== "") {
+      oldPrice = Number(edit.oldPrice);
+      if (isNaN(oldPrice) || oldPrice < 0) {
+        return {
+          isValid: false,
+          error: `Old price cannot be negative for ${label}`,
+          price: 0,
+          oldPrice: null,
+          stock: 0,
+        };
+      }
+    }
+
+    const stock = Number(edit.stock);
+    if (isNaN(stock) || !Number.isInteger(stock) || stock < 0) {
+      return {
+        isValid: false,
+        error: `Stock must be a whole number (>= 0) for ${label}`,
+        price: 0,
+        oldPrice: null,
+        stock: 0,
+      };
+    }
+
+    return { isValid: true, price, oldPrice, stock };
+  };
+
   // Handle Inline Variant Edit Change
   const handleInlineVariantChange = (
     variantId: string,
@@ -218,7 +295,7 @@ export default function AdminProductsPage() {
     setInlineVariantEdits((prev) => {
       const current = prev[variantId] || {
         price: initialPrice.toString(),
-        oldPrice: initialOldPrice ? initialOldPrice.toString() : "",
+        oldPrice: initialOldPrice !== undefined && initialOldPrice !== null ? initialOldPrice.toString() : "",
         stock: initialStock.toString(),
       };
       return {
@@ -231,36 +308,144 @@ export default function AdminProductsPage() {
     });
   };
 
-  // Save Inline Variant to Supabase
+  // Save Inline Variant to Supabase by variant.id UUID
   const handleSaveVariant = async (product: Product, variant: ProductVariant) => {
-    const edit = inlineVariantEdits[variant.id];
-    if (!edit) return;
-
-    const newPrice = parseInt(edit.price, 10);
-    const newOldPrice = edit.oldPrice ? parseInt(edit.oldPrice, 10) : null;
-    const newStock = parseInt(edit.stock, 10);
-
-    if (isNaN(newPrice) || newPrice <= 0) {
-      showToast("Please enter a valid price greater than 0", "error");
-      return;
-    }
-    if (isNaN(newStock) || newStock < 0) {
-      showToast("Please enter a valid non-negative stock count", "error");
-      return;
-    }
-
-    const updated: ProductVariant = {
-      ...variant,
-      price: newPrice,
-      oldPrice: newOldPrice,
-      stock: newStock,
+    const edit = inlineVariantEdits[variant.id] || {
+      price: variant.price.toString(),
+      oldPrice: variant.oldPrice !== undefined && variant.oldPrice !== null ? variant.oldPrice.toString() : "",
+      stock: variant.stock.toString(),
     };
 
-    const ok = await updateVariant(product.id, updated);
-    if (ok) {
-      showToast(`Saved variant ${variant.storage} (${variant.color}) to Supabase!`, "success");
-    } else {
-      showToast("Failed to sync variant update to Supabase database.", "error");
+    const val = validateVariantEdit(edit, `${variant.storage} (${variant.color})`);
+    if (!val.isValid) {
+      showToast(val.error || "Validation failed", "error");
+      return;
+    }
+
+    setSavingVariantIds((prev) => ({ ...prev, [variant.id]: true }));
+
+    try {
+      const updated: ProductVariant = {
+        ...variant,
+        price: val.price,
+        oldPrice: val.oldPrice,
+        stock: val.stock,
+      };
+
+      const res = await updateVariant(product.id, updated);
+      if (res.success) {
+        // Mark as recently saved for green feedback
+        setRecentlySavedVariantIds((prev) => ({ ...prev, [variant.id]: true }));
+        setTimeout(() => {
+          setRecentlySavedVariantIds((prev) => {
+            const next = { ...prev };
+            delete next[variant.id];
+            return next;
+          });
+        }, 3000);
+
+        // Reset inline edit state to newly saved values so dirty flag is cleared
+        setInlineVariantEdits((prev) => ({
+          ...prev,
+          [variant.id]: {
+            price: val.price.toString(),
+            oldPrice: val.oldPrice !== null ? val.oldPrice.toString() : "",
+            stock: val.stock.toString(),
+          },
+        }));
+
+        showToast(`Saved variant ${variant.storage} (${variant.color}) to Supabase!`, "success");
+      } else {
+        showToast(`Failed to sync variant update: ${res.error || "Supabase error"}`, "error");
+      }
+    } catch (err: any) {
+      showToast(`Error saving variant: ${err?.message || "Unknown error"}`, "error");
+    } finally {
+      setSavingVariantIds((prev) => {
+        const next = { ...prev };
+        delete next[variant.id];
+        return next;
+      });
+    }
+  };
+
+  // Save All Modified Variants for a Product
+  const handleSaveAllVariants = async (product: Product) => {
+    const dirtyVariants = getDirtyVariantsForProduct(product);
+    if (dirtyVariants.length === 0) return;
+
+    // Validate all dirty variants first before sending
+    for (const v of dirtyVariants) {
+      const edit = inlineVariantEdits[v.id];
+      if (!edit) continue;
+      const val = validateVariantEdit(edit, `${v.storage} (${v.color})`);
+      if (!val.isValid) {
+        showToast(val.error || "Validation failed", "error");
+        return;
+      }
+    }
+
+    setIsSavingProductBatch((prev) => ({ ...prev, [product.id]: true }));
+
+    let successCount = 0;
+    let failCount = 0;
+    const failedVariants: string[] = [];
+
+    try {
+      for (const v of dirtyVariants) {
+        const edit = inlineVariantEdits[v.id]!;
+        const val = validateVariantEdit(edit, `${v.storage} (${v.color})`);
+        const updated: ProductVariant = {
+          ...v,
+          price: val.price,
+          oldPrice: val.oldPrice,
+          stock: val.stock,
+        };
+
+        const res = await updateVariantInSupabase(product.id, updated);
+        if (res.success) {
+          successCount++;
+          setRecentlySavedVariantIds((prev) => ({ ...prev, [v.id]: true }));
+          setInlineVariantEdits((prev) => ({
+            ...prev,
+            [v.id]: {
+              price: val.price.toString(),
+              oldPrice: val.oldPrice !== null ? val.oldPrice.toString() : "",
+              stock: val.stock.toString(),
+            },
+          }));
+        } else {
+          failCount++;
+          failedVariants.push(`${v.storage} (${v.color})`);
+        }
+      }
+
+      // Re-fetch catalog once after batch updates to recalculate lowest starting prices and store state
+      await refreshCatalog();
+
+      // Clear recently saved green state after 3 seconds
+      setTimeout(() => {
+        setRecentlySavedVariantIds((prev) => {
+          const next = { ...prev };
+          dirtyVariants.forEach((v) => delete next[v.id]);
+          return next;
+        });
+      }, 3000);
+
+      if (failCount === 0) {
+        showToast(`All ${successCount} variant changes saved to Supabase!`, "success");
+      } else if (successCount > 0) {
+        showToast(
+          `Saved ${successCount} variants. ${failCount} failed: ${failedVariants.join(", ")}`,
+          "error"
+        );
+      } else {
+        showToast(`Failed to save variant changes to Supabase database.`, "error");
+      }
+    } catch (err: any) {
+      showToast(`Error saving variants: ${err?.message || "Unknown error"}`, "error");
+    } finally {
+      setIsSavingProductBatch((prev) => ({ ...prev, [product.id]: false }));
     }
   };
 
@@ -872,8 +1057,45 @@ export default function AdminProductsPage() {
                         </p>
                       </div>
 
-                      <div className="text-xs text-slate-500">
-                        Total Variants: <strong>{variants.length}</strong>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <div className="text-xs text-slate-500">
+                          Total Variants: <strong>{variants.length}</strong>
+                        </div>
+
+                        {/* Save All Changes Button */}
+                        {(() => {
+                          const dirtyCount = getDirtyVariantsForProduct(product).length;
+                          const isBatchSaving = Boolean(isSavingProductBatch[product.id]);
+
+                          return (
+                            <button
+                              onClick={() => handleSaveAllVariants(product)}
+                              disabled={dirtyCount === 0 || isBatchSaving}
+                              className={`min-h-[38px] sm:min-h-[36px] px-3.5 py-1.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm active:scale-95 ${
+                                dirtyCount > 0 && !isBatchSaving
+                                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-500/20 cursor-pointer"
+                                  : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed border border-slate-300 dark:border-white/5"
+                              }`}
+                              title={
+                                dirtyCount > 0
+                                  ? `Save all ${dirtyCount} modified variants to Supabase`
+                                  : "No unsaved changes in variants"
+                              }
+                            >
+                              {isBatchSaving ? (
+                                <>
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
+                                  <span>Saving {dirtyCount} Changes...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <CheckCircle2 className="w-3.5 h-3.5" />
+                                  <span>Save All Changes ({dirtyCount})</span>
+                                </>
+                              )}
+                            </button>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -900,15 +1122,35 @@ export default function AdminProductsPage() {
                               stock: v.stock.toString(),
                             };
 
-                            const hasChanged =
-                              edit.price !== v.price.toString() ||
-                              edit.oldPrice !== (v.oldPrice ? v.oldPrice.toString() : "") ||
-                              edit.stock !== v.stock.toString();
+                            const isDirty = isVariantDirty(v);
+                            const isSaving = Boolean(savingVariantIds[v.id]);
+                            const isRecentlySaved = Boolean(recentlySavedVariantIds[v.id]);
 
                             return (
-                              <tr key={v.id} className="hover:bg-slate-100/50 dark:hover:bg-slate-900/50 transition-colors">
+                              <tr
+                                key={v.id}
+                                className={`transition-colors ${
+                                  isDirty
+                                    ? "bg-amber-500/5 hover:bg-amber-500/10 dark:bg-amber-500/5 dark:hover:bg-amber-500/10"
+                                    : isRecentlySaved
+                                    ? "bg-emerald-500/5 hover:bg-emerald-500/10 dark:bg-emerald-500/5 dark:hover:bg-emerald-500/10"
+                                    : "hover:bg-slate-100/50 dark:hover:bg-slate-900/50"
+                                }`}
+                              >
                                 <td className="p-3 font-bold text-slate-900 dark:text-white">
-                                  {v.storage}
+                                  <div className="flex items-center gap-1.5">
+                                    <span>{v.storage}</span>
+                                    {isDirty && (
+                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                        Unsaved
+                                      </span>
+                                    )}
+                                    {isRecentlySaved && (
+                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase tracking-wider flex items-center gap-0.5">
+                                        <Check className="w-2.5 h-2.5" /> Saved
+                                      </span>
+                                    )}
+                                  </div>
                                 </td>
                                 <td className="p-3 text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
                                   <span className="w-2.5 h-2.5 rounded-full border border-black/20" />
@@ -924,7 +1166,11 @@ export default function AdminProductsPage() {
                                     onChange={(e) =>
                                       handleInlineVariantChange(v.id, "price", e.target.value, v.price, v.oldPrice, v.stock)
                                     }
-                                    className="w-28 px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                                    className={`w-28 px-2 py-1 rounded bg-white dark:bg-slate-900 border font-bold text-slate-900 dark:text-white focus:outline-none ${
+                                      isDirty
+                                        ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
+                                        : "border-slate-200 dark:border-white/10 focus:border-blue-500"
+                                    }`}
                                   />
                                 </td>
                                 <td className="p-3">
@@ -945,22 +1191,49 @@ export default function AdminProductsPage() {
                                     onChange={(e) =>
                                       handleInlineVariantChange(v.id, "stock", e.target.value, v.price, v.oldPrice, v.stock)
                                     }
-                                    className="w-20 px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                                    className={`w-20 px-2 py-1 rounded bg-white dark:bg-slate-900 border font-semibold text-slate-900 dark:text-white focus:outline-none ${
+                                      isDirty
+                                        ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
+                                        : "border-slate-200 dark:border-white/10 focus:border-blue-500"
+                                    }`}
                                   />
                                 </td>
                                 <td className="p-3 text-right">
                                   <div className="flex items-center justify-end gap-2">
                                     <button
                                       onClick={() => handleSaveVariant(product, v)}
-                                      disabled={!hasChanged}
+                                      disabled={!isDirty || isSaving}
                                       className={`px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center gap-1 transition-all ${
-                                        hasChanged
+                                        isSaving
+                                          ? "bg-blue-600 text-white cursor-wait"
+                                          : isRecentlySaved
+                                          ? "bg-emerald-600 text-white shadow-xs"
+                                          : isDirty
                                           ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs"
                                           : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed"
                                       }`}
                                     >
-                                      <Check className="w-3 h-3" />
-                                      <span>Save</span>
+                                      {isSaving ? (
+                                        <>
+                                          <RefreshCw className="w-3 h-3 animate-spin" />
+                                          <span>Saving...</span>
+                                        </>
+                                      ) : isRecentlySaved ? (
+                                        <>
+                                          <Check className="w-3 h-3" />
+                                          <span>Saved</span>
+                                        </>
+                                      ) : isDirty ? (
+                                        <>
+                                          <Check className="w-3 h-3" />
+                                          <span>Save*</span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Check className="w-3 h-3" />
+                                          <span>Save</span>
+                                        </>
+                                      )}
                                     </button>
 
                                     <button
@@ -993,21 +1266,36 @@ export default function AdminProductsPage() {
                           stock: v.stock.toString(),
                         };
 
-                        const hasChanged =
-                          edit.price !== v.price.toString() ||
-                          edit.oldPrice !== (v.oldPrice ? v.oldPrice.toString() : "") ||
-                          edit.stock !== v.stock.toString();
+                        const isDirty = isVariantDirty(v);
+                        const isSaving = Boolean(savingVariantIds[v.id]);
+                        const isRecentlySaved = Boolean(recentlySavedVariantIds[v.id]);
 
                         return (
                           <div
                             key={v.id}
-                            className="p-3.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900/90 shadow-xs space-y-2.5"
+                            className={`p-3.5 rounded-xl border shadow-xs space-y-2.5 transition-colors ${
+                              isDirty
+                                ? "bg-amber-500/5 dark:bg-amber-500/5 border-amber-500/30"
+                                : isRecentlySaved
+                                ? "bg-emerald-500/5 dark:bg-emerald-500/5 border-emerald-500/30"
+                                : "bg-white dark:bg-slate-900/90 border-slate-200 dark:border-white/10"
+                            }`}
                           >
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <div className="flex items-center gap-2 flex-wrap">
                                 <span className="font-bold text-xs text-slate-900 dark:text-white">{v.storage}</span>
                                 <span className="text-slate-400">•</span>
                                 <span className="text-xs text-slate-600 dark:text-zinc-300">{v.color}</span>
+                                {isDirty && (
+                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                    Unsaved
+                                  </span>
+                                )}
+                                {isRecentlySaved && (
+                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase tracking-wider flex items-center gap-0.5">
+                                    <Check className="w-2.5 h-2.5" /> Saved
+                                  </span>
+                                )}
                               </div>
                               <span className="font-mono text-[10px] text-slate-400 dark:text-zinc-500 truncate max-w-[120px]">
                                 {v.sku}
@@ -1025,7 +1313,11 @@ export default function AdminProductsPage() {
                                   onChange={(e) =>
                                     handleInlineVariantChange(v.id, "price", e.target.value, v.price, v.oldPrice, v.stock)
                                   }
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 font-bold text-xs text-slate-900 dark:text-white focus:outline-none"
+                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border font-bold text-xs text-slate-900 dark:text-white focus:outline-none ${
+                                    isDirty
+                                      ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
+                                      : "border-slate-200 dark:border-white/10"
+                                  }`}
                                 />
                               </div>
 
@@ -1039,7 +1331,11 @@ export default function AdminProductsPage() {
                                   onChange={(e) =>
                                     handleInlineVariantChange(v.id, "stock", e.target.value, v.price, v.oldPrice, v.stock)
                                   }
-                                  className="w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 font-bold text-xs text-slate-900 dark:text-white focus:outline-none"
+                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border font-bold text-xs text-slate-900 dark:text-white focus:outline-none ${
+                                    isDirty
+                                      ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
+                                      : "border-slate-200 dark:border-white/10"
+                                  }`}
                                 />
                               </div>
                             </div>
@@ -1047,15 +1343,38 @@ export default function AdminProductsPage() {
                             <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 dark:border-white/5">
                               <button
                                 onClick={() => handleSaveVariant(product, v)}
-                                disabled={!hasChanged}
-                                className={`min-h-[38px] flex-1 py-1.5 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
-                                  hasChanged
+                                disabled={!isDirty || isSaving}
+                                className={`min-h-[44px] flex-1 py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                                  isSaving
+                                    ? "bg-blue-600 text-white cursor-wait"
+                                    : isRecentlySaved
+                                    ? "bg-emerald-600 text-white shadow-xs"
+                                    : isDirty
                                     ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs active:scale-95"
                                     : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed"
                                 }`}
                               >
-                                <Check className="w-3.5 h-3.5" />
-                                <span>{hasChanged ? "Save Changes" : "Saved"}</span>
+                                {isSaving ? (
+                                  <>
+                                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                    <span>Saving...</span>
+                                  </>
+                                ) : isRecentlySaved ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>Saved</span>
+                                  </>
+                                ) : isDirty ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>Save Changes*</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Check className="w-3.5 h-3.5" />
+                                    <span>Saved</span>
+                                  </>
+                                )}
                               </button>
 
                               <button
@@ -1065,10 +1384,10 @@ export default function AdminProductsPage() {
                                     showToast("Variant deleted from Supabase", "info");
                                   }
                                 }}
-                                className="min-h-[38px] min-w-[38px] p-2 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 flex items-center justify-center transition-colors active:scale-95"
+                                className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 flex items-center justify-center transition-colors active:scale-95"
                                 title="Delete variant"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
