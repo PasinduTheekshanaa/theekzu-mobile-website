@@ -111,7 +111,7 @@ Can you confirm availability and latest variant pricing?`;
         {displayImage ? (
           <Image
             src={displayImage}
-            alt={product.name}
+            alt={`${product.name} - Theekzu Mobile Sri Lanka`}
             width={280}
             height={280}
             className="max-h-full max-w-full object-contain group-hover:scale-108 transition-transform duration-500 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"

@@ -120,7 +120,7 @@ export const FlagshipShowcase: React.FC = () => {
             <div className="relative z-10 w-full max-w-xs sm:max-w-md lg:max-w-lg flex items-center justify-center">
               <Image
                 src={flagshipImg}
-                alt={flagship.name}
+                alt={`${flagship.name} - Flagship Apple iPhone at Theekzu Mobile Sri Lanka`}
                 width={500}
                 height={500}
                 className="max-h-[300px] sm:max-h-[400px] lg:max-h-[460px] object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] animate-float"

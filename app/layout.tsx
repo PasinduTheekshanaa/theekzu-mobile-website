@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ProductProvider } from "@/context/ProductContext";
@@ -16,31 +16,62 @@ import { loadProductsFromSupabase } from "@/lib/supabaseService";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#040711" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theekzumobile.lk"),
-  title: "Theekzu Mobile | Premium iPhones & Accessories Sri Lanka",
+  metadataBase: new URL("https://theekzu.vercel.app"),
+  title: {
+    default: "Theekzu Mobile | iPhone Store Sri Lanka",
+    template: "%s | Theekzu Mobile",
+  },
   description:
-    "Shop premium iPhones, used iPhones, accessories and mobile deals from Theekzu Mobile Sri Lanka. Trusted service, Apple warranty, and instant WhatsApp ordering.",
+    "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
   keywords: [
     "Theekzu Mobile",
     "iPhone Sri Lanka",
+    "iPhone price Sri Lanka",
+    "Buy iPhone Sri Lanka",
+    "Apple iPhone Sri Lanka",
     "iPhone 16 Pro Max Sri Lanka",
     "Used iPhones Colombo",
-    "Buy Apple iPhone Sri Lanka",
-    "AirPods Pro Sri Lanka",
-    "Apple Watch Ultra 2 Sri Lanka",
-    "iPhone Trade-In Sri Lanka",
+    "Apple accessories Sri Lanka",
+    "iPhone warranty Sri Lanka",
   ],
+  authors: [{ name: "Theekzu Mobile", url: "https://theekzu.vercel.app" }],
+  creator: "Theekzu Mobile",
+  publisher: "Theekzu Mobile",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "https://theekzu.vercel.app",
+  },
   icons: {
-    icon: "/favicon.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+      { url: "/logo.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/logo.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.png",
   },
   openGraph: {
-    title: "Theekzu Mobile | Premium iPhones & Accessories Sri Lanka",
+    title: "Theekzu Mobile | iPhone Store Sri Lanka",
     description:
-      "Shop premium iPhones, used iPhones, accessories and mobile deals from Theekzu Mobile Sri Lanka.",
-    url: "https://theekzumobile.lk",
-    siteName: storeConfig.businessName,
+      "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
+    url: "https://theekzu.vercel.app",
+    siteName: "Theekzu Mobile",
     images: [
       {
         url: "/logo.png",
@@ -51,6 +82,72 @@ export const metadata: Metadata = {
     ],
     locale: "en_LK",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    description:
+      "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering.",
+    images: ["/logo.png"],
+    creator: "@theekzumobile",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "OnlineStore",
+  name: "Theekzu Mobile",
+  alternateName: ["Theekzu Mobile Sri Lanka", "Theekzu iPhone Store"],
+  url: "https://theekzu.vercel.app",
+  logo: "https://theekzu.vercel.app/logo.png",
+  image: "https://theekzu.vercel.app/logo.png",
+  description:
+    "Online Apple iPhone store in Sri Lanka offering brand new sealed and certified pre-owned iPhones with genuine warranty.",
+  telephone: "+94740245749",
+  email: "pasindutheekshana21@gmail.com",
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "LK",
+    addressLocality: "Colombo",
+    addressRegion: "Western Province",
+  },
+  priceRange: "LKR 50,000 - LKR 700,000",
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    opens: "08:00",
+    closes: "20:00",
+  },
+  sameAs: [
+    "https://www.facebook.com/share/1EF6rMFmEN/?mibextid=wwXIfr",
+    "https://www.instagram.com/theekzu_mobile?igsi=MThtZGd1OTM3dmJiMg==",
+    "https://www.tiktok.com/@theekzu?_r=1&_t=ZS-99Tf73AGf1l",
+  ],
+};
+
+const webSiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Theekzu Mobile",
+  url: "https://theekzu.vercel.app",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://theekzu.vercel.app/shop?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
   },
 };
 
@@ -64,6 +161,14 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

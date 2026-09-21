@@ -1,6 +1,48 @@
 import React from "react";
+import type { Metadata } from "next";
 import { TradeInBanner } from "@/components/TradeInBanner";
 import { ShieldCheck, ArrowRight, Smartphone, RefreshCw, CheckCircle2, Sparkles } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "iPhone Trade-In Sri Lanka | Theekzu Mobile",
+  },
+  description:
+    "Upgrade your old smartphone to a newer Apple iPhone in Sri Lanka. Get an instant, high-value trade-in estimate on WhatsApp and pay only the difference with Theekzu Mobile.",
+  keywords: [
+    "iPhone trade in Sri Lanka",
+    "Exchange iPhone Colombo",
+    "Used phone trade in Sri Lanka",
+    "Upgrade to iPhone 16 Sri Lanka",
+  ],
+  alternates: {
+    canonical: "https://theekzu.vercel.app/trade-in",
+  },
+  openGraph: {
+    title: "iPhone Trade-In Sri Lanka | Exchange & Upgrade | Theekzu Mobile",
+    description:
+      "Upgrade your old smartphone to a newer Apple iPhone in Sri Lanka. Get an instant, high-value trade-in estimate on WhatsApp and pay only the difference with Theekzu Mobile.",
+    url: "https://theekzu.vercel.app/trade-in",
+    siteName: "Theekzu Mobile",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 800,
+        alt: "iPhone Trade-In Sri Lanka - Theekzu Mobile",
+      },
+    ],
+    locale: "en_LK",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "iPhone Trade-In Sri Lanka | Exchange & Upgrade | Theekzu Mobile",
+    description:
+      "Trade in your phone and upgrade to a brand new or certified pre-owned Apple iPhone in Sri Lanka.",
+    images: ["/logo.png"],
+  },
+};
 
 export default function TradeInPage() {
   const steps = [

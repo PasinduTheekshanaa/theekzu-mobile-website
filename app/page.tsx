@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { CategoryGrid } from "@/components/CategoryGrid";
@@ -14,6 +15,34 @@ import { DeliveryInfo } from "@/components/DeliveryInfo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Theekzu Mobile | iPhone Store Sri Lanka",
+  },
+  description:
+    "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
+  alternates: {
+    canonical: "https://theekzu.vercel.app",
+  },
+  openGraph: {
+    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    description:
+      "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
+    url: "https://theekzu.vercel.app",
+    siteName: "Theekzu Mobile",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 800,
+        alt: "Theekzu Mobile - iPhone Store Sri Lanka",
+      },
+    ],
+    locale: "en_LK",
+    type: "website",
+  },
+};
 
 export default function HomePage() {
   return (

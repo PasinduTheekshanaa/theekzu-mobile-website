@@ -3,9 +3,47 @@ import Image from "next/image";
 import { Target, Eye, ShieldCheck, Users, Smartphone, Zap, Truck, Sparkles } from "lucide-react";
 import { storeConfig } from "@/config/store";
 
-export const metadata = {
-  title: "About Us | Theekzu Mobile Sri Lanka",
-  description: "Learn more about Theekzu Mobile, our mission, vision, and dedication to authentic Apple products in Sri Lanka.",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "About Theekzu Mobile | Trusted iPhone Store Sri Lanka",
+  },
+  description:
+    "Learn about Theekzu Mobile, Sri Lanka's premier online destination for genuine Apple iPhones and original accessories. Tested devices, warranty, and customer-first service.",
+  keywords: [
+    "About Theekzu Mobile",
+    "iPhone seller Sri Lanka",
+    "Genuine Apple warranty Sri Lanka",
+    "Trusted iPhone shop Colombo",
+  ],
+  alternates: {
+    canonical: "https://theekzu.vercel.app/about",
+  },
+  openGraph: {
+    title: "About Theekzu Mobile | Trusted iPhone Store Sri Lanka",
+    description:
+      "Learn about Theekzu Mobile, Sri Lanka's premier online destination for genuine Apple iPhones and original accessories. Tested devices, warranty, and customer-first service.",
+    url: "https://theekzu.vercel.app/about",
+    siteName: "Theekzu Mobile",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 800,
+        alt: "About Theekzu Mobile Sri Lanka",
+      },
+    ],
+    locale: "en_LK",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Theekzu Mobile | Trusted iPhone Store Sri Lanka",
+    description:
+      "Sri Lanka's trusted online store for genuine Apple iPhones and accessories.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function AboutPage() {

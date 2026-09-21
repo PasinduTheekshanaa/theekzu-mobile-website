@@ -44,6 +44,7 @@ export const Hero: React.FC = () => {
               Upgrade Your World with <br />
               <span className="text-gradient-chrome">Theekzu</span>{" "}
               <span className="text-gradient-neon drop-shadow-sm dark:drop-shadow-[0_0_30px_rgba(0,180,255,0.45)]">Mobile</span>
+              <span className="sr-only"> - Premium iPhone Store in Sri Lanka</span>
             </h1>
           </ScrollReveal>
 
@@ -153,6 +154,7 @@ export const Hero: React.FC = () => {
               Upgrade Your World with <br className="hidden sm:inline" />
               <span className="text-gradient-chrome">Theekzu</span>{" "}
               <span className="text-gradient-neon drop-shadow-sm dark:drop-shadow-[0_0_30px_rgba(0,180,255,0.45)]">Mobile</span>
+              <span className="sr-only"> - Premium iPhone Store in Sri Lanka</span>
             </h1>
 
             {/* Subheading */}
