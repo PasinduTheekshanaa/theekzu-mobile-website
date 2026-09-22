@@ -749,9 +749,29 @@ export default function AdminProductsPage() {
       }`}>
         <Database className="w-4 h-4 flex-shrink-0" />
         <span>
-          <strong>Database Status:</strong> {isLiveDatabase ? `Supabase Live — ${products.length} Products` : "Using Default 21-Model Catalog. Click 'Sync 21 iPhones to Supabase' to insert into your database."}
+          <strong>Database Status:</strong> {isLiveDatabase ? `Supabase Live — ${products.length} Products` : "Catalog ready. Click 'Sync 29 iPhones & Price List to Supabase' to insert into your database."}
         </span>
       </div>
+
+      {/* Sync Prompt Banner when missing models are detected */}
+      {isLiveDatabase && products.length < 29 && (
+        <div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-3 text-xs flex flex-wrap items-center justify-between gap-3 text-amber-900 dark:text-amber-200">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-500 flex-shrink-0 animate-pulse" />
+            <span>
+              <strong>Price List & Catalog Update Ready:</strong> Database currently has {products.length} products. 8 new iPhone models (SE 2nd Gen, X, XS, XS Max, 12 Mini, 13 Mini, 14 Plus, 15 Plus) and revised prices are ready to sync into Supabase.
+            </span>
+          </div>
+          <button
+            onClick={handleMigrateAll}
+            disabled={isMigrating}
+            className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition-all disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3 h-3 ${isMigrating ? "animate-spin" : ""}`} />
+            <span>{isMigrating ? "Applying..." : "Apply Database Update Now"}</span>
+          </button>
+        </div>
+      )}
 
       {/* Top Header Navigation */}
       <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 px-4 sm:px-8 py-4">
@@ -781,7 +801,7 @@ export default function AdminProductsPage() {
                 )}
               </div>
               <p className="text-xs text-slate-500 dark:text-zinc-400">
-                Manage 21 iPhone models, variants, prices, and upload real images directly to Supabase Storage bucket <code>{STORAGE_BUCKET}</code>.
+                Manage 29 iPhone models, variants, prices, and upload real images directly to Supabase Storage bucket <code>{STORAGE_BUCKET}</code>.
               </p>
             </div>
           </div>
@@ -790,11 +810,11 @@ export default function AdminProductsPage() {
             <button
               onClick={handleMigrateAll}
               disabled={isMigrating}
-              className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-purple-600/20 active:scale-95 transition-all disabled:opacity-50"
-              title="Safe one-time migration of all 21 models into public.products"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-purple-600/20 active:scale-95 transition-all disabled:opacity-50"
+              title="Sync all 29 iPhone models, official colors, and updated price list into Supabase"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isMigrating ? "animate-spin" : ""}`} />
-              <span>{isMigrating ? "Migrating..." : "Sync 21 iPhones to Supabase"}</span>
+              <span>{isMigrating ? "Syncing Catalog..." : "Sync 29 iPhones & Price List to Supabase"}</span>
             </button>
 
             <button
@@ -855,6 +875,9 @@ export default function AdminProductsPage() {
                 <option value="13">iPhone 13 Series</option>
                 <option value="12">iPhone 12 Series</option>
                 <option value="11">iPhone 11 Series</option>
+                <option value="XS">iPhone XS Series</option>
+                <option value="X">iPhone X</option>
+                <option value="SE">iPhone SE Series</option>
                 <option value="accessories">Accessories</option>
               </select>
             </div>

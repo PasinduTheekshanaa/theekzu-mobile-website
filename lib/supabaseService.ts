@@ -397,13 +397,13 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
       variantsAlreadyPresent: 0,
       productsFailed: 0,
       variantsFailed: 0,
-      totalProducts: 21,
+      totalProducts: baseProducts.filter((p) => p.category === "iphones" || p.slug.startsWith("iphone-")).length,
       totalVariants: 0,
       error: errMsg,
     };
   }
 
-  // Filter exactly the 21 iPhone catalog models
+  // Filter all iPhone catalog models (29 models)
   const iphoneCatalog = baseProducts.filter(
     (p) => p.category === "iphones" || p.slug.startsWith("iphone-")
   );
@@ -444,26 +444,32 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
 
     const existingSlugMap = new Map((existingProds || []).map((p) => [p.slug, p.id]));
 
-    // Query existing variants
+    // Query existing variants including stock to preserve inventory
     const { data: existingVars, error: existingVarsErr } = await supabase
       .from("product_variants")
-      .select("product_id, storage, color");
+      .select("id, product_id, storage, color, stock");
 
     if (existingVarsErr) {
       console.warn("Notice: could not pre-fetch existing variants:", existingVarsErr.message);
     }
 
+    const existingVarMap = new Map(
+      (existingVars || []).map((v) => [`${v.product_id}_${v.storage}_${v.color}`, v])
+    );
     const existingVarKeySet = new Set(
       (existingVars || []).map((v) => `${v.product_id}_${v.storage}_${v.color}`)
     );
 
-    // 3. Upsert products one-by-one, returning id (UUID) and slug
+    // 3. Upsert products one-by-one.
+    // NOTE: We do NOT chain .select().single() on the upsert — Supabase RLS may block
+    // the SELECT-back even when the write succeeds (PGRST116). Instead we resolve the
+    // product UUID from the pre-fetched existingSlugMap, or re-query by slug for new rows.
     for (const p of iphoneCatalog) {
       const isProductExisting = existingSlugMap.has(p.slug);
 
       // Match actual public.products database schema:
       // slug, name, series, category, condition, description, featured, active
-      const { data: savedProduct, error: productError } = await supabase
+      const { error: productError } = await supabase
         .from("products")
         .upsert(
           {
@@ -477,31 +483,51 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
             active: true,
           },
           { onConflict: "slug" }
-        )
-        .select("id, slug")
-        .single();
+        );
 
-      if (productError || !savedProduct) {
+      if (productError) {
         console.error(`Failed to upsert product ${p.name} (${p.slug}):`, productError);
         productsFailed++;
         variantsFailed += p.variants ? p.variants.length : 0;
         continue;
       }
 
+      // Resolve UUID: use map for existing products; re-query for newly inserted ones
+      let productUuid: string | undefined = existingSlugMap.get(p.slug);
+      if (!productUuid) {
+        const { data: newRow, error: lookupErr } = await supabase
+          .from("products")
+          .select("id, slug")
+          .eq("slug", p.slug)
+          .single();
+        if (lookupErr || !newRow) {
+          console.error(`Could not resolve UUID for newly inserted product ${p.slug}:`, lookupErr);
+          productsFailed++;
+          variantsFailed += p.variants ? p.variants.length : 0;
+          continue;
+        }
+        productUuid = newRow.id;
+        existingSlugMap.set(p.slug, productUuid!);
+      }
+
       if (isProductExisting) {
         productsAlreadyPresent++;
       } else {
         productsInserted++;
-        existingSlugMap.set(savedProduct.slug, savedProduct.id);
       }
-
-      const productUuid = savedProduct.id;
 
       // 4. Upsert variants for this product with product_id = productUuid
       if (p.variants && p.variants.length > 0) {
         for (const v of p.variants) {
           const varKey = `${productUuid}_${v.storage}_${v.color}`;
           const isVarExisting = existingVarKeySet.has(varKey);
+          const existingVar = existingVarMap.get(varKey);
+
+          // Preserve existing stock for existing variants; default to 3 units for new variants
+          const variantStock =
+            isVarExisting && existingVar && existingVar.stock !== undefined && existingVar.stock !== null
+              ? Number(existingVar.stock)
+              : (v.stock !== undefined ? Number(v.stock) : 3);
 
           const { error: variantError } = await supabase
             .from("product_variants")
@@ -512,7 +538,7 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
                 color: v.color,
                 price: Number(v.price) || 0,
                 old_price: v.oldPrice !== undefined && v.oldPrice !== null ? Number(v.oldPrice) : null,
-                stock: v.stock !== undefined ? Number(v.stock) : 5,
+                stock: variantStock,
                 sku: v.sku || `TM-${p.model || p.slug}-${v.storage}-${v.color}`,
                 active: true,
               },
@@ -754,12 +780,14 @@ export async function updateVariantInSupabase(
         });
       }
 
-      const { data, error } = await supabase
+      // NOTE: We do NOT chain .select().single() here.
+      // Supabase RLS blocks the SELECT-back for anon/publishable keys even when the
+      // UPDATE itself succeeds — this causes a spurious PGRST116 "0 rows" error.
+      // By omitting .select(), we only fail on genuine write errors.
+      const { error } = await supabase
         .from("product_variants")
         .update(payload)
-        .eq("id", variant.id)
-        .select()
-        .single();
+        .eq("id", variant.id);
 
       if (error) {
         if (process.env.NODE_ENV !== "production") {
@@ -776,11 +804,10 @@ export async function updateVariantInSupabase(
         console.log("[updateVariantInSupabase] Successfully updated variant:", {
           variantId: variant.id,
           productId,
-          data,
         });
       }
 
-      return { success: true, data };
+      return { success: true };
     } else {
       const insertPayload: any = {
         product_id: productId,

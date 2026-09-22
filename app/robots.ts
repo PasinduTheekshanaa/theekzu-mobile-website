@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/favicon.ico"],
         disallow: [
           "/admin",
           "/admin/",
@@ -17,7 +17,17 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "Googlebot",
-        allow: "/",
+        allow: ["/", "/favicon.ico"],
+        disallow: [
+          "/admin",
+          "/admin/",
+          "/admin/*",
+          "/api/",
+        ],
+      },
+      {
+        userAgent: "Googlebot-Image",
+        allow: ["/", "/favicon.ico", "/*.png", "/*.jpg", "/*.jpeg", "/*.webp", "/*.ico"],
         disallow: [
           "/admin",
           "/admin/",

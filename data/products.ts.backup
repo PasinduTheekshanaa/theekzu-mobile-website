@@ -88,6 +88,9 @@ function generateDefaultVariants(
 
       // Slight natural variation for popular colors (e.g. Natural Titanium, Deep Purple)
       let priceOffset = 0;
+      if (col.name.includes("Natural") || col.name.includes("Desert") || col.name.includes("Titanium")) {
+        priceOffset = 2000;
+      }
 
       variants.push({
         id: variantId,
@@ -117,7 +120,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Next-Gen Flagship",
-    price: 435000,
+    price: 499000,
     oldPrice: 535000,
     discount: "7% OFF",
     storage: "256GB",
@@ -150,7 +153,7 @@ export const products: Product[] = [
       "iphone-17-pro-max",
       "17PM",
       [
-        { storage: "256GB", price: 435000, oldPrice: 480000, stock: 4 },
+        { storage: "256GB", price: 499000, oldPrice: 535000, stock: 4 },
         { storage: "512GB", price: 549000, oldPrice: 585000, stock: 3 },
         { storage: "1TB", price: 615000, oldPrice: 650000, stock: 2 },
         { storage: "2TB", price: 695000, oldPrice: 740000, stock: 1 },
@@ -288,7 +291,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Brand New Sealed",
-    price: 300000,
+    price: 429900,
     oldPrice: 469900,
     discount: "9% OFF",
     storage: "256GB",
@@ -322,7 +325,7 @@ export const products: Product[] = [
       "iphone-16-pro-max",
       "16PM",
       [
-        { storage: "256GB", price: 300000, oldPrice: 340000, stock: 5 },
+        { storage: "256GB", price: 429900, oldPrice: 469900, stock: 5 },
         { storage: "512GB", price: 479900, oldPrice: 519900, stock: 3 },
         { storage: "1TB", price: 539900, oldPrice: 579900, stock: 2 },
       ],
@@ -345,7 +348,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Brand New Sealed",
-    price: 260000,
+    price: 369900,
     oldPrice: 399900,
     discount: "8% OFF",
     storage: "128GB",
@@ -377,8 +380,8 @@ export const products: Product[] = [
       "iphone-16-pro",
       "16P",
       [
-        { storage: "128GB", price: 260000, oldPrice: 295000, stock: 4 },
-        { storage: "256GB", price: 270000, oldPrice: 305000, stock: 3 },
+        { storage: "128GB", price: 369900, oldPrice: 399900, stock: 4 },
+        { storage: "256GB", price: 409900, oldPrice: 439900, stock: 3 },
         { storage: "512GB", price: 459900, oldPrice: 489900, stock: 2 },
         { storage: "1TB", price: 519900, oldPrice: 559900, stock: 1 },
       ],
@@ -401,7 +404,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Brand New Sealed",
-    price: 190000,
+    price: 289900,
     oldPrice: 315000,
     discount: "8% OFF",
     storage: "128GB",
@@ -434,7 +437,7 @@ export const products: Product[] = [
       "iphone-16",
       "16",
       [
-        { storage: "128GB", price: 190000, oldPrice: 215000, stock: 5 },
+        { storage: "128GB", price: 289900, oldPrice: 315000, stock: 5 },
         { storage: "256GB", price: 329900, oldPrice: 355000, stock: 3 },
         { storage: "512GB", price: 389900, oldPrice: 415000, stock: 2 },
       ],
@@ -461,7 +464,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Brand New Sealed",
-    price: 250000,
+    price: 349900,
     oldPrice: 385000,
     discount: "9% OFF",
     storage: "256GB",
@@ -494,9 +497,9 @@ export const products: Product[] = [
       "iphone-15-pro-max",
       "15PM",
       [
-        { storage: "256GB", price: 250000, oldPrice: 280000, stock: 4 },
-        { storage: "512GB", price: 265000, oldPrice: 295000, stock: 2 },
-        { storage: "1TB", price: 275000, oldPrice: 310000, stock: 1 },
+        { storage: "256GB", price: 349900, oldPrice: 385000, stock: 4 },
+        { storage: "512GB", price: 395000, oldPrice: 429000, stock: 2 },
+        { storage: "1TB", price: 449000, oldPrice: 485000, stock: 1 },
       ],
       [
         { name: "Natural Titanium", hex: "#8c8780" },
@@ -517,7 +520,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Brand New Sealed",
-    price: 210000,
+    price: 280000,
     oldPrice: 295000,
     discount: "5% OFF",
     storage: "128GB",
@@ -549,8 +552,8 @@ export const products: Product[] = [
       "iphone-15-pro",
       "15P",
       [
-        { storage: "128GB", price: 210000, oldPrice: 235000, stock: 3 },
-        { storage: "256GB", price: 225000, oldPrice: 250000, stock: 2 },
+        { storage: "128GB", price: 280000, oldPrice: 295000, stock: 3 },
+        { storage: "256GB", price: 310000, oldPrice: 325000, stock: 2 },
         { storage: "512GB", price: 350000, oldPrice: 375000, stock: 1 },
         { storage: "1TB", price: 395000, oldPrice: 420000, stock: 1 },
       ],
@@ -573,7 +576,7 @@ export const products: Product[] = [
     subcategory: "latest-iphones",
     condition: "Brand New",
     conditionBadge: "Brand New Sealed",
-    price: 160000,
+    price: 225000,
     oldPrice: 245000,
     discount: "8% OFF",
     storage: "128GB",
@@ -606,8 +609,8 @@ export const products: Product[] = [
       "iphone-15",
       "15",
       [
-        { storage: "128GB", price: 160000, oldPrice: 180000, stock: 5 },
-        { storage: "256GB", price: 175000, oldPrice: 195000, stock: 3 },
+        { storage: "128GB", price: 225000, oldPrice: 245000, stock: 5 },
+        { storage: "256GB", price: 259000, oldPrice: 279000, stock: 3 },
         { storage: "512GB", price: 305000, oldPrice: 329000, stock: 2 },
       ],
       [
@@ -633,7 +636,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 200000,
+    price: 249900,
     oldPrice: 279900,
     discount: "11% OFF",
     storage: "128GB",
@@ -666,9 +669,9 @@ export const products: Product[] = [
       "iphone-14-pro-max",
       "14PM",
       [
-        { storage: "128GB", price: 200000, oldPrice: 225000, stock: 3 },
-        { storage: "256GB", price: 210000, oldPrice: 235000, stock: 2 },
-        { storage: "512GB", price: 225000, oldPrice: 255000, stock: 1 },
+        { storage: "128GB", price: 249900, oldPrice: 279900, stock: 3 },
+        { storage: "256GB", price: 279900, oldPrice: 309900, stock: 2 },
+        { storage: "512GB", price: 319900, oldPrice: 349900, stock: 1 },
         { storage: "1TB", price: 359900, oldPrice: 389900, stock: 1 },
       ],
       [
@@ -690,7 +693,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 175000,
+    price: 219900,
     oldPrice: 245000,
     discount: "10% OFF",
     storage: "128GB",
@@ -722,10 +725,10 @@ export const products: Product[] = [
       "iphone-14-pro",
       "14P",
       [
-        { storage: "128GB", price: 175000, oldPrice: 195000, stock: 3 },
-        { storage: "256GB", price: 185000, oldPrice: 205000, stock: 2 },
-        { storage: "512GB", price: 200000, oldPrice: 225000, stock: 1 },
-        { storage: "1TB", price: 210000, oldPrice: 235000, stock: 1 },
+        { storage: "128GB", price: 219900, oldPrice: 245000, stock: 3 },
+        { storage: "256GB", price: 249900, oldPrice: 275000, stock: 2 },
+        { storage: "512GB", price: 285000, oldPrice: 310000, stock: 1 },
+        { storage: "1TB", price: 320000, oldPrice: 350000, stock: 1 },
       ],
       [
         { name: "Deep Purple", hex: "#4b384c" },
@@ -746,7 +749,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 125000,
+    price: 169900,
     oldPrice: 189900,
     discount: "11% OFF",
     storage: "128GB",
@@ -780,8 +783,8 @@ export const products: Product[] = [
       "iphone-14",
       "14",
       [
-        { storage: "128GB", price: 125000, oldPrice: 145000, stock: 4 },
-        { storage: "256GB", price: 135000, oldPrice: 155000, stock: 2 },
+        { storage: "128GB", price: 169900, oldPrice: 189900, stock: 4 },
+        { storage: "256GB", price: 195000, oldPrice: 219000, stock: 2 },
         { storage: "512GB", price: 229000, oldPrice: 249000, stock: 1 },
       ],
       [
@@ -808,7 +811,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 155000,
+    price: 199900,
     oldPrice: 225000,
     discount: "11% OFF",
     storage: "128GB",
@@ -842,10 +845,10 @@ export const products: Product[] = [
       "iphone-13-pro-max",
       "13PM",
       [
-        { storage: "128GB", price: 155000, oldPrice: 175000, stock: 4 },
-        { storage: "256GB", price: 160000, oldPrice: 180000, stock: 3 },
-        { storage: "512GB", price: 175000, oldPrice: 195000, stock: 1 },
-        { storage: "1TB", price: 185000, oldPrice: 210000, stock: 1 },
+        { storage: "128GB", price: 199900, oldPrice: 225000, stock: 4 },
+        { storage: "256GB", price: 225000, oldPrice: 249000, stock: 3 },
+        { storage: "512GB", price: 255000, oldPrice: 279000, stock: 1 },
+        { storage: "1TB", price: 285000, oldPrice: 309000, stock: 1 },
       ],
       [
         { name: "Sierra Blue", hex: "#9bb5ce" },
@@ -867,7 +870,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 130000,
+    price: 179900,
     oldPrice: 199900,
     discount: "10% OFF",
     storage: "128GB",
@@ -900,9 +903,9 @@ export const products: Product[] = [
       "iphone-13-pro",
       "13P",
       [
-        { storage: "128GB", price: 130000, oldPrice: 150000, stock: 3 },
-        { storage: "256GB", price: 140000, oldPrice: 160000, stock: 2 },
-        { storage: "512GB", price: 150000, oldPrice: 170000, stock: 1 },
+        { storage: "128GB", price: 179900, oldPrice: 199900, stock: 3 },
+        { storage: "256GB", price: 199900, oldPrice: 220000, stock: 2 },
+        { storage: "512GB", price: 229000, oldPrice: 249000, stock: 1 },
         { storage: "1TB", price: 259000, oldPrice: 279000, stock: 1 },
       ],
       [
@@ -925,7 +928,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 100000,
+    price: 139900,
     oldPrice: 159900,
     discount: "13% OFF",
     storage: "128GB",
@@ -959,8 +962,8 @@ export const products: Product[] = [
       "iphone-13",
       "13",
       [
-        { storage: "128GB", price: 100000, oldPrice: 120000, stock: 6 },
-        { storage: "256GB", price: 110000, oldPrice: 130000, stock: 3 },
+        { storage: "128GB", price: 139900, oldPrice: 159900, stock: 6 },
+        { storage: "256GB", price: 159900, oldPrice: 179900, stock: 3 },
         { storage: "512GB", price: 189900, oldPrice: 209900, stock: 1 },
       ],
       [
@@ -987,7 +990,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 123000,
+    price: 169900,
     oldPrice: 189900,
     discount: "11% OFF",
     storage: "128GB",
@@ -1019,9 +1022,9 @@ export const products: Product[] = [
       "iphone-12-pro-max",
       "12PM",
       [
-        { storage: "128GB", price: 123000, oldPrice: 140000, stock: 3 },
-        { storage: "256GB", price: 130000, oldPrice: 148000, stock: 2 },
-        { storage: "512GB", price: 140000, oldPrice: 160000, stock: 1 },
+        { storage: "128GB", price: 169900, oldPrice: 189900, stock: 3 },
+        { storage: "256GB", price: 189900, oldPrice: 209900, stock: 2 },
+        { storage: "512GB", price: 219900, oldPrice: 239900, stock: 1 },
       ],
       [
         { name: "Pacific Blue", hex: "#2b4554" },
@@ -1042,7 +1045,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 99000,
+    price: 149900,
     oldPrice: 169900,
     discount: "12% OFF",
     storage: "128GB",
@@ -1074,9 +1077,9 @@ export const products: Product[] = [
       "iphone-12-pro",
       "12P",
       [
-        { storage: "128GB", price: 99000, oldPrice: 115000, stock: 3 },
-        { storage: "256GB", price: 105000, oldPrice: 122000, stock: 2 },
-        { storage: "512GB", price: 118000, oldPrice: 135000, stock: 1 },
+        { storage: "128GB", price: 149900, oldPrice: 169900, stock: 3 },
+        { storage: "256GB", price: 169900, oldPrice: 189900, stock: 2 },
+        { storage: "512GB", price: 195000, oldPrice: 215000, stock: 1 },
       ],
       [
         { name: "Pacific Blue", hex: "#2b4554" },
@@ -1097,7 +1100,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 85000,
+    price: 109900,
     oldPrice: 125000,
     discount: "12% OFF",
     storage: "64GB",
@@ -1132,8 +1135,8 @@ export const products: Product[] = [
       "12",
       [
         { storage: "64GB", price: 109900, oldPrice: 125000, stock: 4 },
-        { storage: "128GB", price: 85000, oldPrice: 100000, stock: 3 },
-        { storage: "256GB", price: 95000, oldPrice: 110000, stock: 1 },
+        { storage: "128GB", price: 124900, oldPrice: 139900, stock: 3 },
+        { storage: "256GB", price: 145000, oldPrice: 159900, stock: 1 },
       ],
       [
         { name: "Black", hex: "#1f2022" },
@@ -1159,7 +1162,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 93000,
+    price: 139900,
     oldPrice: 155000,
     discount: "10% OFF",
     storage: "64GB",
@@ -1191,8 +1194,8 @@ export const products: Product[] = [
       "iphone-11-pro-max",
       "11PM",
       [
-        { storage: "64GB", price: 93000, oldPrice: 110000, stock: 3 },
-        { storage: "256GB", price: 103000, oldPrice: 120000, stock: 2 },
+        { storage: "64GB", price: 139900, oldPrice: 155000, stock: 3 },
+        { storage: "256GB", price: 159900, oldPrice: 175000, stock: 2 },
         { storage: "512GB", price: 179900, oldPrice: 195000, stock: 1 },
       ],
       [
@@ -1214,7 +1217,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 78000,
+    price: 119900,
     oldPrice: 135000,
     discount: "11% OFF",
     storage: "64GB",
@@ -1246,9 +1249,9 @@ export const products: Product[] = [
       "iphone-11-pro",
       "11P",
       [
-        { storage: "64GB", price: 78000, oldPrice: 92000, stock: 3 },
-        { storage: "256GB", price: 88000, oldPrice: 105000, stock: 2 },
-        { storage: "512GB", price: 98000, oldPrice: 118000, stock: 1 },
+        { storage: "64GB", price: 119900, oldPrice: 135000, stock: 3 },
+        { storage: "256GB", price: 139900, oldPrice: 155000, stock: 2 },
+        { storage: "512GB", price: 159900, oldPrice: 175000, stock: 1 },
       ],
       [
         { name: "Midnight Green", hex: "#4e5851" },
@@ -1269,7 +1272,7 @@ export const products: Product[] = [
     subcategory: "used-iphones",
     condition: "Used",
     conditionBadge: "Certified Grade A+",
-    price: 65000,
+    price: 84900,
     oldPrice: 99900,
     discount: "15% OFF",
     storage: "64GB",
@@ -1303,9 +1306,9 @@ export const products: Product[] = [
       "iphone-11",
       "11",
       [
-        { storage: "64GB", price: 65000, oldPrice: 78000, stock: 5 },
-        { storage: "128GB", price: 75000, oldPrice: 89000, stock: 4 },
-        { storage: "256GB", price: 83000, oldPrice: 98000, stock: 2 },
+        { storage: "64GB", price: 84900, oldPrice: 99900, stock: 5 },
+        { storage: "128GB", price: 98900, oldPrice: 112000, stock: 4 },
+        { storage: "256GB", price: 115000, oldPrice: 129000, stock: 2 },
       ],
       [
         { name: "Black", hex: "#1f2022" },
@@ -1314,460 +1317,6 @@ export const products: Product[] = [
         { name: "Yellow", hex: "#fef08a" },
         { name: "Purple", hex: "#d8b4fe" },
         { name: "Red", hex: "#dc2626" },
-      ]
-    ),
-  },
-
-  
-  // ==========================================================================
-  // iPHONE 15 PLUS
-  // ==========================================================================
-  {
-    id: "iphone-15-plus",
-    slug: "iphone-15-plus",
-    name: "iPhone 15 Plus",
-    series: "15",
-    model: "iPhone 15 Plus",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 188000,
-    oldPrice: 205000,
-    discount: "8% OFF",
-    storage: "128GB",
-    storageOptions: ["128GB"],
-    colors: [
-      { name: "Black", hex: "#343538" },
-      { name: "Blue", hex: "#d2dde4" },
-      { name: "Green", hex: "#d4e1d7" },
-      { name: "Yellow", hex: "#f6eac7" },
-      { name: "Pink", hex: "#e9d3d5" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Apple iPhone 15 Plus featuring Dynamic Island, 48MP Main camera with 2x Telephoto, color-infused durable back glass, USB-C connector, and massive 6.7-inch OLED display.",
-    specifications: {
-      chip: "A16 Bionic chip with 5-core GPU and 16-core Neural Engine",
-      display: "6.7-inch Super Retina XDR OLED display (2000 nits peak outdoor)",
-      camera: "48MP Main camera with 24MP super-high-resolution default and 2x Telephoto",
-      battery: "Up to 26 hours video playback with USB-C convenience",
-      build: "Color-infused back glass with contoured aluminum edges, IP68 water resistance",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.9,
-    reviewsCount: 16,
-    variants: generateDefaultVariants(
-      "iphone-15-plus",
-      "15P",
-      [
-        { storage: "128GB", price: 188000, oldPrice: 205000, stock: 3 },
-      ],
-      [
-        { name: "Black", hex: "#343538" },
-        { name: "Blue", hex: "#d2dde4" },
-        { name: "Green", hex: "#d4e1d7" },
-        { name: "Yellow", hex: "#f6eac7" },
-        { name: "Pink", hex: "#e9d3d5" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE 14 PLUS
-  // ==========================================================================
-  {
-    id: "iphone-14-plus",
-    slug: "iphone-14-plus",
-    name: "iPhone 14 Plus",
-    series: "14",
-    model: "iPhone 14 Plus",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 135000,
-    oldPrice: 150000,
-    discount: "10% OFF",
-    storage: "128GB",
-    storageOptions: ["128GB", "256GB"],
-    colors: [
-      { name: "Midnight", hex: "#1a232e" },
-      { name: "Starlight", hex: "#fbf7f4" },
-      { name: "Blue", hex: "#a0b3c6" },
-      { name: "Purple", hex: "#e5ddea" },
-      { name: "Yellow", hex: "#f8e79b" },
-      { name: "(PRODUCT)RED", hex: "#e11c2a" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Apple iPhone 14 Plus with expansive 6.7-inch Super Retina XDR OLED, all-day battery life, Action mode video, Crash Detection, and enhanced low-light photography.",
-    specifications: {
-      chip: "A15 Bionic chip with 5-core GPU and 16-core Neural Engine",
-      display: "6.7-inch Super Retina XDR OLED display (2778 x 1284)",
-      camera: "Dual 12MP Main and Ultra Wide with Photonic Engine and Action mode",
-      battery: "Up to 26 hours video playback (longest battery life in iPhone 14 series)",
-      build: "Aerospace-grade aluminum with Ceramic Shield front and IP68 rating",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.8,
-    reviewsCount: 19,
-    variants: generateDefaultVariants(
-      "iphone-14-plus",
-      "14PL",
-      [
-        { storage: "128GB", price: 135000, oldPrice: 150000, stock: 3 },
-        { storage: "256GB", price: 145000, oldPrice: 162000, stock: 3 },
-      ],
-      [
-        { name: "Midnight", hex: "#1a232e" },
-        { name: "Starlight", hex: "#fbf7f4" },
-        { name: "Blue", hex: "#a0b3c6" },
-        { name: "Purple", hex: "#e5ddea" },
-        { name: "Yellow", hex: "#f8e79b" },
-        { name: "(PRODUCT)RED", hex: "#e11c2a" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE 13 MINI
-  // ==========================================================================
-  {
-    id: "iphone-13-mini",
-    slug: "iphone-13-mini",
-    name: "iPhone 13 Mini",
-    series: "13",
-    model: "iPhone 13 Mini",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 85000,
-    oldPrice: 98000,
-    discount: "13% OFF",
-    storage: "128GB",
-    storageOptions: ["128GB"],
-    colors: [
-      { name: "Midnight", hex: "#1a232e" },
-      { name: "Starlight", hex: "#fbf7f4" },
-      { name: "Blue", hex: "#2c4b64" },
-      { name: "Pink", hex: "#faddd7" },
-      { name: "Green", hex: "#394c38" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Apple iPhone 13 Mini featuring lightning-fast A15 Bionic, Cinematic mode, diagonal dual 12MP camera system with sensor-shift OIS, and vibrant 5.4-inch OLED display.",
-    specifications: {
-      chip: "A15 Bionic chip with 6-core CPU and 4-core GPU",
-      display: "5.4-inch Super Retina XDR OLED (800 nits peak brightness)",
-      camera: "Dual 12MP system with Sensor-shift optical image stabilization and Cinematic mode",
-      battery: "Up to 17 hours video playback (improved battery life)",
-      build: "Ceramic Shield front, aluminum design with IP68 water resistance",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.8,
-    reviewsCount: 24,
-    variants: generateDefaultVariants(
-      "iphone-13-mini",
-      "13M",
-      [
-        { storage: "128GB", price: 85000, oldPrice: 98000, stock: 3 },
-      ],
-      [
-        { name: "Midnight", hex: "#1a232e" },
-        { name: "Starlight", hex: "#fbf7f4" },
-        { name: "Blue", hex: "#2c4b64" },
-        { name: "Pink", hex: "#faddd7" },
-        { name: "Green", hex: "#394c38" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE 12 MINI
-  // ==========================================================================
-  {
-    id: "iphone-12-mini",
-    slug: "iphone-12-mini",
-    name: "iPhone 12 Mini",
-    series: "12",
-    model: "iPhone 12 Mini",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 75000,
-    oldPrice: 88000,
-    discount: "14% OFF",
-    storage: "128GB",
-    storageOptions: ["128GB", "256GB"],
-    colors: [
-      { name: "Black", hex: "#1f2022" },
-      { name: "White", hex: "#f9f6ef" },
-      { name: "Blue", hex: "#276787" },
-      { name: "Green", hex: "#daf0ce" },
-      { name: "(PRODUCT)RED", hex: "#ba0c2f" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Compact 5.4-inch iPhone 12 Mini with 5G capability, Ceramic Shield front, Super Retina XDR OLED, A14 Bionic chip, and Night mode on all cameras.",
-    specifications: {
-      chip: "A14 Bionic chip with 16-core Neural Engine",
-      display: "5.4-inch Super Retina XDR OLED display (2340 x 1080)",
-      camera: "Dual 12MP Ultra Wide and Wide cameras with Night mode and Deep Fusion",
-      battery: "Up to 15 hours video playback",
-      build: "Ceramic Shield front, aerospace-grade aluminum with IP68 water resistance",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.7,
-    reviewsCount: 21,
-    variants: generateDefaultVariants(
-      "iphone-12-mini",
-      "12M",
-      [
-        { storage: "128GB", price: 75000, oldPrice: 88000, stock: 3 },
-        { storage: "256GB", price: 85000, oldPrice: 99000, stock: 3 },
-      ],
-      [
-        { name: "Black", hex: "#1f2022" },
-        { name: "White", hex: "#f9f6ef" },
-        { name: "Blue", hex: "#276787" },
-        { name: "Green", hex: "#daf0ce" },
-        { name: "(PRODUCT)RED", hex: "#ba0c2f" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE XS MAX
-  // ==========================================================================
-  {
-    id: "iphone-xs-max",
-    slug: "iphone-xs-max",
-    name: "iPhone XS Max",
-    series: "XS",
-    model: "iPhone XS Max",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 65000,
-    oldPrice: 78000,
-    discount: "16% OFF",
-    storage: "64GB",
-    storageOptions: ["64GB", "256GB"],
-    colors: [
-      { name: "Space Gray", hex: "#4b4846" },
-      { name: "Silver", hex: "#e2e4e1" },
-      { name: "Gold", hex: "#f9e5c9" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Apple iPhone XS Max with massive 6.5-inch Super Retina OLED display, A12 Bionic chip, dual 12MP cameras with Depth Control, and premium stainless steel chassis.",
-    specifications: {
-      chip: "A12 Bionic chip with Next-Generation Neural Engine",
-      display: "6.5-inch Super Retina OLED display (2688 x 1242, True Tone)",
-      camera: "Dual 12MP Wide and Telephoto with Smart HDR and 4K recording up to 60 fps",
-      battery: "Up to 15 hours video playback",
-      build: "Surgical-grade stainless steel with durable glass back",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.8,
-    reviewsCount: 30,
-    variants: generateDefaultVariants(
-      "iphone-xs-max",
-      "XSM",
-      [
-        { storage: "64GB", price: 65000, oldPrice: 78000, stock: 3 },
-        { storage: "256GB", price: 75000, oldPrice: 88000, stock: 3 },
-      ],
-      [
-        { name: "Space Gray", hex: "#4b4846" },
-        { name: "Silver", hex: "#e2e4e1" },
-        { name: "Gold", hex: "#f9e5c9" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE XS
-  // ==========================================================================
-  {
-    id: "iphone-xs",
-    slug: "iphone-xs",
-    name: "iPhone XS",
-    series: "XS",
-    model: "iPhone XS",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 65000,
-    oldPrice: 75000,
-    discount: "13% OFF",
-    storage: "256GB",
-    storageOptions: ["256GB"],
-    colors: [
-      { name: "Space Gray", hex: "#4b4846" },
-      { name: "Silver", hex: "#e2e4e1" },
-      { name: "Gold", hex: "#f9e5c9" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Apple iPhone XS with 5.8-inch Super Retina OLED display, A12 Bionic with Next-Generation Neural Engine, advanced Face ID, and dual-camera system with Smart HDR.",
-    specifications: {
-      chip: "A12 Bionic chip with Next-Generation Neural Engine",
-      display: "5.8-inch Super Retina OLED display (2436 x 1125, True Tone)",
-      camera: "Dual 12MP Wide and Telephoto cameras with Smart HDR and Depth Control",
-      battery: "Up to 14 hours video playback",
-      build: "Surgical-grade stainless steel frame with IP68 water resistance",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.7,
-    reviewsCount: 26,
-    variants: generateDefaultVariants(
-      "iphone-xs",
-      "XS",
-      [
-        { storage: "256GB", price: 65000, oldPrice: 75000, stock: 3 },
-      ],
-      [
-        { name: "Space Gray", hex: "#4b4846" },
-        { name: "Silver", hex: "#e2e4e1" },
-        { name: "Gold", hex: "#f9e5c9" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE X
-  // ==========================================================================
-  {
-    id: "iphone-x",
-    slug: "iphone-x",
-    name: "iPhone X",
-    series: "X",
-    model: "iPhone X",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 48000,
-    oldPrice: 58000,
-    discount: "17% OFF",
-    storage: "256GB",
-    storageOptions: ["256GB"],
-    colors: [
-      { name: "Space Gray", hex: "#4b4846" },
-      { name: "Silver", hex: "#e2e4e1" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "The revolutionary iPhone X featuring 5.8-inch Super Retina OLED display, Face ID, A11 Bionic chip, and dual 12MP cameras with dual optical image stabilization.",
-    specifications: {
-      chip: "A11 Bionic chip with Neural Engine",
-      display: "5.8-inch Super Retina HD OLED display with HDR and True Tone",
-      camera: "Dual 12MP Wide and Telephoto cameras with Portrait mode and dual OIS",
-      battery: "Up to 21 hours talk time",
-      build: "Surgical-grade stainless steel with durable all-glass design",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.7,
-    reviewsCount: 35,
-    variants: generateDefaultVariants(
-      "iphone-x",
-      "X",
-      [
-        { storage: "256GB", price: 48000, oldPrice: 58000, stock: 3 },
-      ],
-      [
-        { name: "Space Gray", hex: "#4b4846" },
-        { name: "Silver", hex: "#e2e4e1" },
-      ]
-    ),
-  },
-
-  // ==========================================================================
-  // iPHONE SE (2nd Gen)
-  // ==========================================================================
-  {
-    id: "iphone-se2",
-    slug: "iphone-se2",
-    name: "iPhone SE (2nd Gen)",
-    series: "SE",
-    model: "iPhone SE (2nd Gen)",
-    category: "iphones",
-    subcategory: "used-iphones",
-    condition: "Used",
-    conditionBadge: "Grade A+ Pre-Owned",
-    price: 37000,
-    oldPrice: 45000,
-    discount: "18% OFF",
-    storage: "64GB",
-    storageOptions: ["64GB", "128GB", "256GB"],
-    colors: [
-      { name: "Black", hex: "#1f2022" },
-      { name: "White", hex: "#f9f6ef" },
-      { name: "(PRODUCT)RED", hex: "#ba0c2f" },
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80",
-    ],
-    description: "Apple iPhone SE (2nd Generation) featuring A13 Bionic chip, 4.7-inch Retina HD display, advanced single-camera system with Portrait mode, and Touch ID. Fully tested and certified.",
-    specifications: {
-      chip: "A13 Bionic chip with third-generation Neural Engine",
-      display: "4.7-inch Retina HD display with True Tone",
-      camera: "12MP Wide camera with Portrait mode, 4K video recording up to 60 fps",
-      battery: "Up to 13 hours video playback",
-      build: "Aerospace-grade aluminum and durable glass design with IP67 water resistance",
-      warranty: "6 Months Theekzu Mobile Care Warranty",
-      delivery: "Express Islandwide Delivery across Sri Lanka",
-    },
-    stock: "In Stock",
-    featured: false,
-    rating: 4.8,
-    reviewsCount: 42,
-    variants: generateDefaultVariants(
-      "iphone-se2",
-      "SE2",
-      [
-        { storage: "64GB", price: 37000, oldPrice: 45000, stock: 3 },
-        { storage: "128GB", price: 47000, oldPrice: 55000, stock: 3 },
-        { storage: "256GB", price: 57000, oldPrice: 65000, stock: 3 },
-      ],
-      [
-        { name: "Black", hex: "#1f2022" },
-        { name: "White", hex: "#f9f6ef" },
-        { name: "(PRODUCT)RED", hex: "#ba0c2f" },
       ]
     ),
   },
