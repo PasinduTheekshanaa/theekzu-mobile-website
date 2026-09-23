@@ -10,19 +10,15 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-0 md:min-h-[80vh] lg:min-h-[85vh] flex items-center pt-2 sm:pt-4 md:pt-6 pb-6 sm:pb-10 md:pb-16 overflow-hidden radial-glow-hero tech-grid-bg transition-colors duration-300 w-full">
+    <section className="relative min-h-0 md:min-h-[80vh] lg:min-h-[85vh] flex items-center pt-2 sm:pt-4 md:pt-6 pb-6 sm:pb-10 md:pb-16 overflow-hidden radial-glow-hero tech-grid-bg transition-colors duration-300 w-full cursor-glow-area" onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--cx', `${e.clientX - r.left}px`); e.currentTarget.style.setProperty('--cy', `${e.clientY - r.top}px`); }}>
       {/* Ambient background glow blooms */}
-      <div className="absolute -top-32 -left-32 w-72 sm:w-[32rem] h-72 sm:h-[32rem] bg-gradient-to-br from-blue-600/15 via-cyan-500/10 to-transparent dark:from-blue-600/25 dark:via-cyan-500/20 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none" />
-      <div className="absolute top-1/4 -right-20 w-72 sm:w-[36rem] h-72 sm:h-[36rem] bg-gradient-to-tr from-cyan-500/15 via-purple-600/10 to-transparent dark:from-cyan-500/25 dark:via-purple-600/20 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-72 sm:w-[32rem] h-72 sm:h-[32rem] bg-gradient-to-br from-blue-600/15 via-cyan-500/10 to-transparent dark:from-blue-600/25 dark:via-cyan-500/20 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none animate-glow-breathe" />
+      <div className="absolute top-1/4 -right-20 w-72 sm:w-[36rem] h-72 sm:h-[36rem] bg-gradient-to-tr from-cyan-500/15 via-purple-600/10 to-transparent dark:from-cyan-500/25 dark:via-purple-600/20 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none animate-glow-breathe [animation-delay:2s]" />
       <div className="absolute -bottom-24 left-1/3 w-64 sm:w-[28rem] h-64 sm:h-[28rem] bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full blur-[90px] sm:blur-[120px] pointer-events-none" />
 
       <div className="container-custom w-full relative z-10">
         
-        {/* ========================================================================= */}
-        {/* 1. DEDICATED MOBILE HERO LAYOUT (< 768px): Normal Document Flow           */}
-        {/* Flow: 1. Badge -> 2. Heading -> 3. Description -> 4. CTAs -> Trust Cards  */}
-        {/*       -> 5. Robot Visual -> 6. Compact Product Info Card                  */}
-        {/* ========================================================================= */}
+        {/* Mobile Layout */}
         <div className="md:hidden flex flex-col items-center text-center space-y-4 pt-1">
           {/* 1. Small Badge */}
           <ScrollReveal direction="up" delay={50}>
@@ -31,7 +27,7 @@ export const Hero: React.FC = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 dark:bg-cyan-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600 dark:bg-cyan-500"></span>
               </span>
-              <span className="tracking-wide truncate">Official Brand New & Certified iPhones • Sri Lanka</span>
+              <span className="tracking-wide truncate">Official Brand New &amp; Certified iPhones • Sri Lanka</span>
             </div>
           </ScrollReveal>
 
@@ -55,12 +51,12 @@ export const Hero: React.FC = () => {
             </p>
           </ScrollReveal>
 
-          {/* 4. Action Buttons (Full Width, Stacked with 12px gap) */}
+          {/* 4. Action Buttons */}
           <ScrollReveal direction="up" delay={200} className="w-full">
             <div className="flex flex-col gap-3 w-full pt-1">
               <Link
                 href="/iphones"
-                className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:via-blue-600 dark:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+                className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:via-blue-600 dark:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform btn-press"
               >
                 <span>Shop iPhones</span>
                 <ArrowRight className="w-4 h-4" />
@@ -70,7 +66,7 @@ export const Hero: React.FC = () => {
                 href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-bold shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+                className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-bold shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform btn-press"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Chat on WhatsApp</span>
@@ -78,7 +74,7 @@ export const Hero: React.FC = () => {
             </div>
           </ScrollReveal>
 
-          {/* Trust Feature Cards (2 cols on mobile) */}
+          {/* Trust Feature Cards */}
           <ScrollReveal direction="up" delay={250} className="w-full">
             <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-cyan-500/20 w-full">
               <div className="glass-card p-2.5 rounded-xl flex items-center gap-2 shadow-xs min-w-0 text-left">
@@ -123,32 +119,29 @@ export const Hero: React.FC = () => {
             </div>
           </ScrollReveal>
 
-          {/* 5. Robot Visual & 6. Compact Product Info Card (in normal document flow) */}
           <ScrollReveal direction="up" delay={300} className="w-full">
             <AnimatedRobotHero mode="mobile" />
           </ScrollReveal>
         </div>
 
-        {/* ========================================================================= */}
-        {/* 2. PRESERVED DESKTOP HERO LAYOUT (>= 768px): Side-by-Side Grid            */}
-        {/* ========================================================================= */}
+        {/* Desktop Layout */}
         <div className="hidden md:grid md:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* LEFT: Copy, Fluid Headline, Subheading, Responsive CTAs, Trust Cards */}
+          {/* LEFT: Copy with stagger animations */}
           <div className="md:col-span-7 text-left space-y-5 sm:space-y-6">
             
             {/* Announcement Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/30 text-xs font-bold text-blue-700 dark:text-cyan-300 shadow-sm dark:shadow-[0_0_20px_rgba(0,210,255,0.25)] max-w-full">
+            <div className="hero-animate-1 inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/30 text-xs font-bold text-blue-700 dark:text-cyan-300 shadow-sm dark:shadow-[0_0_20px_rgba(0,210,255,0.25)] max-w-full">
               <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 flex-shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 dark:bg-cyan-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-blue-600 dark:bg-cyan-500"></span>
               </span>
-              <span className="tracking-wide truncate">Official Brand New & Certified iPhones • Sri Lanka</span>
+              <span className="tracking-wide truncate">Official Brand New &amp; Certified iPhones • Sri Lanka</span>
             </div>
 
             {/* Main Fluid Headline */}
-            <h1 
-              className="font-black tracking-tight leading-[1.08] text-slate-900 dark:text-white break-words"
+            <h1
+              className="hero-animate-2 font-black tracking-tight leading-[1.08] text-slate-900 dark:text-white break-words"
               style={{ fontSize: "clamp(2.5rem, 5.5vw, 4.5rem)" }}
             >
               Upgrade Your World with <br className="hidden sm:inline" />
@@ -158,33 +151,33 @@ export const Hero: React.FC = () => {
             </h1>
 
             {/* Subheading */}
-            <p className="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 max-w-xl font-normal leading-relaxed">
+            <p className="hero-animate-3 text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 max-w-xl font-normal leading-relaxed">
               Discover authentic Apple iPhones, original accessories and exclusive deals with trusted Sri Lanka warranty and instant WhatsApp ordering.
             </p>
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-start gap-4 pt-2 w-full">
+            <div className="hero-animate-4 flex items-center justify-start gap-4 pt-2 w-full">
               <Link
                 href="/iphones"
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:via-blue-600 dark:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-600/25 dark:shadow-[0_0_30px_rgba(0,102,255,0.5)] active:scale-[0.98] transition-all min-h-[44px]"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:via-blue-600 dark:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-600/25 dark:shadow-[0_0_30px_rgba(0,102,255,0.5)] active:scale-[0.98] transition-all min-h-[44px] btn-press group"
               >
                 <span>Shop iPhones</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
               <a
                 href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-bold shadow-md shadow-emerald-500/20 dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:scale-[0.98] transition-all min-h-[44px]"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-bold shadow-md shadow-emerald-500/20 dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:scale-[0.98] transition-all min-h-[44px] btn-press group"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>
 
-            {/* Trust Feature Cards: 4 columns on desktop */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-6 border-t border-slate-200 dark:border-cyan-500/20 w-full">
+            {/* Trust Feature Cards */}
+            <div className="hero-animate-5 grid grid-cols-2 lg:grid-cols-4 gap-3 pt-6 border-t border-slate-200 dark:border-cyan-500/20 w-full">
               <div className="glass-card p-3 rounded-2xl flex items-center gap-3 shadow-xs min-w-0">
                 <div className="w-8 h-8 rounded-xl bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 flex items-center justify-center text-blue-600 dark:text-cyan-400 flex-shrink-0">
                   <ShieldCheck className="w-4 h-4" />
@@ -228,8 +221,8 @@ export const Hero: React.FC = () => {
 
           </div>
 
-          {/* RIGHT: Animated Futuristic Robot Assistant holding an iPhone */}
-          <div className="md:col-span-5 relative flex items-center justify-center w-full">
+          {/* RIGHT: Animated Robot Hero with float */}
+          <div className="md:col-span-5 relative flex items-center justify-center w-full hero-animate-img">
             <AnimatedRobotHero mode="desktop" />
           </div>
 

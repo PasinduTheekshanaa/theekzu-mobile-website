@@ -27,21 +27,21 @@ export interface ProductContextType {
   getProductBySlug: (slug: string) => Product | undefined;
   getProductById: (id: string) => Product | undefined;
   getRelatedProducts: (product: Product, limit?: number) => Product[];
-  updateProduct: (updatedProduct: Product) => Promise<boolean>;
-  addProduct: (product: Product) => Promise<boolean>;
-  deleteProduct: (productId: string) => Promise<boolean>;
+  updateProduct: (updatedProduct: Product) => Promise<{ success: boolean; data?: any; error?: string }>;
+  addProduct: (product: Product) => Promise<{ success: boolean; data?: any; error?: string }>;
+  deleteProduct: (productId: string) => Promise<{ success: boolean; error?: string }>;
   updateVariant: (productId: string, variant: ProductVariant) => Promise<{ success: boolean; data?: any; error?: string }>;
   addVariant: (productId: string, variant: ProductVariant) => Promise<boolean>;
-  deleteVariant: (productId: string, variantId: string) => Promise<boolean>;
+  deleteVariant: (productId: string, variantId: string) => Promise<{ success: boolean; error?: string }>;
   generateVariants: (productId: string, storages: string[], colors: string[], basePrice?: number) => Promise<boolean>;
   updatePrice: (productId: string, newPrice: number, newOldPrice?: number) => Promise<boolean>;
   updateStock: (productId: string, inStock: boolean) => Promise<boolean>;
   updateFeatured: (productId: string, featured: boolean) => Promise<boolean>;
   customImages: Record<string, SupabaseProductImageRecord[]>;
-  uploadImage: (productId: string, file: File, color?: string, isPrimary?: boolean) => Promise<boolean>;
-  deleteImage: (imageId: string, imageUrl?: string, productId?: string) => Promise<boolean>;
-  setPrimaryImage: (productId: string, imageId: string) => Promise<boolean>;
-  assignImageToColor: (imageId: string, color?: string, productId?: string) => Promise<boolean>;
+  uploadImage: (productId: string, file: File, color?: string, isPrimary?: boolean) => Promise<{ success: boolean; imageRecord?: SupabaseProductImageRecord; error?: string }>;
+  deleteImage: (imageId: string, imageUrl?: string, productId?: string) => Promise<{ success: boolean; error?: string }>;
+  setPrimaryImage: (productId: string, imageId: string) => Promise<{ success: boolean; error?: string }>;
+  assignImageToColor: (imageId: string, color?: string, productId?: string) => Promise<{ success: boolean; error?: string }>;
   refreshCatalog: () => Promise<void>;
   migrateCatalog: () => Promise<MigrationResult>;
   getProductPrimaryImage: (product: Product) => string;
@@ -166,13 +166,12 @@ export const ProductProvider: React.FC<{
   };
 
   // Delete a variant
-  const deleteVariant = async (productId: string, variantId: string): Promise<boolean> => {
-    const ok = await deleteVariantFromSupabase(variantId);
-    if (ok) {
+  const deleteVariant = async (productId: string, variantId: string): Promise<{ success: boolean; error?: string }> => {
+    const res = await deleteVariantFromSupabase(variantId);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Generate variants for storage x color
@@ -218,64 +217,70 @@ export const ProductProvider: React.FC<{
   };
 
   // Update general product
-  const updateProduct = async (updatedProduct: Product): Promise<boolean> => {
-    const ok = await updateProductInSupabase(updatedProduct);
-    if (ok) {
+  const updateProduct = async (
+    updatedProduct: Product
+  ): Promise<{ success: boolean; data?: any; error?: string }> => {
+    const res = await updateProductInSupabase(updatedProduct);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Add product
-  const addProduct = async (newProduct: Product): Promise<boolean> => {
-    const ok = await addProductToSupabase(newProduct);
-    if (ok) {
+  const addProduct = async (
+    newProduct: Product
+  ): Promise<{ success: boolean; data?: any; error?: string }> => {
+    const res = await addProductToSupabase(newProduct);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Delete product
-  const deleteProduct = async (productId: string): Promise<boolean> => {
-    const ok = await deleteProductFromSupabase(productId);
-    if (ok) {
+  const deleteProduct = async (
+    productId: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const res = await deleteProductFromSupabase(productId);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   const updatePrice = async (productId: string, newPrice: number, newOldPrice?: number): Promise<boolean> => {
     const product = products.find((p) => p.id === productId);
     if (!product) return false;
 
-    return updateProduct({
+    const res = await updateProduct({
       ...product,
       price: newPrice,
       ...(newOldPrice !== undefined ? { oldPrice: newOldPrice } : {}),
     });
+    return res.success;
   };
 
   const updateStock = async (productId: string, inStock: boolean): Promise<boolean> => {
     const product = products.find((p) => p.id === productId);
     if (!product) return false;
 
-    return updateProduct({
+    const res = await updateProduct({
       ...product,
       stock: inStock ? "In Stock" : "Out of Stock",
     });
+    return res.success;
   };
 
   const updateFeatured = async (productId: string, featured: boolean): Promise<boolean> => {
     const product = products.find((p) => p.id === productId);
     if (!product) return false;
 
-    return updateProduct({
+    const res = await updateProduct({
       ...product,
       featured,
     });
+    return res.success;
   };
 
   // Upload real image to Supabase Storage bucket 'product-images'
@@ -284,43 +289,50 @@ export const ProductProvider: React.FC<{
     file: File,
     color?: string,
     isPrimary?: boolean
-  ): Promise<boolean> => {
+  ): Promise<{ success: boolean; imageRecord?: SupabaseProductImageRecord; error?: string }> => {
     const res = await uploadImageToSupabase(productId, file, color, isPrimary);
     if (res.success && res.imageRecord) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Delete image
-  const deleteImage = async (imageId: string, imageUrl?: string, productId?: string): Promise<boolean> => {
-    const ok = await deleteImageFromSupabase(imageId, imageUrl);
-    if (ok) {
+  const deleteImage = async (
+    imageId: string,
+    imageUrl?: string,
+    productId?: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const res = await deleteImageFromSupabase(imageId, imageUrl);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Set primary image
-  const setPrimaryImage = async (productId: string, imageId: string): Promise<boolean> => {
-    const ok = await setPrimaryImageInSupabase(productId, imageId);
-    if (ok) {
+  const setPrimaryImage = async (
+    productId: string,
+    imageId: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const res = await setPrimaryImageInSupabase(productId, imageId);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   // Assign image to color
-  const assignImageToColor = async (imageId: string, color?: string, productId?: string): Promise<boolean> => {
-    const ok = await assignImageColorInSupabase(imageId, color);
-    if (ok) {
+  const assignImageToColor = async (
+    imageId: string,
+    color?: string,
+    productId?: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const res = await assignImageColorInSupabase(imageId, color);
+    if (res.success) {
       await loadCatalog();
-      return true;
     }
-    return false;
+    return res;
   };
 
   const getProductPrimaryImage = (product: Product): string => {

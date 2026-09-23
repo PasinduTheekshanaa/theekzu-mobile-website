@@ -8,6 +8,7 @@ import { NavbarWrapper } from "@/components/NavbarWrapper";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WishlistDrawer } from "@/components/WishlistDrawer";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
 import { BrandedLoader } from "@/components/BrandedLoader";
 import { storeConfig } from "@/config/store";
@@ -205,6 +206,7 @@ export default async function RootLayout({
                 <CartDrawer />
                 <WishlistDrawer />
                 <FloatingWhatsApp />
+                <BackToTop />
               </WishlistProvider>
             </CartProvider>
           </ProductProvider>

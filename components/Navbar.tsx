@@ -136,12 +136,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                     {link.badge}
                   </span>
                 )}
-                {/* Subtle animated underline */}
+                {/* Subtle animated underline with glow */}
                 <span
                   className={`absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-300 ${
                     isActive(link.href)
-                      ? "w-full bg-gradient-to-r from-blue-600 to-cyan-400 dark:from-cyan-400 dark:to-blue-600"
-                      : "w-0 bg-blue-500/40 dark:bg-cyan-400/40 group-hover:w-full"
+                      ? "w-full bg-gradient-to-r from-blue-600 to-cyan-400 dark:from-cyan-400 dark:to-blue-600 shadow-[0_0_8px_rgba(0,102,255,0.4)] dark:shadow-[0_0_8px_rgba(0,210,255,0.6)]"
+                      : "w-0 bg-blue-500/40 dark:bg-cyan-400/40 group-hover:w-full group-hover:shadow-[0_0_6px_rgba(0,102,255,0.3)]"
                   }`}
                 />
               </Link>
@@ -154,17 +154,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             {/* Desktop-only Search Trigger */}
             <button
               onClick={onOpenSearch}
-              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors shadow-xs active:scale-95"
+              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors shadow-xs active:scale-95 btn-press group"
               title="Search Products"
               aria-label="Search Products"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
 
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-cyan-300 transition-all duration-300 relative overflow-hidden group shadow-xs active:scale-95"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-cyan-300 transition-all duration-300 relative overflow-hidden group shadow-xs active:scale-95 btn-press"
               title={mounted && theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
               aria-label="Toggle Dark and Light Mode"
             >
@@ -182,11 +182,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             {/* Desktop Wishlist Trigger (Visible >= 1024px) */}
             <button
               onClick={() => setIsWishlistOpen(true)}
-              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 items-center justify-center text-slate-700 dark:text-slate-300 hover:text-rose-500 transition-colors relative shadow-xs active:scale-95"
+              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 items-center justify-center text-slate-700 dark:text-slate-300 hover:text-rose-500 transition-colors relative shadow-xs active:scale-95 btn-press group"
               title="Saved Wishlist"
               aria-label="Saved Wishlist"
             >
-              <Heart className="w-4 h-4" />
+              <Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
               {wishlistCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
                   {wishlistCount}
@@ -197,11 +197,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             {/* Cart Trigger (Always visible on mobile, tablet, desktop) */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors relative shadow-xs active:scale-95"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/20 dark:hover:border-cyan-400/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-cyan-300 transition-colors relative shadow-xs active:scale-95 btn-press group"
               title="Shopping Cart"
               aria-label="Shopping Cart"
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBag className="w-4 h-4 group-hover:scale-110 transition-transform" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-cyan-500 dark:to-blue-600 text-white text-[9px] font-bold flex items-center justify-center shadow-xs">
                   {cartCount}
@@ -214,17 +214,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20 dark:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20 dark:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-[0.98] btn-press group"
               title="Chat on WhatsApp"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
               <span>Chat</span>
             </a>
 
             {/* Mobile / Tablet Hamburger Button (< 1024px) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-slate-800 dark:text-zinc-200 shadow-xs active:scale-95 transition-colors"
+              className="lg:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-slate-800 dark:text-zinc-200 shadow-xs active:scale-95 transition-colors btn-press"
               aria-label={mobileMenuOpen ? "Close Menu" : "Open Navigation Menu"}
               aria-expanded={mobileMenuOpen}
             >

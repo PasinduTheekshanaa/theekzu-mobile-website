@@ -177,12 +177,12 @@ export function mapSupabaseToProduct(
     id: p.id,
     slug: p.slug,
     name: p.name,
-    model: baseMatch?.model || p.name,
+    model: p.name || baseMatch?.model || p.slug,
     series: p.series || baseMatch?.series || "16",
     category: p.category || baseMatch?.category || "iphones",
     subcategory: baseMatch?.subcategory || (p.category === "iphones" ? (p.condition === "Used" ? "used-iphones" : "latest-iphones") : "cases-accessories"),
-    condition: p.condition || "Brand New",
-    conditionBadge: p.condition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
+    condition: p.condition || baseMatch?.condition || "Brand New",
+    conditionBadge: (p.condition || baseMatch?.condition) === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
     price: lowestPrice,
     oldPrice: lowestOldPrice ? Number(lowestOldPrice) : undefined,
     discount,
@@ -190,10 +190,17 @@ export function mapSupabaseToProduct(
     storageOptions,
     colors,
     images: imageList.length > 0 ? imageList : [PLACEHOLDER_IMAGE],
-    description: p.description || baseMatch?.description || "",
-    specifications: baseMatch?.specifications || {},
+    description: (p.description !== null && p.description !== undefined && p.description.trim() !== "")
+      ? p.description
+      : (baseMatch?.description || ""),
+    specifications: {
+      warranty: (p.condition || baseMatch?.condition) === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty",
+      delivery: "1-2 Days Islandwide Delivery",
+      authenticity: "100% Original Guaranteed",
+      ...(baseMatch?.specifications || {}),
+    },
     stock,
-    featured: Boolean(p.featured),
+    featured: p.featured !== undefined && p.featured !== null ? Boolean(p.featured) : Boolean(baseMatch?.featured),
     rating: baseMatch?.rating || 5.0,
     reviewsCount: baseMatch?.reviewsCount || 10,
     variants: mappedVariants,
@@ -597,6 +604,29 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
 }
 
 /**
+ * Helper to resolve product UUID by ID or slug.
+ */
+export async function resolveProductUuid(productIdOrSlug: string): Promise<string | null> {
+  if (!productIdOrSlug) return null;
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productIdOrSlug);
+  if (isUUID) return productIdOrSlug;
+
+  const { data, error } = await supabase
+    .from("products")
+    .select("id")
+    .eq("slug", productIdOrSlug)
+    .maybeSingle();
+
+  if (error || !data) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(`[resolveProductUuid] Could not resolve UUID for "${productIdOrSlug}":`, error);
+    }
+    return null;
+  }
+  return data.id;
+}
+
+/**
  * Upload an image file directly to Supabase Storage bucket 'product-images'
  * and insert metadata into public.product_images table.
  */
@@ -614,8 +644,13 @@ export async function uploadImageToSupabase(
   }
 
   try {
+    const targetProductId = await resolveProductUuid(productId);
+    if (!targetProductId) {
+      return { success: false, error: `Could not resolve product UUID for "${productId}".` };
+    }
+
     const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-    const filePath = `${productId}/${Date.now()}_${cleanFileName}`;
+    const filePath = `${targetProductId}/${Date.now()}_${cleanFileName}`;
 
     // 1. Upload to Supabase Storage bucket 'product-images'
     const { error: uploadErr } = await supabase.storage
@@ -634,35 +669,53 @@ export async function uploadImageToSupabase(
     const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
     const publicUrl = urlData.publicUrl;
 
-    // 3. If primary, unset existing primary flags for this product
-    if (isPrimary) {
+    // 3. Determine if primary (if explicitly requested or if it's the product's first image)
+    let shouldBePrimary = Boolean(isPrimary);
+    if (!isPrimary) {
+      const { data: existingImgs } = await supabase
+        .from("product_images")
+        .select("id")
+        .eq("product_id", targetProductId)
+        .limit(1);
+      if (!existingImgs || existingImgs.length === 0) {
+        shouldBePrimary = true;
+      }
+    }
+
+    if (shouldBePrimary) {
       await supabase
         .from("product_images")
         .update({ is_primary: false })
-        .eq("product_id", productId);
+        .eq("product_id", targetProductId);
     }
 
     // 4. Insert into public.product_images
-    const { data: newRecord, error: dbErr } = await supabase
+    const { data: newRecords, error: dbErr } = await supabase
       .from("product_images")
       .insert({
-        product_id: productId,
+        product_id: targetProductId,
         storage_path: publicUrl,
         color: color && color.trim() ? color.trim() : null,
-        is_primary: Boolean(isPrimary),
+        is_primary: shouldBePrimary,
       })
-      .select()
-      .single();
+      .select();
 
-    if (dbErr) {
+    if (dbErr && dbErr.code !== "PGRST116") {
       console.error("Error inserting into product_images table:", dbErr);
       return { success: false, error: dbErr.message };
     }
 
-    const finalRecord: SupabaseProductImageRecord = {
-      ...newRecord,
-      image_url: publicUrl,
-    };
+    const record = Array.isArray(newRecords) && newRecords.length > 0 ? newRecords[0] : null;
+    const finalRecord: SupabaseProductImageRecord = record
+      ? { ...record, image_url: publicUrl }
+      : {
+          id: `img-${Date.now()}`,
+          product_id: targetProductId,
+          storage_path: publicUrl,
+          image_url: publicUrl,
+          color: color || null,
+          is_primary: shouldBePrimary,
+        };
     return {
       success: true,
       imageRecord: finalRecord,
@@ -676,12 +729,19 @@ export async function uploadImageToSupabase(
 /**
  * Delete image from public.product_images and Supabase Storage bucket
  */
-export async function deleteImageFromSupabase(imageId: string, imageUrl?: string): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function deleteImageFromSupabase(
+  imageId: string,
+  imageUrl?: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { success: false, error: "Supabase is not configured in .env.local" };
 
   try {
     // Delete from DB table
-    await supabase.from("product_images").delete().eq("id", imageId);
+    const { error: dbErr } = await supabase.from("product_images").delete().eq("id", imageId);
+    if (dbErr) {
+      console.error("Error deleting image from DB:", dbErr);
+      return { success: false, error: dbErr.message };
+    }
 
     // If storage path exists in public URL, try to delete from bucket
     if (imageUrl && imageUrl.includes(STORAGE_BUCKET)) {
@@ -691,52 +751,68 @@ export async function deleteImageFromSupabase(imageId: string, imageUrl?: string
         await supabase.storage.from(STORAGE_BUCKET).remove([storagePath]);
       }
     }
-    return true;
-  } catch (e) {
+    return { success: true };
+  } catch (e: any) {
     console.error("deleteImageFromSupabase error:", e);
-    return false;
+    return { success: false, error: e?.message || "Failed to delete image" };
   }
 }
 
 /**
  * Set an image as primary in public.product_images
  */
-export async function setPrimaryImageInSupabase(productId: string, imageId: string): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function setPrimaryImageInSupabase(
+  productId: string,
+  imageId: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { success: false, error: "Supabase is not configured in .env.local" };
 
   try {
+    const targetProductId = await resolveProductUuid(productId);
+    if (!targetProductId) return { success: false, error: "Product UUID not found" };
+
     await supabase
       .from("product_images")
       .update({ is_primary: false })
-      .eq("product_id", productId);
+      .eq("product_id", targetProductId);
 
-    await supabase
+    const { error } = await supabase
       .from("product_images")
       .update({ is_primary: true })
       .eq("id", imageId);
 
-    return true;
-  } catch (e) {
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (e: any) {
     console.error("setPrimaryImageInSupabase error:", e);
-    return false;
+    return { success: false, error: e?.message || "Failed to set primary image" };
   }
 }
 
 /**
  * Assign an image to a specific color
  */
-export async function assignImageColorInSupabase(imageId: string, color?: string): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function assignImageColorInSupabase(
+  imageId: string,
+  color?: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { success: false, error: "Supabase is not configured in .env.local" };
 
   try {
-    await supabase
+    const { error } = await supabase
       .from("product_images")
       .update({ color: color && color.trim() ? color.trim() : null })
       .eq("id", imageId);
-    return true;
-  } catch (e) {
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (e: any) {
     console.error("assignImageColorInSupabase error:", e);
-    return false;
+    return { success: false, error: e?.message || "Failed to assign image color" };
   }
 }
 
@@ -748,10 +824,18 @@ export async function updateVariantInSupabase(
   variant: ProductVariant | any
 ): Promise<{ success: boolean; data?: any; error?: string }> {
   if (!isSupabaseConfigured()) {
-    return { success: false, error: "Supabase is not configured" };
+    return { success: false, error: "Supabase is not configured in .env.local" };
   }
 
   try {
+    const targetProductId = await resolveProductUuid(productId);
+    if (!targetProductId) {
+      return {
+        success: false,
+        error: `Could not resolve product UUID for "${productId}".`,
+      };
+    }
+
     const isUUID =
       variant.id &&
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(variant.id);
@@ -765,52 +849,42 @@ export async function updateVariantInSupabase(
     const stock = Number(variant.stock);
 
     if (isUUID) {
-      const payload = {
+      const payload: any = {
         price,
         old_price,
         stock,
         updated_at: new Date().toISOString(),
       };
+      if (variant.storage) payload.storage = variant.storage;
+      if (variant.color) payload.color = variant.color;
+      if (variant.sku) payload.sku = variant.sku;
+      if (variant.active !== undefined) payload.active = Boolean(variant.active);
 
       if (process.env.NODE_ENV !== "production") {
         console.log("[updateVariantInSupabase] Updating variant by UUID:", {
           variantId: variant.id,
-          productId,
+          targetProductId,
           payload,
         });
       }
 
-      // NOTE: We do NOT chain .select().single() here.
-      // Supabase RLS blocks the SELECT-back for anon/publishable keys even when the
-      // UPDATE itself succeeds — this causes a spurious PGRST116 "0 rows" error.
-      // By omitting .select(), we only fail on genuine write errors.
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("product_variants")
         .update(payload)
-        .eq("id", variant.id);
+        .eq("id", variant.id)
+        .select("id, product_id, storage, color, price, old_price, stock, sku, active");
 
       if (error) {
         if (process.env.NODE_ENV !== "production") {
-          console.error("[updateVariantInSupabase] Error updating variant:", {
-            variantId: variant.id,
-            productId,
-            error,
-          });
+          console.error("[updateVariantInSupabase] Error updating variant:", error);
         }
         return { success: false, error: error.message };
       }
 
-      if (process.env.NODE_ENV !== "production") {
-        console.log("[updateVariantInSupabase] Successfully updated variant:", {
-          variantId: variant.id,
-          productId,
-        });
-      }
-
-      return { success: true };
+      return { success: true, data: data?.[0] };
     } else {
       const insertPayload: any = {
-        product_id: productId,
+        product_id: targetProductId,
         storage: variant.storage,
         color: variant.color,
         price,
@@ -822,7 +896,7 @@ export async function updateVariantInSupabase(
 
       if (process.env.NODE_ENV !== "production") {
         console.log("[updateVariantInSupabase] Inserting new variant:", {
-          productId,
+          targetProductId,
           insertPayload,
         });
       }
@@ -851,57 +925,105 @@ export async function updateVariantInSupabase(
 /**
  * Delete variant from public.product_variants
  */
-export async function deleteVariantFromSupabase(variantId: string): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function deleteVariantFromSupabase(
+  variantId: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
 
   try {
     const { error } = await supabase.from("product_variants").delete().eq("id", variantId);
     if (error) {
       console.error("Error deleting variant from Supabase:", error);
-      return false;
+      return { success: false, error: error.message };
     }
-    return true;
-  } catch (e) {
+    return { success: true };
+  } catch (e: any) {
     console.error("deleteVariantFromSupabase exception:", e);
-    return false;
+    return { success: false, error: e?.message || "Unknown error deleting variant" };
   }
 }
 
 /**
  * Update product general fields in public.products
+ * Persists name, series, category, condition, description, featured status, updated_at
  */
-export async function updateProductInSupabase(product: Product): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function updateProductInSupabase(
+  product: Product
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured in .env.local" };
+  }
 
   try {
-    const { error } = await supabase
+    const targetId = await resolveProductUuid(product.id || product.slug);
+    if (!targetId) {
+      return {
+        success: false,
+        error: `Product with slug "${product.slug}" or ID "${product.id}" was not found in Supabase.`,
+      };
+    }
+
+    const payload: any = {
+      name: product.name.trim(),
+      series: product.series,
+      category: product.category || "iphones",
+      condition: product.condition || "Brand New",
+      description: product.description !== undefined ? product.description : "",
+      featured: Boolean(product.featured),
+      updated_at: new Date().toISOString(),
+    };
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[updateProductInSupabase] Updating product in Supabase:", {
+        targetId,
+        slug: product.slug,
+        payload,
+      });
+    }
+
+    const { data: updatedRows, error } = await supabase
       .from("products")
-      .update({
-        name: product.name,
-        series: product.series,
-        category: product.category,
-        condition: product.condition,
-        description: product.description,
-        featured: product.featured,
-      })
-      .eq("id", product.id);
+      .update(payload)
+      .eq("id", targetId)
+      .select("id, slug, name, series, category, condition, description, featured, active, updated_at");
 
     if (error) {
-      console.error("Error updating product in Supabase:", error);
-      return false;
+      console.error("[updateProductInSupabase] Supabase update error:", error);
+      return { success: false, error: error.message };
     }
-    return true;
-  } catch (e) {
-    console.error("updateProductInSupabase exception:", e);
-    return false;
+
+    if (!updatedRows || updatedRows.length === 0) {
+      console.error("[updateProductInSupabase] Update affected 0 rows for product ID:", targetId);
+      return {
+        success: false,
+        error: "Database update affected 0 rows. Please verify your admin session or permissions.",
+      };
+    }
+
+    // If overall stock is marked "Out of Stock", synchronize variants to stock = 0
+    if (product.stock && product.stock.toLowerCase().includes("out of stock")) {
+      await supabase
+        .from("product_variants")
+        .update({ stock: 0, updated_at: new Date().toISOString() })
+        .eq("product_id", targetId);
+    }
+
+    return { success: true, data: updatedRows[0] };
+  } catch (e: any) {
+    console.error("[updateProductInSupabase] Exception:", e);
+    return { success: false, error: e?.message || "Unknown error updating product" };
   }
 }
 
 /**
  * Add a new product and its variants to Supabase
  */
-export async function addProductToSupabase(product: Product): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function addProductToSupabase(product: Product): Promise<{ success: boolean; data?: any; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
 
   try {
     const { data: newProd, error: pErr } = await supabase
@@ -921,7 +1043,7 @@ export async function addProductToSupabase(product: Product): Promise<boolean> {
 
     if (pErr || !newProd) {
       console.error("Error adding product to Supabase:", pErr);
-      return false;
+      return { success: false, error: pErr?.message || "Failed to add product" };
     }
 
     if (product.variants && product.variants.length > 0) {
@@ -941,26 +1063,39 @@ export async function addProductToSupabase(product: Product): Promise<boolean> {
       }
     }
 
-    return true;
-  } catch (e) {
+    return { success: true, data: newProd };
+  } catch (e: any) {
     console.error("addProductToSupabase exception:", e);
-    return false;
+    return { success: false, error: e?.message || "Unknown error adding product" };
   }
 }
 
 /**
  * Delete a product and its variants from Supabase
  */
-export async function deleteProductFromSupabase(productId: string): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
+export async function deleteProductFromSupabase(
+  productId: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
 
   try {
-    await supabase.from("product_variants").delete().eq("product_id", productId);
-    await supabase.from("product_images").delete().eq("product_id", productId);
-    const { error } = await supabase.from("products").delete().eq("id", productId);
-    return !error;
-  } catch (e) {
+    const targetProductId = await resolveProductUuid(productId);
+    if (!targetProductId) {
+      return { success: false, error: `Could not resolve product UUID for "${productId}".` };
+    }
+
+    await supabase.from("product_variants").delete().eq("product_id", targetProductId);
+    await supabase.from("product_images").delete().eq("product_id", targetProductId);
+    const { error } = await supabase.from("products").delete().eq("id", targetProductId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (e: any) {
     console.error("deleteProductFromSupabase exception:", e);
-    return false;
+    return { success: false, error: e?.message || "Unknown error deleting product" };
   }
 }

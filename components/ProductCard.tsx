@@ -30,18 +30,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   // Subtle 3D tilt calculation on desktop hover
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [tilt, setTilt] = useState({ x: 0, y: 0, lift: 0 });
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current || window.innerWidth < 1024) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
-    setTilt({ x, y });
+    setTilt({ x, y, lift: -6 });
   };
 
   const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
+    setTilt({ x: 0, y: 0, lift: 0 });
   };
 
   const waMessage = `Hello Theekzu Mobile,
@@ -64,8 +65,8 @@ Can you confirm availability and latest variant pricing?`;
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        transform: `perspective(800px) rotateY(${tilt.x}deg) rotateX(${-tilt.y}deg)`,
-        transition: "transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease",
+        transform: `perspective(800px) rotateY(${tilt.x}deg) rotateX(${-tilt.y}deg) translateY(${tilt.lift}px)`,
+        transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease",
       }}
       className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500/50 dark:hover:border-cyan-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(0,102,255,0.35)]"
     >
@@ -109,13 +110,21 @@ Can you confirm availability and latest variant pricing?`;
         className="h-56 w-full rounded-2xl bg-slate-50/80 dark:bg-gradient-to-b dark:from-slate-900/50 dark:to-slate-950/80 border border-slate-200/80 dark:border-cyan-500/10 p-4 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-blue-400/40 dark:group-hover:border-cyan-500/30 transition-all"
       >
         {displayImage ? (
-          <Image
-            src={displayImage}
-            alt={`${product.name} - Theekzu Mobile Sri Lanka`}
-            width={280}
-            height={280}
-            className="max-h-full max-w-full object-contain group-hover:scale-108 transition-transform duration-500 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
-          />
+          <>
+            {!imgLoaded && (
+              <div className="absolute inset-4 rounded-xl skeleton z-0" />
+            )}
+            <Image
+              src={displayImage}
+              alt={`${product.name} - Theekzu Mobile Sri Lanka`}
+              width={280}
+              height={280}
+              onLoad={() => setImgLoaded(true)}
+              className={`max-h-full max-w-full object-contain group-hover:scale-108 transition-all duration-500 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] relative z-10 ${
+                imgLoaded ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-mono">
             No Image
@@ -123,13 +132,13 @@ Can you confirm availability and latest variant pricing?`;
         )}
 
         {product.discount && (
-          <span className="absolute bottom-3 left-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-xs">
+          <span className="absolute bottom-3 left-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-xs z-20">
             {product.discount}
           </span>
         )}
 
         {isOutOfStock && (
-          <span className="absolute top-3 right-3 bg-rose-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+          <span className="absolute top-3 right-3 bg-rose-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow z-20">
             Out of Stock
           </span>
         )}
@@ -194,9 +203,9 @@ Can you confirm availability and latest variant pricing?`;
           <div className="grid grid-cols-2 gap-2">
             <Link
               href={`/product/${product.slug}`}
-              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98]"
+              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] btn-press group/btn"
             >
-              <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 shrink-0" />
+              <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 shrink-0 group-hover/btn:scale-110 transition-transform" />
               <span>Details</span>
             </Link>
 
@@ -204,9 +213,9 @@ Can you confirm availability and latest variant pricing?`;
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs font-bold text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20 active:scale-[0.98]"
+              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs font-bold text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20 active:scale-[0.98] btn-press group/wa"
             >
-              <MessageCircle className="w-3.5 h-3.5 shrink-0" />
+              <MessageCircle className="w-3.5 h-3.5 shrink-0 group-hover/wa:scale-110 transition-transform" />
               <span>WhatsApp</span>
             </a>
           </div>

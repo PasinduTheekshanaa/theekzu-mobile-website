@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -114,6 +115,7 @@ export default function AdminProductsPage() {
   const [formStorages, setFormStorages] = useState("");
   const [formColors, setFormColors] = useState("");
   const [formDescription, setFormDescription] = useState("");
+  const [isSavingProductEdit, setIsSavingProductEdit] = useState(false);
 
   // New Product Modal State
   const [showAddProductModal, setShowAddProductModal] = useState(false);
@@ -128,6 +130,38 @@ export default function AdminProductsPage() {
 
   // Migration running state
   const [isMigrating, setIsMigrating] = useState(false);
+
+  // Client-side mount flag for React Portals
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll and close on Escape when ANY modal is active
+  useEffect(() => {
+    const isAnyModalOpen = Boolean(imageModalProduct || variantGenProduct || showAddProductModal || editingProduct);
+    if (!isAnyModalOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (!isUploading && !isSavingProductEdit) {
+          setImageModalProduct(null);
+          setVariantGenProduct(null);
+          setShowAddProductModal(false);
+          setEditingProduct(null);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [imageModalProduct, variantGenProduct, showAddProductModal, editingProduct, isUploading, isSavingProductEdit]);
 
   // Verify Admin Session on mount using Supabase Auth and public.admin_users
   useEffect(() => {
@@ -524,23 +558,38 @@ export default function AdminProductsPage() {
 
     try {
       let uploadedCount = 0;
+      const errors: string[] = [];
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (!file.type.startsWith("image/")) continue;
+        if (!file.type.startsWith("image/")) {
+          errors.push(`${file.name}: Not an image file`);
+          continue;
+        }
         if (file.size > 10 * 1024 * 1024) {
-          showToast(`File ${file.name} exceeds 10MB limit`, "error");
+          errors.push(`${file.name}: Exceeds 10MB limit`);
           continue;
         }
 
-        const ok = await uploadImage(imageModalProduct.id, file, undefined, false);
-        if (ok) uploadedCount++;
+        const res = await uploadImage(imageModalProduct.id, file, undefined, false);
+        if (res.success) {
+          uploadedCount++;
+        } else {
+          errors.push(`${file.name}: ${res.error || "Upload failed"}`);
+        }
       }
 
       if (uploadedCount > 0) {
         showToast(`Uploaded ${uploadedCount} image(s) to Supabase Storage bucket "${STORAGE_BUCKET}"!`, "success");
+        await refreshCatalog();
+        router.refresh();
+      }
+
+      if (errors.length > 0) {
+        showToast(`Upload issues: ${errors.join("; ")}`, "error");
       }
     } catch (e: any) {
-      console.error(e);
+      console.error("handleImageFiles exception:", e);
       showToast(e.message || "Failed to upload image to Supabase", "error");
     } finally {
       setIsUploading(false);
@@ -641,32 +690,80 @@ export default function AdminProductsPage() {
       return;
     }
 
-    const storages = formStorages.split(",").map((s) => s.trim()).filter(Boolean);
-    const colorNames = formColors.split(",").map((c) => c.trim()).filter(Boolean);
-    const updatedColors: ProductColor[] = colorNames.map((name) => {
-      const existing = editingProduct.colors?.find((c) => c.name.toLowerCase() === name.toLowerCase());
-      return existing || {
-        name,
-        hex: name.toLowerCase().includes("black") ? "#1c1c1e" : name.toLowerCase().includes("white") ? "#f5f5f7" : "#0066ff",
+    setIsSavingProductEdit(true);
+
+    try {
+      const storages = formStorages.split(",").map((s) => s.trim()).filter(Boolean);
+      const colorNames = formColors.split(",").map((c) => c.trim()).filter(Boolean);
+      const updatedColors: ProductColor[] = colorNames.map((name) => {
+        const existing = editingProduct.colors?.find((c) => c.name.toLowerCase() === name.toLowerCase());
+        return existing || {
+          name,
+          hex: name.toLowerCase().includes("black") ? "#1c1c1e" : name.toLowerCase().includes("white") ? "#f5f5f7" : "#0066ff",
+        };
+      });
+
+      const updatedProductData: Product = {
+        ...editingProduct,
+        name: formName.trim(),
+        model: formModel.trim() || formName.trim(),
+        series: formSeries,
+        condition: formCondition,
+        conditionBadge: formCondition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
+        stock: formInStock ? "In Stock" : "Out of Stock",
+        featured: formFeatured,
+        storageOptions: storages.length > 0 ? storages : editingProduct.storageOptions,
+        colors: updatedColors.length > 0 ? updatedColors : editingProduct.colors,
+        description: formDescription,
       };
-    });
 
-    await updateProduct({
-      ...editingProduct,
-      name: formName.trim(),
-      model: formModel.trim() || editingProduct.model,
-      series: formSeries,
-      condition: formCondition,
-      conditionBadge: formCondition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
-      stock: formInStock ? "In Stock" : "Out of Stock",
-      featured: formFeatured,
-      storageOptions: storages.length > 0 ? storages : editingProduct.storageOptions,
-      colors: updatedColors.length > 0 ? updatedColors : editingProduct.colors,
-      description: formDescription,
-    });
+      const res = await updateProduct(updatedProductData);
 
-    setEditingProduct(null);
-    showToast("Product details, storages, and colors updated in Supabase database!", "success");
+      if (res.success) {
+        // Synchronize any newly added storages or colors into product_variants
+        const existingVariants = editingProduct.variants || [];
+        const missingVariantsToAdd: ProductVariant[] = [];
+
+        storages.forEach((st) => {
+          colorNames.forEach((col) => {
+            const hasVariant = existingVariants.some(
+              (v) => v.storage.toLowerCase() === st.toLowerCase() && v.color.toLowerCase() === col.toLowerCase()
+            );
+            if (!hasVariant) {
+              const basePrice = editingProduct.price || 150000;
+              const sku = `TM-${(editingProduct.model || editingProduct.name).replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${st.toUpperCase()}-${col.slice(0, 3).toUpperCase()}`;
+              missingVariantsToAdd.push({
+                id: `new-${Date.now()}-${st}-${col}`,
+                storage: st,
+                color: col,
+                price: basePrice,
+                oldPrice: Math.round(basePrice * 1.08),
+                stock: 3,
+                sku,
+              });
+            }
+          });
+        });
+
+        if (missingVariantsToAdd.length > 0) {
+          for (const newVar of missingVariantsToAdd) {
+            await updateVariantInSupabase(editingProduct.id, newVar);
+          }
+          await refreshCatalog();
+        }
+
+        setEditingProduct(null);
+        showToast("Product updated successfully", "success");
+        router.refresh();
+      } else {
+        showToast(`Failed to update product: ${res.error || "Supabase update rejected"}`, "error");
+      }
+    } catch (err: any) {
+      console.error("handleSaveProductEdit error:", err);
+      showToast(`Error updating product: ${err?.message || "Unexpected error"}`, "error");
+    } finally {
+      setIsSavingProductEdit(false);
+    }
   };
 
   // Trigger one-time migration of all 21 models
@@ -801,21 +898,28 @@ export default function AdminProductsPage() {
                 )}
               </div>
               <p className="text-xs text-slate-500 dark:text-zinc-400">
-                Manage 29 iPhone models, variants, prices, and upload real images directly to Supabase Storage bucket <code>{STORAGE_BUCKET}</code>.
+                Manage 29 iPhone models, variants, prices, and images. All edits save directly to Supabase in real-time.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <button
-              onClick={handleMigrateAll}
-              disabled={isMigrating}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-purple-600/20 active:scale-95 transition-all disabled:opacity-50"
-              title="Sync all 29 iPhone models, official colors, and updated price list into Supabase"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isMigrating ? "animate-spin" : ""}`} />
-              <span>{isMigrating ? "Syncing Catalog..." : "Sync 29 iPhones & Price List to Supabase"}</span>
-            </button>
+            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Live Database • Edits save directly</span>
+            </div>
+
+            {products.length < 29 && (
+              <button
+                onClick={handleMigrateAll}
+                disabled={isMigrating}
+                className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-purple-600/20 active:scale-95 transition-all disabled:opacity-50"
+                title="Only use if initial products are missing from Supabase"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isMigrating ? "animate-spin" : ""}`} />
+                <span>{isMigrating ? "Seeding Catalog..." : "Seed Baseline Catalog"}</span>
+              </button>
+            )}
 
             <button
               onClick={() => setShowAddProductModal(true)}
@@ -1262,8 +1366,12 @@ export default function AdminProductsPage() {
                                     <button
                                       onClick={async () => {
                                         if (confirm(`Delete variant ${v.storage} - ${v.color} from Supabase?`)) {
-                                          await deleteVariant(product.id, v.id);
-                                          showToast("Variant deleted from Supabase", "info");
+                                          const res = await deleteVariant(product.id, v.id);
+                                          if (res.success) {
+                                            showToast("Variant deleted from Supabase", "info");
+                                          } else {
+                                            showToast(`Failed to delete variant: ${res.error || "Supabase error"}`, "error");
+                                          }
                                         }
                                       }}
                                       className="p-1 rounded text-slate-400 hover:text-rose-500 transition-colors"
@@ -1403,8 +1511,12 @@ export default function AdminProductsPage() {
                               <button
                                 onClick={async () => {
                                   if (confirm(`Delete variant ${v.storage} - ${v.color} from Supabase?`)) {
-                                    await deleteVariant(product.id, v.id);
-                                    showToast("Variant deleted from Supabase", "info");
+                                    const res = await deleteVariant(product.id, v.id);
+                                    if (res.success) {
+                                      showToast("Variant deleted from Supabase", "info");
+                                    } else {
+                                      showToast(`Failed to delete variant: ${res.error || "Supabase error"}`, "error");
+                                    }
                                   }
                                 }}
                                 className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 flex items-center justify-center transition-colors active:scale-95"
@@ -1509,171 +1621,316 @@ export default function AdminProductsPage() {
       {/* ========================================================================= */}
       {/* IMAGE MANAGEMENT MODAL (Supabase Storage bucket 'product-images') */}
       {/* ========================================================================= */}
-      {imageModalProduct && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="glass-card bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-6 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in zoom-in-95 duration-200 my-8">
-            
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4">
-              <div>
-                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <ImageIcon className="w-5 h-5 text-blue-600 dark:text-cyan-400" />
-                  <span>Images: {imageModalProduct.name}</span>
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-zinc-400">
-                  Upload images directly to Supabase Storage bucket <code>{STORAGE_BUCKET}</code> and assign them to specific colors.
-                </p>
-              </div>
-              <button
-                onClick={() => setImageModalProduct(null)}
-                className="p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-white"
+      {mounted && imageModalProduct && createPortal(
+        <div
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isUploading) {
+              setImageModalProduct(null);
+            }
+          }}
+        >
+          {(() => {
+            const currentModalProduct = products.find((p) => p.id === imageModalProduct.id) || imageModalProduct;
+            const currentImages = customImages[currentModalProduct.id] || [];
+            const primaryImageUrl = getProductPrimaryImage(currentModalProduct);
+
+            return (
+              <div
+                className="relative bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-slate-200 dark:border-cyan-500/30 shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()}
               >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Drag & Drop Upload Zone */}
-            <div
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                handleImageFiles(e.dataTransfer.files);
-              }}
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-blue-400 dark:border-cyan-500/40 hover:border-blue-600 dark:hover:border-cyan-400 rounded-2xl p-6 text-center cursor-pointer bg-blue-50/50 dark:bg-slate-950/50 transition-colors"
-            >
-              <input
-                type="file"
-                ref={fileInputRef}
-                multiple
-                accept="image/png, image/jpeg, image/jpg, image/webp"
-                onChange={(e) => handleImageFiles(e.target.files)}
-                className="hidden"
-              />
-              <UploadCloud className="w-10 h-10 mx-auto text-blue-600 dark:text-cyan-400 mb-2 animate-pulse" />
-              <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-200">
-                {isUploading ? "Uploading image to Supabase Storage..." : "Click to select or drag & drop product images"}
-              </p>
-              <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">
-                PNG, JPG, WEBP up to 10MB each. Saved globally in Supabase Storage bucket <code>{STORAGE_BUCKET}</code>.
-              </p>
-            </div>
-
-            {/* Gallery of Uploaded Images */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">
-                Supabase Images ({customImages[imageModalProduct.id]?.length || 0})
-              </h4>
-
-              {(!customImages[imageModalProduct.id] || customImages[imageModalProduct.id].length === 0) ? (
-                <div className="text-center py-6 text-xs text-slate-400">
-                  No images uploaded yet to Supabase Storage for this product. Default catalog images are currently displayed.
+                {/* Modal Header */}
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 p-5 sm:p-6 pb-4">
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                        <ImageIcon className="w-5 h-5 text-blue-600 dark:text-cyan-400" />
+                        <span>Product Images</span>
+                      </h3>
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-cyan-400 border border-blue-500/20">
+                        {currentModalProduct.name}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+                      Supabase Storage bucket: <code className="text-cyan-600 dark:text-cyan-400 font-mono font-semibold">{STORAGE_BUCKET}</code>
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => !isUploading && setImageModalProduct(null)}
+                    disabled={isUploading}
+                    aria-label="Close modal"
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
-                  {customImages[imageModalProduct.id].map((img) => (
-                    <div
-                      key={img.id}
-                      className="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950"
-                    >
-                      <div className="w-14 h-14 rounded-lg bg-white dark:bg-slate-900 border p-1 flex items-center justify-center flex-shrink-0">
+
+                {/* Modal Scrollable Body */}
+                <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
+                  {/* Current Storefront Image Preview */}
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-1.5 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                      {primaryImageUrl ? (
                         <Image
-                          src={img.image_url || img.storage_path || "/logo.png"}
-                          alt={img.filename || "Product Image"}
-                          width={50}
-                          height={50}
+                          src={primaryImageUrl}
+                          alt={currentModalProduct.name}
+                          width={80}
+                          height={80}
                           className="max-h-full max-w-full object-contain"
                         />
-                      </div>
-
-                      <div className="flex-1 min-w-0 space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-slate-900 dark:text-white truncate block">
-                            {img.filename || "Product Image"}
-                          </span>
-                          {img.is_primary && (
-                            <span className="text-[10px] font-black bg-cyan-500 text-slate-950 px-1.5 py-0.5 rounded">
-                              Primary
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Color assignment selector */}
-                        <div className="flex items-center gap-2">
-                          <select
-                            value={img.color || ""}
-                            onChange={async (e) => {
-                              await assignImageToColor(img.id, e.target.value, imageModalProduct.id);
-                              showToast("Color assigned and saved to Supabase!", "success");
-                            }}
-                            className="text-[11px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded px-2 py-0.5 w-full text-slate-700 dark:text-zinc-300"
-                          >
-                            <option value="">No specific color (General)</option>
-                            {imageModalProduct.colors?.map((c) => (
-                              <option key={c.name} value={c.name}>
-                                Color: {c.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="flex items-center justify-between text-[11px] pt-1">
-                          {!img.is_primary ? (
-                            <button
-                              onClick={async () => {
-                                await setPrimaryImage(imageModalProduct.id, img.id);
-                                showToast("Primary image set in Supabase!", "success");
-                              }}
-                              className="text-blue-600 dark:text-cyan-400 hover:underline font-medium"
-                            >
-                              Set as Primary
-                            </button>
-                          ) : (
-                            <span className="text-emerald-500 font-bold">Current Main</span>
-                          )}
-
-                          <button
-                            onClick={async () => {
-                              await deleteImage(img.id, img.image_url, imageModalProduct.id);
-                              showToast("Image removed from Supabase", "info");
-                            }}
-                            className="text-rose-500 hover:underline flex items-center gap-1 font-medium"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                            <span>Delete</span>
-                          </button>
-                        </div>
-                      </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">No Image</span>
+                      )}
                     </div>
-                  ))}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+                          Storefront Display
+                        </span>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                          Active Main Image
+                        </span>
+                      </div>
+                      <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 truncate mt-0.5">
+                        {currentModalProduct.name}
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400">
+                        This is the photo buyers will see on the storefront catalog and product showcase.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Upload Actions & Dropzone */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">
+                        Upload New Images
+                      </h4>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading}
+                        className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-500/20 transition-all disabled:opacity-50"
+                      >
+                        <UploadCloud className="w-4 h-4" />
+                        <span>{isUploading ? "Uploading..." : "Upload / Add Image"}</span>
+                      </button>
+                    </div>
+
+                    <div
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        if (!isUploading) handleImageFiles(e.dataTransfer.files);
+                      }}
+                      onClick={() => !isUploading && fileInputRef.current?.click()}
+                      className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+                        isUploading
+                          ? "border-blue-400 bg-blue-50/50 dark:bg-blue-950/20 cursor-wait opacity-80"
+                          : "border-blue-300 dark:border-cyan-500/40 hover:border-blue-500 dark:hover:border-cyan-400 bg-blue-50/30 dark:bg-slate-950/50 hover:bg-blue-50/60 dark:hover:bg-slate-950/80"
+                      }`}
+                    >
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        multiple
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                        onChange={(e) => handleImageFiles(e.target.files)}
+                        className="hidden"
+                      />
+                      {isUploading ? (
+                        <div className="flex flex-col items-center py-2">
+                          <RefreshCw className="w-8 h-8 text-blue-600 dark:text-cyan-400 animate-spin mb-2" />
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">
+                            Uploading images to Supabase Storage...
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+                            Saving directly to bucket <code className="font-mono">{STORAGE_BUCKET}</code> and linking to database.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center">
+                          <UploadCloud className="w-10 h-10 text-blue-600 dark:text-cyan-400 mb-2 transition-transform hover:scale-110" />
+                          <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-200">
+                            Click &quot;Upload / Add Image&quot; or drag &amp; drop photos here
+                          </p>
+                          <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">
+                            PNG, JPG, WEBP up to 10MB each. Saved globally in Supabase bucket <code className="font-mono">{STORAGE_BUCKET}</code>.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Gallery of Uploaded Images */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">
+                        Supabase Images ({currentImages.length})
+                      </h4>
+                      <span className="text-[11px] text-slate-500 dark:text-zinc-400">
+                        {currentImages.length === 0 ? "Showing catalog fallback" : "Custom images active"}
+                      </span>
+                    </div>
+
+                    {currentImages.length === 0 ? (
+                      <div className="text-center py-8 px-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-zinc-400">
+                        <ImageIcon className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
+                        <p className="text-xs font-semibold">No custom images uploaded yet for {currentModalProduct.name}.</p>
+                        <p className="text-[11px] text-slate-400 dark:text-zinc-500 mt-0.5">
+                          The storefront currently displays the default catalog photo. Upload an image above to customize it.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
+                        {currentImages.map((img) => (
+                          <div
+                            key={img.id}
+                            className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950 hover:border-slate-300 dark:hover:border-cyan-500/30 transition-all"
+                          >
+                            <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-1 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                              <Image
+                                src={img.image_url || img.storage_path || "/logo.png"}
+                                alt={img.filename || "Product Image"}
+                                width={60}
+                                height={60}
+                                className="max-h-full max-w-full object-contain"
+                              />
+                              {img.is_primary && (
+                                <span className="absolute top-1 left-1 px-1 py-0.2 text-[8px] font-black bg-cyan-500 text-slate-950 rounded uppercase">
+                                  Main
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex-1 min-w-0 space-y-1.5">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="text-xs font-semibold text-slate-900 dark:text-white truncate block">
+                                  {img.filename || "Image"}
+                                </span>
+                                {img.is_primary && (
+                                  <span className="text-[10px] font-black bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                    <Check className="w-2.5 h-2.5" /> Primary
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Color assignment selector */}
+                              <div className="flex items-center gap-1.5">
+                                <select
+                                  value={img.color || ""}
+                                  onChange={async (e) => {
+                                    const res = await assignImageToColor(img.id, e.target.value, currentModalProduct.id);
+                                    if (res.success) {
+                                      showToast("Color assigned and saved to Supabase!", "success");
+                                    } else {
+                                      showToast(`Failed: ${res.error || "Supabase error"}`, "error");
+                                    }
+                                  }}
+                                  className="text-[11px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 w-full text-slate-700 dark:text-zinc-300 focus:outline-none focus:border-blue-500"
+                                >
+                                  <option value="">All Colors (General Image)</option>
+                                  {currentModalProduct.colors?.map((c) => (
+                                    <option key={c.name} value={c.name}>
+                                      Color: {c.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              <div className="flex items-center justify-between text-[11px] pt-0.5">
+                                {!img.is_primary ? (
+                                  <button
+                                    type="button"
+                                    onClick={async () => {
+                                      const res = await setPrimaryImage(currentModalProduct.id, img.id);
+                                      if (res.success) {
+                                        showToast("Primary image set in Supabase!", "success");
+                                      } else {
+                                        showToast(`Failed: ${res.error || "Supabase error"}`, "error");
+                                      }
+                                    }}
+                                    className="text-blue-600 dark:text-cyan-400 hover:underline font-bold"
+                                  >
+                                    Set as Primary
+                                  </button>
+                                ) : (
+                                  <span className="text-emerald-500 font-bold flex items-center gap-1 text-[11px]">
+                                    <CheckCircle2 className="w-3 h-3" /> Current Main
+                                  </span>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    const res = await deleteImage(img.id, img.image_url, currentModalProduct.id);
+                                    if (res.success) {
+                                      showToast("Image removed from Supabase", "info");
+                                    } else {
+                                      showToast(`Failed to delete: ${res.error || "Database error"}`, "error");
+                                    }
+                                  }}
+                                  className="text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 hover:underline flex items-center gap-1 font-semibold ml-auto"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                  <span>Delete</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
 
-            <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-white/10">
-              <button
-                onClick={() => setImageModalProduct(null)}
-                className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-bold"
-              >
-                Done
-              </button>
-            </div>
-
-          </div>
-        </div>
+                {/* Modal Footer */}
+                <div className="flex items-center justify-between p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-slate-950/40">
+                  <div className="text-xs text-slate-500 dark:text-zinc-400">
+                    <span className="font-bold text-slate-800 dark:text-zinc-200">{currentImages.length}</span> image(s) in Supabase Storage
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setImageModalProduct(null)}
+                      disabled={isUploading}
+                      className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all disabled:opacity-50"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </div>,
+        document.body
       )}
 
       {/* ========================================================================= */}
       {/* VARIANT GENERATOR MODAL */}
       {/* ========================================================================= */}
-      {variantGenProduct && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5 border border-slate-200 dark:border-cyan-500/30 shadow-2xl">
+      {mounted && variantGenProduct && createPortal(
+        <div
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setVariantGenProduct(null);
+          }}
+        >
+          <div
+            className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-slate-900 dark:text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-amber-500" />
                 <span>Variant Generator: {variantGenProduct.name}</span>
               </h3>
-              <button onClick={() => setVariantGenProduct(null)}>
+              <button
+                onClick={() => setVariantGenProduct(null)}
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -1732,33 +1989,45 @@ export default function AdminProductsPage() {
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
               <button
                 onClick={() => setVariantGenProduct(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRunVariantGenerator}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold"
+                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20"
               >
                 Generate Combinations into Supabase
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ========================================================================= */}
       {/* ADD NEW PRODUCT MODAL */}
       {/* ========================================================================= */}
-      {showAddProductModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-slate-200 dark:border-cyan-500/30 shadow-2xl">
+      {mounted && showAddProductModal && createPortal(
+        <div
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowAddProductModal(false);
+          }}
+        >
+          <div
+            className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-slate-900 dark:text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
                 <Plus className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
                 <span>Add New Product to Supabase</span>
               </h3>
-              <button onClick={() => setShowAddProductModal(false)}>
+              <button
+                onClick={() => setShowAddProductModal(false)}
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -1853,33 +2122,48 @@ export default function AdminProductsPage() {
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
               <button
                 onClick={() => setShowAddProductModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateProduct}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold"
+                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20"
               >
                 Create Product in Supabase
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ========================================================================= */}
       {/* EDIT GENERAL PRODUCT MODAL */}
       {/* ========================================================================= */}
-      {editingProduct && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-card bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 space-y-4 border border-slate-200 dark:border-cyan-500/30 shadow-2xl">
+      {mounted && editingProduct && createPortal(
+        <div
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !isSavingProductEdit) {
+              setEditingProduct(null);
+            }
+          }}
+        >
+          <div
+            className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-slate-900 dark:text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
                 <Edit className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
                 <span>Edit Product Details</span>
               </h3>
-              <button onClick={() => setEditingProduct(null)}>
+              <button
+                onClick={() => !isSavingProductEdit && setEditingProduct(null)}
+                disabled={isSavingProductEdit}
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -1972,22 +2256,37 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400 bg-blue-500/5 dark:bg-cyan-500/5 p-2.5 rounded-xl border border-blue-500/10 dark:border-cyan-500/10 flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 flex-shrink-0" />
+              <span>Edits save directly to Supabase and immediately reflect on the live storefront. No catalog sync needed.</span>
+            </div>
+
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
               <button
                 onClick={() => setEditingProduct(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-semibold"
+                disabled={isSavingProductEdit}
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveProductEdit}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold"
+                disabled={isSavingProductEdit}
+                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 disabled:opacity-50 shadow-md shadow-blue-500/20"
               >
-                Save Changes to Supabase
+                {isSavingProductEdit ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <span>Save Changes</span>
+                )}
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

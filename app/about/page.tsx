@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { Target, Eye, ShieldCheck, Users, Smartphone, Zap, Truck, Sparkles } from "lucide-react";
 import { storeConfig } from "@/config/store";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 
 import type { Metadata } from "next";
 
@@ -48,10 +49,10 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   const stats = [
-    { label: "Happy Customers", value: "500+", icon: Users, color: "text-blue-600 dark:text-cyan-400" },
-    { label: "Devices Sold", value: "700+", icon: Smartphone, color: "text-indigo-600 dark:text-blue-400" },
+    { label: "Happy Customers", value: "500+", numeric: 500, suffix: "+", icon: Users, color: "text-blue-600 dark:text-cyan-400" },
+    { label: "Devices Sold", value: "700+", numeric: 700, suffix: "+", icon: Smartphone, color: "text-indigo-600 dark:text-blue-400" },
     { label: "Fast Customer Support", value: "8AM - 8PM", icon: Zap, color: "text-amber-500 dark:text-amber-400" },
-    { label: "Islandwide Online Service", value: "25 Districts", icon: Truck, color: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Islandwide Online Service", value: "25 Districts", numeric: 25, suffix: " Districts", icon: Truck, color: "text-emerald-600 dark:text-emerald-400" },
   ];
 
   return (
@@ -143,7 +144,13 @@ export default function AboutPage() {
             return (
               <div key={st.label} className="space-y-1.5 sm:space-y-2">
                 <Icon className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto ${st.color} mb-1.5 sm:mb-2`} />
-                <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white">{st.value}</div>
+                <div className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white">
+                  {st.numeric ? (
+                    <AnimatedCounter target={st.numeric} suffix={st.suffix} />
+                  ) : (
+                    st.value
+                  )}
+                </div>
                 <p className="text-[10px] sm:text-xs uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
                   {st.label}
                 </p>

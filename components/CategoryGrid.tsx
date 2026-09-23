@@ -97,7 +97,7 @@ export const CategoryGrid: React.FC = () => {
             <ScrollReveal key={cat.name} direction="up" delay={idx * 50}>
               <Link
                 href={cat.href}
-                className={`glass-card group p-5 sm:p-7 rounded-2xl sm:rounded-[2rem] transition-all duration-300 relative overflow-hidden flex flex-col justify-between border ${cat.borderColor} shadow-sm hover:shadow-xl w-full`}
+                className={`glass-card group p-5 sm:p-7 rounded-2xl sm:rounded-[2rem] transition-all duration-300 relative overflow-hidden flex flex-col justify-between border ${cat.borderColor} shadow-sm hover:shadow-xl w-full hover:-translate-y-1.5`}
               >
                 {/* Background ambient lighting */}
                 <div className={`absolute -right-8 -bottom-8 w-36 h-36 rounded-full bg-gradient-to-br ${cat.glow} blur-2xl group-hover:scale-150 transition-transform duration-500`} />

@@ -69,9 +69,20 @@ export default function IPhonesPage() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {iphones.map((product) => (
-          <ProductCard key={product.id} product={product} />
+      <div
+        key={filter}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-300"
+      >
+        {iphones.map((product, idx) => (
+          <div
+            key={product.id}
+            style={{
+              animationDelay: `${Math.min(idx * 35, 350)}ms`,
+            }}
+            className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+          >
+            <ProductCard product={product} />
+          </div>
         ))}
       </div>
 

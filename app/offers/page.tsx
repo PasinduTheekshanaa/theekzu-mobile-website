@@ -39,9 +39,17 @@ export default function OffersPage() {
           <span className="text-xs font-bold text-rose-600 dark:text-rose-400">{deals.length} active offers</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {deals.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-300">
+          {deals.map((product, idx) => (
+            <div
+              key={product.id}
+              style={{
+                animationDelay: `${Math.min(idx * 40, 350)}ms`,
+              }}
+              className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+            >
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </div>
