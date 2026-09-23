@@ -64,6 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
     { name: "iPhones", href: "/iphones" },
+    { name: "Showroom", href: "/showroom" },
     { name: "Accessories", href: "/accessories" },
     { name: "Offers", href: "/offers", badge: "HOT" },
     { name: "Trade-In", href: "/trade-in" },
@@ -119,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           </Link>
 
           {/* CENTER: Desktop Navigation Links (Visible >= 1024px) */}
-          <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-6 2xl:gap-7">
+          <nav className="hidden lg:flex items-center justify-center gap-3 xl:gap-5 2xl:gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.name}

@@ -6,6 +6,7 @@ import { CategoryGrid } from "@/components/CategoryGrid";
 import { SpecialOffers } from "@/components/SpecialOffers";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { TradeInBanner } from "@/components/TradeInBanner";
+import { ShowroomPreview } from "@/components/ShowroomPreview";
 import { FlagshipShowcase } from "@/components/FlagshipShowcase";
 import { CustomerReviews } from "@/components/CustomerReviews";
 import { SocialSection } from "@/components/SocialSection";
@@ -65,7 +66,10 @@ export default function HomePage() {
       {/* 6. Trade-In Banner with Interactive Form */}
       <TradeInBanner />
 
-      {/* 7. Flagship Showcase (iPhone 16 Pro Max) */}
+      {/* 7. Showroom Experience Preview */}
+      <ShowroomPreview />
+
+      {/* 8. Flagship Showcase (iPhone 16 Pro Max) */}
       <FlagshipShowcase />
 
       {/* 8. Customer Reviews */}

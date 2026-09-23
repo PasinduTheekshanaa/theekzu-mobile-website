@@ -160,6 +160,11 @@ export const Footer: React.FC = () => {
                   About Our Company
                 </Link>
               </li>
+              <li>
+                <Link href="/showroom" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">
+                  Our Showroom Gallery
+                </Link>
+              </li>
             </ul>
           </div>
 
