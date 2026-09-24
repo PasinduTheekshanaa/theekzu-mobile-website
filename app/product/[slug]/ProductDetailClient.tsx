@@ -71,11 +71,19 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
     liveProduct.variants?.find((v) => v.storage.toLowerCase() === selectedStorage.toLowerCase()) ||
     liveProduct.variants?.[0];
 
-  // Dynamic pricing
+  // Dynamic pricing & Stock Verification
   const currentPrice = currentVariant ? currentVariant.price : liveProduct.price;
   const oldPrice = currentVariant ? currentVariant.oldPrice : liveProduct.oldPrice;
-  const currentStock = currentVariant ? currentVariant.stock : (liveProduct.stock === "Out of Stock" ? 0 : 5);
-  const isOutOfStock = currentStock <= 0;
+
+  // Variant & Product Stock logic
+  const currentVariantStock = currentVariant ? (Number(currentVariant.stock) || 0) : 5;
+  const isProductLevelOutOfStock = liveProduct.stock === "Out of Stock";
+  const areAllVariantsOutOfStock = Boolean(
+    liveProduct.variants &&
+      liveProduct.variants.length > 0 &&
+      liveProduct.variants.every((v) => (Number(v.stock) || 0) <= 0)
+  );
+  const isOutOfStock = isProductLevelOutOfStock || areAllVariantsOutOfStock || currentVariantStock <= 0;
   const sku = currentVariant?.sku || `TM-${liveProduct.model}-${selectedStorage}`;
 
   // Calculated discount
@@ -86,21 +94,34 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
 
   const wishlisted = isWishlisted(liveProduct.id);
 
-  // High-precision WhatsApp message
-  const waMessage = `🛒 *THEEKZU MOBILE - PRODUCT INQUIRY*
+  // High-precision WhatsApp message: inquiry vs confirmed order
+  const waMessage = isOutOfStock
+    ? `💬 *THEEKZU MOBILE - STOCK AVAILABILITY INQUIRY*
 
-Hello Theekzu Mobile, I would like to order/inquire about:
+Hello Theekzu Mobile,
+
+I noticed that the following item is currently marked as Out of Stock:
+
+• *Product:* ${liveProduct.name}
+• *Storage:* ${selectedStorage}
+• *Color:* ${selectedColor}
+• *Condition:* ${liveProduct.condition}
+
+Can you please let me know when this model or variant will be restocked, or if there is an alternative available?`
+    : `🛒 *THEEKZU MOBILE - PRODUCT ORDER*
+
+Hello Theekzu Mobile, I would like to place an order for:
 
 • *Product:* ${liveProduct.name}
 • *Storage:* ${selectedStorage}
 • *Color:* ${selectedColor}
 • *SKU:* ${sku}
 • *Price:* ${formatCurrency(currentPrice)}
-• *Stock Status:* ${isOutOfStock ? "Out of Stock (Inquiry)" : "In Stock"}
+• *Stock Status:* In Stock (${currentVariantStock} available)
 • *Quantity:* ${quantity}
 • *Condition:* ${liveProduct.condition}
 
-Can you please confirm order details and delivery?`;
+Please confirm availability and islandwide delivery options!`;
 
   const waUrl = getWhatsAppUrl(waMessage);
 
@@ -110,9 +131,8 @@ Can you please confirm order details and delivery?`;
   };
 
   const handleBuyNow = () => {
-    if (!isOutOfStock) {
-      addItem(liveProduct, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
-    }
+    if (isOutOfStock) return;
+    addItem(liveProduct, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
     window.open(waUrl, "_blank");
   };
 
@@ -237,7 +257,7 @@ Can you please confirm order details and delivery?`;
                 ) : (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>In Stock ({currentStock} available)</span>
+                    <span>In Stock ({currentVariantStock} available)</span>
                   </>
                 )}
               </span>
@@ -403,20 +423,29 @@ Can you please confirm order details and delivery?`;
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={handleBuyNow}
-                  className="min-h-[44px] py-3.5 px-4 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 border border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-white text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.98] btn-press"
+                  disabled={isOutOfStock}
+                  className={`min-h-[44px] py-3.5 px-4 rounded-full border text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs btn-press ${
+                    isOutOfStock
+                      ? "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-white/5 text-slate-400 dark:text-zinc-600 cursor-not-allowed opacity-60"
+                      : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-white active:scale-[0.98]"
+                  }`}
                 >
-                  <Zap className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0" />
-                  <span>{isOutOfStock ? "Inquire on WhatsApp" : "Buy Now (Instant WhatsApp)"}</span>
+                  <Zap className={`w-4 h-4 shrink-0 ${isOutOfStock ? "text-slate-400 dark:text-zinc-600" : "text-blue-600 dark:text-cyan-400"}`} />
+                  <span>{isOutOfStock ? "Unavailable (Out of Stock)" : "Buy Now (Instant WhatsApp)"}</span>
                 </button>
 
                 <a
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="min-h-[44px] py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all active:scale-[0.98] btn-press"
+                  className={`min-h-[44px] py-3.5 px-4 rounded-full text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
+                    isOutOfStock
+                      ? "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-amber-500/20"
+                      : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]"
+                  }`}
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
-                  <span>Order via WhatsApp</span>
+                  <span>{isOutOfStock ? "Inquire Availability on WhatsApp" : "Order via WhatsApp"}</span>
                 </a>
               </div>
             </div>

@@ -15,6 +15,9 @@ import {
   setPrimaryImageInSupabase,
   assignImageColorInSupabase,
   migrateCatalogToSupabase,
+  updateProductStockInSupabase,
+  bulkUpdateProductStockInSupabase,
+  updateVariantStockInSupabase,
   SupabaseProductImageRecord,
   MigrationResult,
 } from "@/lib/supabaseService";
@@ -36,6 +39,9 @@ export interface ProductContextType {
   generateVariants: (productId: string, storages: string[], colors: string[], basePrice?: number) => Promise<boolean>;
   updatePrice: (productId: string, newPrice: number, newOldPrice?: number) => Promise<boolean>;
   updateStock: (productId: string, inStock: boolean) => Promise<boolean>;
+  updateProductStock: (productId: string, inStock: boolean) => Promise<{ success: boolean; error?: string }>;
+  bulkUpdateProductStock: (productIds: string[], inStock: boolean) => Promise<{ success: boolean; updatedCount: number; error?: string }>;
+  updateVariantStock: (variantId: string, stock: number) => Promise<{ success: boolean; error?: string }>;
   updateFeatured: (productId: string, featured: boolean) => Promise<boolean>;
   customImages: Record<string, SupabaseProductImageRecord[]>;
   uploadImage: (productId: string, file: File, color?: string, isPrimary?: boolean) => Promise<{ success: boolean; imageRecord?: SupabaseProductImageRecord; error?: string }>;
@@ -108,7 +114,9 @@ export const ProductProvider: React.FC<{
   }, []);
 
   useEffect(() => {
-    loadCatalog();
+    if (!initialProducts || initialProducts.length === 0) {
+      loadCatalog();
+    }
 
     // Supabase Realtime channel for instant cross-device updates
     if (isSupabaseConfigured()) {
@@ -262,14 +270,86 @@ export const ProductProvider: React.FC<{
   };
 
   const updateStock = async (productId: string, inStock: boolean): Promise<boolean> => {
-    const product = products.find((p) => p.id === productId);
-    if (!product) return false;
-
-    const res = await updateProduct({
-      ...product,
-      stock: inStock ? "In Stock" : "Out of Stock",
-    });
+    const res = await updateProductStock(productId, inStock);
     return res.success;
+  };
+
+  const updateProductStock = async (
+    productId: string,
+    inStock: boolean
+  ): Promise<{ success: boolean; error?: string }> => {
+    // Optimistic UI update
+    setProducts((prev) =>
+      prev.map((p) => {
+        if (p.id !== productId) return p;
+        const newStockVal = inStock ? 5 : 0;
+        const updatedVariants = (p.variants || []).map((v) => ({ ...v, stock: newStockVal }));
+        return {
+          ...p,
+          stock: inStock ? "In Stock" : "Out of Stock",
+          variants: updatedVariants,
+        };
+      })
+    );
+
+    const res = await updateProductStockInSupabase(productId, inStock);
+    if (!res.success) {
+      await loadCatalog(); // Revert on failure
+    } else {
+      await loadCatalog();
+    }
+    return res;
+  };
+
+  const bulkUpdateProductStock = async (
+    productIds: string[],
+    inStock: boolean
+  ): Promise<{ success: boolean; updatedCount: number; error?: string }> => {
+    // Optimistic UI update
+    setProducts((prev) =>
+      prev.map((p) => {
+        if (!productIds.includes(p.id)) return p;
+        const newStockVal = inStock ? 5 : 0;
+        const updatedVariants = (p.variants || []).map((v) => ({ ...v, stock: newStockVal }));
+        return {
+          ...p,
+          stock: inStock ? "In Stock" : "Out of Stock",
+          variants: updatedVariants,
+        };
+      })
+    );
+
+    const res = await bulkUpdateProductStockInSupabase(productIds, inStock);
+    await loadCatalog();
+    return res;
+  };
+
+  const updateVariantStock = async (
+    variantId: string,
+    stock: number
+  ): Promise<{ success: boolean; error?: string }> => {
+    // Optimistic UI update
+    setProducts((prev) =>
+      prev.map((p) => {
+        const hasVariant = p.variants?.some((v) => v.id === variantId);
+        if (!hasVariant) return p;
+        const updatedVariants = (p.variants || []).map((v) => (v.id === variantId ? { ...v, stock } : v));
+        const hasAnyStock = updatedVariants.some((v) => v.stock > 0);
+        return {
+          ...p,
+          stock: hasAnyStock ? "In Stock" : "Out of Stock",
+          variants: updatedVariants,
+        };
+      })
+    );
+
+    const res = await updateVariantStockInSupabase(variantId, stock);
+    if (!res.success) {
+      await loadCatalog();
+    } else {
+      await loadCatalog();
+    }
+    return res;
   };
 
   const updateFeatured = async (productId: string, featured: boolean): Promise<boolean> => {
@@ -335,7 +415,7 @@ export const ProductProvider: React.FC<{
     return res;
   };
 
-  const getProductPrimaryImage = (product: Product): string => {
+  const getProductPrimaryImage = useCallback((product: Product): string => {
     const list = imagesMap[product.id];
     if (list && list.length > 0) {
       const primary = list.find((img) => img.is_primary);
@@ -343,9 +423,9 @@ export const ProductProvider: React.FC<{
       if (list[0]?.image_url) return list[0].image_url;
     }
     return product.images && product.images.length > 0 ? product.images[0] : "";
-  };
+  }, [imagesMap]);
 
-  const getProductColorImage = (product: Product, colorName: string): string | undefined => {
+  const getProductColorImage = useCallback((product: Product, colorName: string): string | undefined => {
     const list = imagesMap[product.id];
     if (list && list.length > 0) {
       const matched = list.find(
@@ -354,54 +434,71 @@ export const ProductProvider: React.FC<{
       if (matched?.image_url) return matched.image_url;
     }
     return undefined;
-  };
+  }, [imagesMap]);
 
-  const getProductBySlug = (slug: string): Product | undefined => {
+  const getProductBySlug = useCallback((slug: string): Product | undefined => {
     return products.find((p) => p.slug === slug);
-  };
+  }, [products]);
 
-  const getProductById = (id: string): Product | undefined => {
+  const getProductById = useCallback((id: string): Product | undefined => {
     return products.find((p) => p.id === id);
-  };
+  }, [products]);
 
-  const getRelatedProducts = (product: Product, limit = 3): Product[] => {
+  const getRelatedProducts = useCallback((product: Product, limit = 3): Product[] => {
     return products
       .filter((p) => p.id !== product.id && p.category === product.category)
       .slice(0, limit);
-  };
+  }, [products]);
+
+  const contextValue = React.useMemo<ProductContextType>(
+    () => ({
+      products,
+      isLoading,
+      isLiveDatabase,
+      getProductBySlug,
+      getProductById,
+      getRelatedProducts,
+      updateProduct,
+      addProduct,
+      deleteProduct,
+      updateVariant,
+      addVariant,
+      deleteVariant,
+      generateVariants,
+      updatePrice,
+      updateStock,
+      updateProductStock,
+      bulkUpdateProductStock,
+      updateVariantStock,
+      updateFeatured,
+      customImages: imagesMap,
+      uploadImage,
+      deleteImage,
+      setPrimaryImage,
+      assignImageToColor,
+      refreshCatalog: loadCatalog,
+      migrateCatalog: migrateCatalogToSupabase,
+      getProductPrimaryImage,
+      getProductColorImage,
+      getLowestPrice: computeLowestPrice,
+      getHighestPrice: computeHighestPrice,
+    }),
+    [
+      products,
+      isLoading,
+      isLiveDatabase,
+      getProductBySlug,
+      getProductById,
+      getRelatedProducts,
+      imagesMap,
+      getProductPrimaryImage,
+      getProductColorImage,
+      loadCatalog,
+    ]
+  );
 
   return (
-    <ProductContext.Provider
-      value={{
-        products,
-        isLoading,
-        isLiveDatabase,
-        getProductBySlug,
-        getProductById,
-        getRelatedProducts,
-        updateProduct,
-        addProduct,
-        deleteProduct,
-        updateVariant,
-        addVariant,
-        deleteVariant,
-        generateVariants,
-        updatePrice,
-        updateStock,
-        updateFeatured,
-        customImages: imagesMap,
-        uploadImage,
-        deleteImage,
-        setPrimaryImage,
-        assignImageToColor,
-        refreshCatalog: loadCatalog,
-        migrateCatalog: migrateCatalogToSupabase,
-        getProductPrimaryImage,
-        getProductColorImage,
-        getLowestPrice: computeLowestPrice,
-        getHighestPrice: computeHighestPrice,
-      }}
-    >
+    <ProductContext.Provider value={contextValue}>
       {children}
     </ProductContext.Provider>
   );

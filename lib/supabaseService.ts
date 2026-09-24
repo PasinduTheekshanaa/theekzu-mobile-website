@@ -169,9 +169,14 @@ export function mapSupabaseToProduct(
     storageOptions = ["128GB", "256GB", "512GB"];
   }
 
-  // Stock: In Stock if any active variant has stock > 0
-  const hasStock = mappedVariants.length > 0 ? mappedVariants.some((v) => v.stock > 0) : true;
-  const stock = hasStock ? "In Stock" : "Out of Stock";
+  // Stock: In Stock if product-level is not Out of Stock AND any variant has stock > 0
+  const isProductLevelOOS =
+    (p as any).stock === "Out of Stock" ||
+    (p as any).stock_status === "Out of Stock" ||
+    (p as any).in_stock === false;
+
+  const hasAnyVariantStock = mappedVariants.length > 0 ? mappedVariants.some((v) => (Number(v.stock) || 0) > 0) : true;
+  const stock = isProductLevelOOS || !hasAnyVariantStock ? "Out of Stock" : "In Stock";
 
   return {
     id: p.id,
@@ -1099,3 +1104,392 @@ export async function deleteProductFromSupabase(
     return { success: false, error: e?.message || "Unknown error deleting product" };
   }
 }
+
+// ==============================================================================
+// CUSTOMER REVIEWS & FEEDBACK SERVICE
+// ==============================================================================
+
+export interface CustomerReview {
+  id: string;
+  customer_name: string;
+  rating: number;
+  review_text: string;
+  review?: string; // Backwards compatible alias
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+  updated_at?: string;
+}
+
+/**
+ * Fetch approved reviews for public display on the storefront
+ */
+export async function fetchApprovedCustomerReviews(): Promise<{
+  reviews: CustomerReview[];
+  averageRating: number;
+  totalCount: number;
+  tableReady: boolean;
+}> {
+  if (!isSupabaseConfigured()) {
+    return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: false };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("customer_reviews")
+      .select("*")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      if (
+        error.code === "42P01" ||
+        error.code === "PGRST205" ||
+        error.message.includes("does not exist") ||
+        error.message.includes("schema cache")
+      ) {
+        return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: false };
+      }
+      console.warn("fetchApprovedCustomerReviews notice:", error.message);
+      return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: true };
+    }
+
+    const reviews: CustomerReview[] = (data || []).map((r: any) => ({
+      id: r.id,
+      customer_name: r.customer_name,
+      rating: Number(r.rating) || 5,
+      review_text: r.review_text || r.review || "",
+      review: r.review_text || r.review || "",
+      status: r.status,
+      created_at: r.created_at,
+      updated_at: r.updated_at || r.created_at,
+    }));
+
+    const totalCount = reviews.length;
+    const averageRating =
+      totalCount > 0
+        ? Math.round((reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / totalCount) * 10) / 10
+        : 5.0;
+
+    return { reviews, averageRating, totalCount, tableReady: true };
+  } catch (e) {
+    console.error("fetchApprovedCustomerReviews exception:", e);
+    return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: false };
+  }
+}
+
+/**
+ * Submit a new customer review (always pending status by default)
+ */
+export async function submitCustomerReview(params: {
+  customerName: string;
+  rating: number;
+  review: string;
+}): Promise<{ success: boolean; error?: string; tableNotCreated?: boolean }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase connection is not configured." };
+  }
+
+  const name = params.customerName.trim();
+  const rating = Math.min(5, Math.max(1, Math.round(params.rating)));
+  const reviewText = params.review.trim();
+
+  if (name.length < 2) {
+    return { success: false, error: "Please enter your name (minimum 2 characters)." };
+  }
+  if (name.length > 100) {
+    return { success: false, error: "Name must be 100 characters or fewer." };
+  }
+  if (reviewText.length < 10) {
+    return { success: false, error: "Please share a few words about your experience (minimum 10 characters)." };
+  }
+  if (reviewText.length > 1000) {
+    return { success: false, error: "Review must be 1000 characters or fewer." };
+  }
+
+  try {
+    const payload: any = {
+      customer_name: name,
+      rating,
+      review_text: reviewText,
+      status: "pending",
+    };
+
+    let { error } = await supabase.from("customer_reviews").insert([payload]);
+
+    if (error && (error.message.includes("review_text") || error.code === "42703")) {
+      const fallbackPayload = {
+        customer_name: name,
+        rating,
+        review: reviewText,
+        status: "pending",
+      };
+      const resFallback = await supabase.from("customer_reviews").insert([fallbackPayload]);
+      error = resFallback.error;
+    }
+
+    if (error) {
+      if (
+        error.code === "42P01" ||
+        error.code === "PGRST205" ||
+        error.message.includes("does not exist") ||
+        error.message.includes("schema cache")
+      ) {
+        return {
+          success: false,
+          tableNotCreated: true,
+          error: "The customer_reviews table is not yet created in Supabase. Please run supabase_theekzu_schema.sql in your Supabase SQL editor.",
+        };
+      }
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (e: any) {
+    console.error("submitCustomerReview exception:", e);
+    return { success: false, error: e?.message || "Failed to submit review." };
+  }
+}
+
+/**
+ * Fetch all reviews for admin moderation (pending, approved, rejected)
+ */
+export async function fetchAdminCustomerReviews(): Promise<{
+  reviews: CustomerReview[];
+  error?: string;
+  tableNotCreated?: boolean;
+}> {
+  if (!isSupabaseConfigured()) {
+    return { reviews: [], error: "Supabase credentials are not configured" };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("customer_reviews")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      if (
+        error.code === "42P01" ||
+        error.code === "PGRST205" ||
+        error.message.includes("does not exist") ||
+        error.message.includes("schema cache")
+      ) {
+        return { reviews: [], tableNotCreated: true, error: "Table 'customer_reviews' does not exist yet." };
+      }
+      return { reviews: [], error: error.message };
+    }
+
+    const reviews: CustomerReview[] = (data || []).map((r: any) => ({
+      id: r.id,
+      customer_name: r.customer_name,
+      rating: Number(r.rating) || 5,
+      review_text: r.review_text || r.review || "",
+      review: r.review_text || r.review || "",
+      status: r.status,
+      created_at: r.created_at,
+      updated_at: r.updated_at || r.created_at,
+    }));
+
+    return { reviews };
+  } catch (e: any) {
+    console.error("fetchAdminCustomerReviews exception:", e);
+    return { reviews: [], error: e?.message || "Failed to fetch reviews" };
+  }
+}
+
+/**
+ * Update review status (approve or reject)
+ */
+export async function updateCustomerReviewStatus(
+  reviewId: string,
+  newStatus: "approved" | "rejected" | "pending"
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
+
+  try {
+    const { error } = await supabase
+      .from("customer_reviews")
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq("id", reviewId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (e: any) {
+    console.error("updateCustomerReviewStatus exception:", e);
+    return { success: false, error: e?.message || "Failed to update review status" };
+  }
+}
+
+/**
+ * Delete a customer review
+ */
+export async function deleteCustomerReviewFromSupabase(
+  reviewId: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
+
+  try {
+    const { error } = await supabase
+      .from("customer_reviews")
+      .delete()
+      .eq("id", reviewId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+    return { success: true };
+  } catch (e: any) {
+    console.error("deleteCustomerReviewFromSupabase exception:", e);
+    return { success: false, error: e?.message || "Failed to delete review" };
+  }
+}
+
+// ==============================================================================
+// ADMIN STOCK MANAGEMENT SERVICE
+// ==============================================================================
+
+/**
+ * Update stock status for an entire product
+ * If inStock = false, sets all variants of the product to stock = 0
+ * If inStock = true, restores stock = 5 for variants currently at 0
+ */
+export async function updateProductStockInSupabase(
+  productId: string,
+  inStock: boolean
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
+
+  try {
+    const targetProductId = await resolveProductUuid(productId);
+    if (!targetProductId) {
+      return { success: false, error: `Could not resolve UUID for "${productId}".` };
+    }
+
+    const newStockVal = inStock ? 5 : 0;
+
+    // Update variant rows
+    const { error: varErr } = await supabase
+      .from("product_variants")
+      .update({ stock: newStockVal, updated_at: new Date().toISOString() })
+      .eq("product_id", targetProductId);
+
+    if (varErr) {
+      console.error("Error updating variant stock:", varErr);
+      return { success: false, error: varErr.message };
+    }
+
+    // Try updating product stock columns if they exist
+    try {
+      await supabase
+        .from("products")
+        .update({
+          stock: inStock ? "In Stock" : "Out of Stock",
+          stock_status: inStock ? "In Stock" : "Out of Stock",
+          in_stock: inStock,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", targetProductId);
+    } catch {
+      // Safe fallback if column not yet added
+      await supabase
+        .from("products")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", targetProductId);
+    }
+
+    return { success: true };
+  } catch (e: any) {
+    console.error("updateProductStockInSupabase exception:", e);
+    return { success: false, error: e?.message || "Failed to update product stock" };
+  }
+}
+
+/**
+ * Bulk update stock for multiple products
+ */
+export async function bulkUpdateProductStockInSupabase(
+  productIds: string[],
+  inStock: boolean
+): Promise<{ success: boolean; updatedCount: number; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, updatedCount: 0, error: "Supabase credentials are not configured" };
+  }
+
+  try {
+    let count = 0;
+    for (const pid of productIds) {
+      const res = await updateProductStockInSupabase(pid, inStock);
+      if (res.success) count++;
+    }
+    return { success: true, updatedCount: count };
+  } catch (e: any) {
+    console.error("bulkUpdateProductStockInSupabase exception:", e);
+    return { success: false, updatedCount: 0, error: e?.message || "Bulk update failed" };
+  }
+}
+
+/**
+ * Update stock for an individual variant (storage x color)
+ * Automatically recalculates parent product stock status so single variant changes
+ * do not mark the entire phone model out of stock if other variants remain available.
+ */
+export async function updateVariantStockInSupabase(
+  variantId: string,
+  stockQty: number
+): Promise<{ success: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: "Supabase credentials are not configured" };
+  }
+
+  try {
+    const qty = Math.max(0, Math.round(stockQty));
+    const { data: updatedVariant, error } = await supabase
+      .from("product_variants")
+      .update({ stock: qty, updated_at: new Date().toISOString() })
+      .eq("id", variantId)
+      .select("id, product_id, stock")
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    // Check sibling variants to update parent product status
+    if (updatedVariant && updatedVariant.product_id) {
+      const { data: siblingVariants } = await supabase
+        .from("product_variants")
+        .select("stock")
+        .eq("product_id", updatedVariant.product_id);
+
+      const hasAnyStock = (siblingVariants || []).some((v) => (Number(v.stock) || 0) > 0);
+      try {
+        await supabase
+          .from("products")
+          .update({
+            stock: hasAnyStock ? "In Stock" : "Out of Stock",
+            stock_status: hasAnyStock ? "In Stock" : "Out of Stock",
+            in_stock: hasAnyStock,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", updatedVariant.product_id);
+      } catch {
+        // Safe if column not yet added
+      }
+    }
+
+    return { success: true };
+  } catch (e: any) {
+    console.error("updateVariantStockInSupabase exception:", e);
+    return { success: false, error: e?.message || "Failed to update variant stock" };
+  }
+}
+

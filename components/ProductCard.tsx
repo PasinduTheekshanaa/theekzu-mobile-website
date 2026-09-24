@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, MessageCircle, Eye, ShieldCheck, Sparkles } from "lucide-react";
+import { Heart, MessageCircle, Eye, ShieldCheck, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Product } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig } from "@/config/store";
@@ -14,7 +14,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) => {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { getProductPrimaryImage, getLowestPrice } = useProducts();
   const wishlisted = isWishlisted(product.id);
@@ -26,26 +26,36 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const hasVariants = product.variants && product.variants.length > 1;
 
   // Check overall stock
-  const isOutOfStock = product.stock === "Out of Stock" || (product.variants && product.variants.every((v) => v.stock <= 0));
+  const isOutOfStock =
+    product.stock === "Out of Stock" ||
+    (product.variants && product.variants.length > 0 && product.variants.every((v) => (Number(v.stock) || 0) <= 0));
 
-  // Subtle 3D tilt calculation on desktop hover
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0, lift: 0 });
   const [imgLoaded, setImgLoaded] = useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  // High performance DOM-based 3D tilt without React state re-renders
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!cardRef.current || window.innerWidth < 1024) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
-    setTilt({ x, y, lift: -6 });
-  };
+    cardRef.current.style.transform = `perspective(800px) rotateY(${x}deg) rotateX(${-y}deg) translateY(-6px)`;
+  }, []);
 
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0, lift: 0 });
-  };
+  const handleMouseLeave = useCallback(() => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = "perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0px)";
+  }, []);
 
-  const waMessage = `Hello Theekzu Mobile,
+  const waMessage = isOutOfStock
+    ? `Hello Theekzu Mobile,
+
+I noticed that ${product.name} is currently marked as Out of Stock.
+Could you please let me know when this model or specific variants will be back in stock?
+
+Product: ${product.name}
+Condition: ${product.condition}`
+    : `Hello Theekzu Mobile,
 
 I am interested in:
 
@@ -65,7 +75,7 @@ Can you confirm availability and latest variant pricing?`;
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        transform: `perspective(800px) rotateY(${tilt.x}deg) rotateX(${-tilt.y}deg) translateY(${tilt.lift}px)`,
+        transform: "perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0px)",
         transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease",
       }}
       className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500/50 dark:hover:border-cyan-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(0,102,255,0.35)]"
@@ -137,9 +147,16 @@ Can you confirm availability and latest variant pricing?`;
           </span>
         )}
 
-        {isOutOfStock && (
-          <span className="absolute top-3 right-3 bg-rose-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow z-20">
+        {/* Stock Status Badge */}
+        {isOutOfStock ? (
+          <span className="absolute top-3 right-3 bg-rose-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md z-20 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             Out of Stock
+          </span>
+        ) : (
+          <span className="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow z-20 flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3" />
+            In Stock
           </span>
         )}
       </Link>
@@ -213,10 +230,15 @@ Can you confirm availability and latest variant pricing?`;
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-xs font-bold text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-sm shadow-emerald-500/20 active:scale-[0.98] btn-press group/wa"
+              className={`min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] btn-press ${
+                isOutOfStock
+                  ? "bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-300 border border-slate-300 dark:border-white/10"
+                  : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-emerald-500/20 group/wa"
+              }`}
+              title={isOutOfStock ? "Inquire about stock availability" : "Inquire or order via WhatsApp"}
             >
               <MessageCircle className="w-3.5 h-3.5 shrink-0 group-hover/wa:scale-110 transition-transform" />
-              <span>WhatsApp</span>
+              <span>{isOutOfStock ? "Inquire Stock" : "WhatsApp"}</span>
             </a>
           </div>
         </div>
@@ -226,3 +248,5 @@ Can you confirm availability and latest variant pricing?`;
     </div>
   );
 };
+
+export const ProductCard = React.memo(ProductCardComponent);

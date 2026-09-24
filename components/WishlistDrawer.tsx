@@ -101,16 +101,22 @@ export const WishlistDrawer: React.FC = () => {
                   </p>
 
                   <div className="flex items-center gap-2 mt-2">
-                    <button
-                      onClick={() => {
-                        addItem(p);
-                        removeFromWishlist(p.id);
-                      }}
-                      className="text-[11px] font-semibold text-white bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 px-3 py-1 rounded-lg flex items-center gap-1 transition-colors shadow-xs"
-                    >
-                      <ShoppingBag className="w-3 h-3" />
-                      <span>Move to Cart</span>
-                    </button>
+                    {p.stock === "Out of Stock" ? (
+                      <span className="text-[11px] font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded-lg">
+                        Out of Stock
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          addItem(p);
+                          removeFromWishlist(p.id);
+                        }}
+                        className="text-[11px] font-semibold text-white bg-blue-600 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-500 px-3 py-1 rounded-lg flex items-center gap-1 transition-colors shadow-xs"
+                      >
+                        <ShoppingBag className="w-3 h-3" />
+                        <span>Move to Cart</span>
+                      </button>
+                    )}
 
                     <button
                       onClick={() => removeFromWishlist(p.id)}

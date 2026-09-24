@@ -16,6 +16,7 @@ export interface CartItem {
   color: string;
   condition: string;
   quantity: number;
+  stockStatus?: string;
 }
 
 interface CartContextType {
@@ -78,23 +79,36 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     customImage?: string,
     variantId?: string
   ) => {
+    // Validate product-level stock status
+    const isProductOOS = (product as any).stock === "Out of Stock";
+
     const selectedStorage = storage || product.storage || (product.storageOptions && product.storageOptions[0]) || "Standard";
     const selectedColor = color || (product.colors && product.colors[0]?.name) || "Default";
     
     // Find matching variant if price not passed explicitly
     let finalPrice = customPrice;
     let finalVariantId = variantId;
+    let matchedVariant: ProductVariant | undefined;
 
-    if (finalPrice === undefined && product.variants && product.variants.length > 0) {
-      const matchedVariant = product.variants.find(
+    if (product.variants && product.variants.length > 0) {
+      matchedVariant = product.variants.find(
         (v) =>
-          v.storage.toLowerCase() === selectedStorage.toLowerCase() &&
-          v.color.toLowerCase() === selectedColor.toLowerCase()
+          (finalVariantId && v.id === finalVariantId) ||
+          (v.storage.toLowerCase() === selectedStorage.toLowerCase() &&
+           v.color.toLowerCase() === selectedColor.toLowerCase())
       );
       if (matchedVariant) {
-        finalPrice = matchedVariant.price;
-        finalVariantId = matchedVariant.id;
+        if (finalPrice === undefined) finalPrice = matchedVariant.price;
+        if (!finalVariantId) finalVariantId = matchedVariant.id;
       }
+    }
+
+    const isVariantOOS = matchedVariant !== undefined && matchedVariant.stock !== undefined && matchedVariant.stock <= 0;
+
+    // Prevent adding out-of-stock items to cart
+    if (isProductOOS || isVariantOOS) {
+      console.warn("Item is out of stock and cannot be added to cart:", product.name);
+      return;
     }
 
     if (finalPrice === undefined) {
@@ -127,6 +141,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             color: selectedColor,
             condition: product.condition,
             quantity,
+            stockStatus: "In Stock",
           },
         ];
       }
@@ -165,28 +180,49 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to inquire about your iPhones.")}`;
     }
 
+    const inStockItems = cart.filter((item) => item.stockStatus !== "Out of Stock");
+    const outOfStockItems = cart.filter((item) => item.stockStatus === "Out of Stock");
+
     const lines = [
-      "🛒 *NEW ORDER - THEEKZU MOBILE*",
-      "Hello Theekzu Mobile, I would like to place an order:",
+      outOfStockItems.length > 0 && inStockItems.length === 0
+        ? "💬 *STOCK AVAILABILITY INQUIRY - THEEKZU MOBILE*"
+        : "🛒 *NEW ORDER - THEEKZU MOBILE*",
+      "Hello Theekzu Mobile, I would like to " +
+        (outOfStockItems.length > 0 && inStockItems.length === 0 ? "inquire about the following items:" : "place an order:"),
       "",
     ];
 
-    cart.forEach((item, index) => {
-      lines.push(`*${index + 1}. ${item.name}*`);
-      if (item.storage && item.storage !== "Standard") {
-        lines.push(`   • Storage: ${item.storage}`);
+    if (inStockItems.length > 0) {
+      if (outOfStockItems.length > 0) {
+        lines.push("*Order Items (In Stock):*");
       }
-      if (item.color && item.color !== "Default") {
-        lines.push(`   • Color: ${item.color}`);
-      }
-      lines.push(`   • Condition: ${item.condition}`);
-      lines.push(`   • Quantity: ${item.quantity}`);
-      lines.push(`   • Price: ${formatLKR(item.price * item.quantity)}`);
-      lines.push("");
-    });
+      inStockItems.forEach((item, index) => {
+        lines.push(`*${index + 1}. ${item.name}*`);
+        if (item.storage && item.storage !== "Standard") {
+          lines.push(`   • Storage: ${item.storage}`);
+        }
+        if (item.color && item.color !== "Default") {
+          lines.push(`   • Color: ${item.color}`);
+        }
+        lines.push(`   • Condition: ${item.condition}`);
+        lines.push(`   • Quantity: ${item.quantity}`);
+        lines.push(`   • Price: ${formatLKR(item.price * item.quantity)}`);
+        lines.push("");
+      });
 
-    lines.push(`💰 *Total Amount: ${formatLKR(subtotal)}*`);
-    lines.push("");
+      const inStockSubtotal = inStockItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      lines.push(`💰 *Total Amount: ${formatLKR(inStockSubtotal)}*`);
+      lines.push("");
+    }
+
+    if (outOfStockItems.length > 0) {
+      lines.push("*Inquiry Items (Availability/Restock Check):*");
+      outOfStockItems.forEach((item) => {
+        lines.push(`• *${item.name}* (${item.storage} / ${item.color}) - Qty: ${item.quantity}`);
+      });
+      lines.push("");
+    }
+
     lines.push("Please confirm availability, delivery fee, and payment options.");
 
     return getWhatsAppUrl(lines.join("\n"));
