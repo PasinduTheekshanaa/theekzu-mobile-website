@@ -47,6 +47,28 @@ END $$;
 CREATE INDEX IF NOT EXISTS idx_customer_reviews_status ON public.customer_reviews(status);
 CREATE INDEX IF NOT EXISTS idx_customer_reviews_created_at ON public.customer_reviews(created_at DESC);
 
+-- Helper security definer function to verify admin access
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+  SELECT (
+    -- Listed in public.admin_users by user_id or email
+    EXISTS (
+      SELECT 1 FROM public.admin_users
+      WHERE user_id = auth.uid() OR email = (auth.jwt() ->> 'email')
+    )
+    OR
+    -- If admin_users table has no rows yet, permit authenticated users so the initial admin is never locked out
+    NOT EXISTS (
+      SELECT 1 FROM public.admin_users
+    )
+  );
+$$;
+
 -- Enable Row Level Security (RLS)
 ALTER TABLE public.customer_reviews ENABLE ROW LEVEL SECURITY;
 
@@ -80,18 +102,8 @@ CREATE POLICY "Admins can manage all reviews"
   ON public.customer_reviews
   FOR ALL
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.admin_users
-      WHERE user_id = auth.uid() OR email = auth.jwt() ->> 'email'
-    )
-  )
-  WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM public.admin_users
-      WHERE user_id = auth.uid() OR email = auth.jwt() ->> 'email'
-    )
-  );
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
 -- ------------------------------------------------------------------------------
 -- 2. PRODUCT & VARIANT STOCK FIELDS

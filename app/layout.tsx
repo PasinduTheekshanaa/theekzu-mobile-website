@@ -34,19 +34,24 @@ export const metadata: Metadata = {
     template: "%s | Theekzu Mobile",
   },
   description:
-    "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
+    "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
   keywords: [
     "Theekzu Mobile",
+    "Theekzu",
+    "Theekzu Mobile Sri Lanka",
+    "Theekzu iPhone Sri Lanka",
+    "iPhone Store Sri Lanka",
     "iPhone Sri Lanka",
     "iPhone price Sri Lanka",
     "Buy iPhone Sri Lanka",
     "Apple iPhone Sri Lanka",
+    "Apple devices Sri Lanka",
     "iPhone 16 Pro Max Sri Lanka",
     "Used iPhones Colombo",
     "Apple accessories Sri Lanka",
     "iPhone warranty Sri Lanka",
   ],
-  authors: [{ name: "Theekzu Mobile", url: "https://theekzu.vercel.app" }],
+  authors: [{ name: "Theekzu Mobile", url: "https://theekzu.vercel.app/" }],
   creator: "Theekzu Mobile",
   publisher: "Theekzu Mobile",
   formatDetection: {
@@ -55,7 +60,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: "https://theekzu.vercel.app",
+    canonical: "https://theekzu.vercel.app/",
   },
   icons: {
     icon: [
@@ -72,8 +77,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Theekzu Mobile | iPhone Store Sri Lanka",
     description:
-      "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
-    url: "https://theekzu.vercel.app",
+      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
+    url: "https://theekzu.vercel.app/",
     siteName: "Theekzu Mobile",
     images: [
       {
@@ -90,7 +95,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Theekzu Mobile | iPhone Store Sri Lanka",
     description:
-      "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering.",
+      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp ordering.",
     images: ["/logo.png"],
     creator: "@theekzumobile",
   },
@@ -111,20 +116,14 @@ const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "OnlineStore",
   name: "Theekzu Mobile",
-  alternateName: ["Theekzu Mobile Sri Lanka", "Theekzu iPhone Store"],
-  url: "https://theekzu.vercel.app",
+  alternateName: "Theekzu",
+  url: "https://theekzu.vercel.app/",
   logo: "https://theekzu.vercel.app/logo.png",
   image: "https://theekzu.vercel.app/logo.png",
   description:
-    "Online Apple iPhone store in Sri Lanka offering brand new sealed and certified pre-owned iPhones with genuine warranty.",
+    "Theekzu Mobile is Sri Lanka's trusted online iPhone store offering 100% genuine brand new sealed and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and fast customer support.",
   telephone: "+94740245749",
   email: "pasindutheekshana21@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "LK",
-    addressLocality: "Colombo",
-    addressRegion: "Western Province",
-  },
   priceRange: "LKR 50,000 - LKR 700,000",
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
@@ -143,7 +142,8 @@ const webSiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Theekzu Mobile",
-  url: "https://theekzu.vercel.app",
+  alternateName: "Theekzu",
+  url: "https://theekzu.vercel.app/",
   potentialAction: {
     "@type": "SearchAction",
     target: {

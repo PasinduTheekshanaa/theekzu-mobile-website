@@ -44,6 +44,25 @@ export const metadata: Metadata = {
   },
 };
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://theekzu.vercel.app",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Trade-In",
+      item: "https://theekzu.vercel.app/trade-in",
+    },
+  ],
+};
+
 export default function TradeInPage() {
   const steps = [
     {
@@ -68,7 +87,10 @@ export default function TradeInPage() {
 
   return (
     <div className="container-custom py-8 sm:py-12 space-y-12 sm:space-y-16 transition-colors duration-300">
-      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Page Header */}
       <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-r from-blue-100 via-indigo-50 to-slate-100 dark:from-blue-950/60 dark:to-zinc-950 p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-blue-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold text-blue-700 dark:text-cyan-400 tracking-widest uppercase mb-2">

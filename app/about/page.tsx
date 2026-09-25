@@ -47,6 +47,25 @@ export const metadata: Metadata = {
   },
 };
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://theekzu.vercel.app",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "About Us",
+      item: "https://theekzu.vercel.app/about",
+    },
+  ],
+};
+
 export default function AboutPage() {
   const stats = [
     { label: "Happy Customers", value: "500+", numeric: 500, suffix: "+", icon: Users, color: "text-blue-600 dark:text-cyan-400" },
@@ -57,6 +76,10 @@ export default function AboutPage() {
 
   return (
     <div className="container-custom py-8 sm:py-12 space-y-12 sm:space-y-16 transition-colors duration-300">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       
       {/* Story Hero */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">

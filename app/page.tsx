@@ -22,15 +22,15 @@ export const metadata: Metadata = {
     absolute: "Theekzu Mobile | iPhone Store Sri Lanka",
   },
   description:
-    "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
+    "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
   alternates: {
-    canonical: "https://theekzu.vercel.app",
+    canonical: "https://theekzu.vercel.app/",
   },
   openGraph: {
     title: "Theekzu Mobile | iPhone Store Sri Lanka",
     description:
-      "Discover brand new sealed and certified pre-owned Apple iPhones at competitive prices in Sri Lanka. Genuine Apple warranty, islandwide delivery, and instant WhatsApp ordering with Theekzu Mobile.",
-    url: "https://theekzu.vercel.app",
+      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
+    url: "https://theekzu.vercel.app/",
     siteName: "Theekzu Mobile",
     images: [
       {
@@ -42,6 +42,14 @@ export const metadata: Metadata = {
     ],
     locale: "en_LK",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    description:
+      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty in Sri Lanka.",
+    images: ["/logo.png"],
+    creator: "@theekzumobile",
   },
 };
 

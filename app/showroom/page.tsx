@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MessageCircle, ShoppingBag, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 import { ShowroomHero } from "@/components/ShowroomHero";
 import { ShowroomIntro } from "@/components/ShowroomIntro";
@@ -8,6 +9,67 @@ import { getWhatsAppUrl, storeConfig } from "@/config/store";
 
 export const dynamic = "force-dynamic";
 
+export const metadata: Metadata = {
+  title: {
+    absolute: "Our Showroom | Theekzu Mobile Sri Lanka",
+  },
+  description:
+    "Experience Theekzu Mobile's showroom in Sri Lanka. View our gallery of genuine brand new sealed and certified pre-owned Apple iPhones and chat with us on WhatsApp.",
+  keywords: [
+    "Theekzu Mobile Showroom",
+    "iPhone Store Sri Lanka",
+    "Theekzu showroom",
+    "Apple store Colombo Sri Lanka",
+    "Theekzu Mobile",
+  ],
+  alternates: {
+    canonical: "https://theekzu.vercel.app/showroom",
+  },
+  openGraph: {
+    title: "Our Showroom | Theekzu Mobile Sri Lanka",
+    description:
+      "Experience Theekzu Mobile's showroom in Sri Lanka. Genuine Apple iPhones with official warranty and expert support.",
+    url: "https://theekzu.vercel.app/showroom",
+    siteName: "Theekzu Mobile",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 800,
+        alt: "Theekzu Mobile Showroom Sri Lanka",
+      },
+    ],
+    locale: "en_LK",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Our Showroom | Theekzu Mobile Sri Lanka",
+    description:
+      "Experience Theekzu Mobile's showroom in Sri Lanka. Authentic Apple iPhones and accessories.",
+    images: ["/logo.png"],
+  },
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://theekzu.vercel.app",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Our Showroom",
+      item: "https://theekzu.vercel.app/showroom",
+    },
+  ],
+};
+
 export default function ShowroomPage() {
   const whatsappUrl = getWhatsAppUrl(
     "Hello Theekzu Mobile, I would like to inquire about available iPhones in your showroom or arrange an in-person viewing."
@@ -15,6 +77,10 @@ export default function ShowroomPage() {
 
   return (
     <div className="space-y-12 sm:space-y-16 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* 1. Hero Section with Main Showroom Photo */}
       <ShowroomHero />
 
