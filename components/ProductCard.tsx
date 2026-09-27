@@ -35,7 +35,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) =>
 
   // High performance DOM-based 3D tilt without React state re-renders
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!cardRef.current || window.innerWidth < 1024) return;
+    if (!cardRef.current || window.innerWidth < 1024 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
     const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;

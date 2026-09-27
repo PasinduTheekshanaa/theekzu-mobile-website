@@ -1,6 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useProducts } from "./ProductContext";
+import { loadProductsFromSupabase } from "@/lib/supabaseService";
+import { reconcileCart } from "@/lib/cartValidation";
 import { Product, ProductVariant } from "@/data/products";
 import { storeConfig, formatLKR, getWhatsAppUrl } from "@/config/store";
 
@@ -37,7 +40,7 @@ interface CartContextType {
   subtotal: number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  getWhatsAppCheckoutUrl: () => string;
+  getWhatsAppCheckoutUrl: () => Promise<string>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -45,6 +48,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = "theekzu_cart_next_v2";
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { products } = useProducts();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -69,6 +73,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error("Failed to save cart to localStorage", e);
     }
   }, [cart, isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    setCart(previous => { const next = reconcileCart(previous, products); return JSON.stringify(previous) === JSON.stringify(next) ? previous : next; });
+  }, [products, isHydrated]);
 
   const addItem = (
     product: Product,
@@ -106,7 +115,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isVariantOOS = matchedVariant !== undefined && matchedVariant.stock !== undefined && matchedVariant.stock <= 0;
 
     // Prevent adding out-of-stock items to cart
-    if (isProductOOS || isVariantOOS) {
+    if (isProductOOS || isVariantOOS || !matchedVariant) {
       console.warn("Item is out of stock and cannot be added to cart:", product.name);
       return;
     }
@@ -123,7 +132,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (existing) {
         return prevCart.map((item) =>
           item.cartItemId === cartItemId
-            ? { ...item, quantity: item.quantity + quantity, price: finalPrice!, image: finalImage || item.image }
+            ? { ...item, quantity: Math.min(matchedVariant!.stock, item.quantity + Math.max(1, Math.floor(quantity))), price: finalPrice!, image: finalImage || item.image }
             : item
         );
       } else {
@@ -140,7 +149,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             storage: selectedStorage,
             color: selectedColor,
             condition: product.condition,
-            quantity,
+            quantity: Math.min(matchedVariant!.stock, Math.max(1, Math.floor(quantity))),
             stockStatus: "In Stock",
           },
         ];
@@ -166,6 +175,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         })
         .filter(Boolean) as CartItem[]
     );
+    setCart(previous => reconcileCart(previous, products));
   };
 
   const clearCart = () => {
@@ -175,7 +185,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const getWhatsAppCheckoutUrl = (): string => {
+  const getWhatsAppCheckoutUrl = async (): Promise<string> => {
+    const result = await loadProductsFromSupabase();
+    if (result.source !== "Supabase") throw new Error("Could not verify current prices and stock. Please try again.");
+    const checkedCart = reconcileCart(cart, result.products);
+    if (JSON.stringify(cart) !== JSON.stringify(checkedCart)) {
+      setCart(checkedCart);
+      throw new Error("Prices or stock changed. Please review your updated cart and try again.");
+    }
     if (cart.length === 0) {
       return `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to inquire about your iPhones.")}`;
     }

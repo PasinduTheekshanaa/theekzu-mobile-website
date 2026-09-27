@@ -21,7 +21,7 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   product: initialProduct,
   related: initialRelated,
 }) => {
-  const { getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages, isLiveDatabase } = useProducts();
+  const { getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages, isLiveDatabase, catalogError } = useProducts();
   const { addItem } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
 
@@ -76,14 +76,15 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   const oldPrice = currentVariant ? currentVariant.oldPrice : liveProduct.oldPrice;
 
   // Variant & Product Stock logic
-  const currentVariantStock = currentVariant ? (Number(currentVariant.stock) || 0) : 5;
+  const currentVariantStock = currentVariant ? (Number(currentVariant.stock) || 0) : 0;
   const isProductLevelOutOfStock = liveProduct.stock === "Out of Stock";
   const areAllVariantsOutOfStock = Boolean(
     liveProduct.variants &&
       liveProduct.variants.length > 0 &&
       liveProduct.variants.every((v) => (Number(v.stock) || 0) <= 0)
   );
-  const isOutOfStock = isProductLevelOutOfStock || areAllVariantsOutOfStock || currentVariantStock <= 0;
+  const isOutOfStock = Boolean(catalogError) || !contextProduct || isProductLevelOutOfStock || areAllVariantsOutOfStock || currentVariantStock <= 0;
+  React.useEffect(() => { setQuantity(q => Math.max(1, Math.min(q, currentVariantStock))); }, [currentVariantStock]);
   const sku = currentVariant?.sku || `TM-${liveProduct.model}-${selectedStorage}`;
 
   // Calculated discount
@@ -273,19 +274,7 @@ Please confirm availability and islandwide delivery options!`;
               {liveProduct.name}
             </h1>
 
-            {/* Rating */}
-            <div className="flex items-center gap-2 sm:gap-3 text-xs text-slate-500 dark:text-zinc-400 mb-5 sm:mb-6 flex-wrap">
-              <div className="flex items-center text-amber-500 dark:text-amber-400">
-                {Array.from({ length: Math.floor(liveProduct.rating) }).map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-500 dark:fill-amber-400" />
-                ))}
-                <span className="font-bold ml-1.5 text-slate-900 dark:text-white">{liveProduct.rating.toFixed(1)}</span>
-              </div>
-              <span>•</span>
-              <span>{liveProduct.reviewsCount} verified reviews</span>
-              <span>•</span>
-              <span className="text-blue-600 dark:text-cyan-400 font-semibold">Islandwide Courier</span>
-            </div>
+            <p className="text-xs mb-5 text-blue-600 dark:text-cyan-400">Islandwide Courier</p>
 
             {/* Price Display */}
             <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/25 mb-6 flex flex-wrap sm:flex-nowrap items-baseline gap-2.5 sm:gap-3 shadow-xs">
@@ -398,7 +387,7 @@ Please confirm availability and islandwide delivery options!`;
                   </button>
                   <span className="font-bold text-sm text-slate-900 dark:text-white px-2">{quantity}</span>
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
+                    onClick={() => setQuantity(Math.min(currentVariantStock, quantity + 1))}
                     disabled={isOutOfStock}
                     className="w-8 h-8 rounded-xl bg-white hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-white font-bold shadow-xs disabled:opacity-40 btn-press"
                   >

@@ -8,7 +8,7 @@ import { AnimatedRobotHero } from "@/components/AnimatedRobotHero";
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-0 md:min-h-[80vh] lg:min-h-[85vh] flex items-center pt-2 sm:pt-4 md:pt-6 pb-6 sm:pb-10 md:pb-16 overflow-hidden radial-glow-hero tech-grid-bg transition-colors duration-300 w-full cursor-glow-area" onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--cx', `${e.clientX - r.left}px`); e.currentTarget.style.setProperty('--cy', `${e.clientY - r.top}px`); }}>
+    <section className="relative min-h-0 md:min-h-[65vh] lg:min-h-[70vh] flex items-center pt-2 sm:pt-4 md:pt-6 pb-6 sm:pb-10 md:pb-16 overflow-hidden radial-glow-hero tech-grid-bg transition-colors duration-300 w-full cursor-glow-area">
       {/* Ambient background glow blooms */}
       <div className="absolute -top-32 -left-32 w-72 sm:w-[32rem] h-72 sm:h-[32rem] bg-gradient-to-br from-blue-600/15 via-cyan-500/10 to-transparent dark:from-blue-600/25 dark:via-cyan-500/20 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none animate-glow-breathe" />
       <div className="absolute top-1/4 -right-20 w-72 sm:w-[36rem] h-72 sm:h-[36rem] bg-gradient-to-tr from-cyan-500/15 via-purple-600/10 to-transparent dark:from-cyan-500/25 dark:via-purple-600/20 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none animate-glow-breathe [animation-delay:2s]" />
@@ -72,8 +72,8 @@ export const Hero: React.FC = () => {
                   <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white truncate">Quality Checked</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 truncate">32-Point Tested</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-snug">Quality Checked</h4>
+                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 leading-snug">32-Point Tested</p>
                 </div>
               </div>
 
@@ -82,8 +82,8 @@ export const Hero: React.FC = () => {
                   <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white truncate">Best Prices</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 truncate">Transparent LKR</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-snug">Best Prices</h4>
+                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 leading-snug">Transparent LKR</p>
                 </div>
               </div>
 
@@ -92,8 +92,8 @@ export const Hero: React.FC = () => {
                   <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white truncate">Trusted Service</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 truncate">Verified Seller</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-snug">Trusted Service</h4>
+                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 leading-snug">Verified Seller</p>
                 </div>
               </div>
 
@@ -102,8 +102,8 @@ export const Hero: React.FC = () => {
                   <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white truncate">Fast Support</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 truncate">8 AM – 8 PM Daily</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-slate-900 dark:text-white leading-snug">Fast Support</h4>
+                  <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-zinc-400 leading-snug">8 AM – 8 PM Daily</p>
                 </div>
               </div>
             </div>

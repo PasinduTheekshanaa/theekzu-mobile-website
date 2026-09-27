@@ -30,10 +30,11 @@ export const supabase: SupabaseClient = createClient(
   isSupabaseConfigured() ? supabaseUrl : dummyUrl,
   isSupabaseConfigured() ? supabaseKey : dummyKey,
   {
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: "no-store", signal: init?.signal || AbortSignal.timeout(12000) }) },
     auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
+      persistSession: typeof window !== "undefined",
+      autoRefreshToken: typeof window !== "undefined",
+      detectSessionInUrl: typeof window !== "undefined",
     },
   }
 );

@@ -12,8 +12,10 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const FlagshipShowcase: React.FC = () => {
   const { products } = useProducts();
-  const flagship = products.find((p) => p.slug === "iphone-16-pro-max") || products[0];
+  const flagship = products.find((p) => p.slug === "iphone-16-pro-max");
   const flagshipImg = (flagship?.images && flagship.images[0]) || "/theekzu-robot.jpg";
+
+  if (!flagship) return null;
 
   return (
     <section className="container-custom transition-colors duration-300">

@@ -59,12 +59,7 @@ AS $$
     -- Listed in public.admin_users by user_id or email
     EXISTS (
       SELECT 1 FROM public.admin_users
-      WHERE user_id = auth.uid() OR email = (auth.jwt() ->> 'email')
-    )
-    OR
-    -- If admin_users table has no rows yet, permit authenticated users so the initial admin is never locked out
-    NOT EXISTS (
-      SELECT 1 FROM public.admin_users
+      WHERE user_id = auth.uid()
     )
   );
 $$;
@@ -87,6 +82,7 @@ CREATE POLICY "Public can submit pending reviews"
   FOR INSERT
   TO anon, authenticated
   WITH CHECK (
+    false AND -- Submissions must use the rate-limited server endpoint.
     status = 'pending' AND
     rating >= 1 AND
     rating <= 5 AND
@@ -116,7 +112,7 @@ ALTER TABLE public.products
 
 -- Ensure public.product_variants has stock column and indexes
 ALTER TABLE public.product_variants
-  ADD COLUMN IF NOT EXISTS stock INTEGER DEFAULT 5;
+  ADD COLUMN IF NOT EXISTS stock INTEGER DEFAULT 0;
 
 CREATE INDEX IF NOT EXISTS idx_product_variants_stock ON public.product_variants(stock);
 CREATE INDEX IF NOT EXISTS idx_product_variants_product_id ON public.product_variants(product_id);

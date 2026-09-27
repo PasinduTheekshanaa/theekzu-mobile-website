@@ -1,21 +1,23 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { loadProductsFromSupabase } from "@/lib/supabaseService";
+import { getServerCatalog } from "@/lib/serverCatalog";
 import { ProductDetailClient } from "./ProductDetailClient";
 import type { Metadata } from "next";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { products } = await loadProductsFromSupabase();
-  const product = products.find((p) => p.slug === params.slug);
+  const { slug } = await params;
+  const { products, error } = await getServerCatalog();
+  if (error) throw new Error("Product information is temporarily unavailable.");
+  const product = products.find((p) => p.slug === slug);
   if (!product) {
     return {
       title: "Product Not Found | Theekzu Mobile",
@@ -77,8 +79,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductDetailPage({ params }: Props) {
-  const { products } = await loadProductsFromSupabase();
-  const product = products.find((p) => p.slug === params.slug);
+  const { slug } = await params;
+  const { products, error } = await getServerCatalog();
+  if (error) throw new Error("Product information is temporarily unavailable.");
+  const product = products.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
@@ -113,7 +117,7 @@ export default async function ProductDetailPage({ params }: Props) {
       url: `https://theekzu.vercel.app/product/${product.slug}`,
       priceCurrency: "LKR",
       price: product.price,
-      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+
       itemCondition:
         product.condition === "Used"
           ? "https://schema.org/UsedCondition"
@@ -162,11 +166,11 @@ export default async function ProductDetailPage({ params }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
       />
       <ProductDetailClient product={product} related={related} />
     </div>

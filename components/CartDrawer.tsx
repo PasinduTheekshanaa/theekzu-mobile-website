@@ -18,6 +18,15 @@ export const CartDrawer: React.FC = () => {
     getWhatsAppCheckoutUrl,
   } = useCart();
 
+  const [checkoutError, setCheckoutError] = React.useState("");
+  const [checking, setChecking] = React.useState(false);
+  const checkout = async () => {
+    setChecking(true); setCheckoutError("");
+    try { window.location.assign(await getWhatsAppCheckoutUrl()); }
+    catch (error) { setCheckoutError(error instanceof Error ? error.message : "Checkout unavailable."); }
+    finally { setChecking(false); }
+  };
+
   React.useEffect(() => {
     if (isCartOpen) {
       document.body.style.overflow = "hidden";
@@ -155,18 +164,18 @@ export const CartDrawer: React.FC = () => {
             </div>
 
             <p className="text-[11px] text-slate-500 dark:text-zinc-400">
-              Orders are settled & dispatched instantly via our official WhatsApp service with live courier tracking.
+              We will verify stock and prices before opening WhatsApp. The store will confirm delivery and payment.
             </p>
 
-            <a
-              href={getWhatsAppCheckoutUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={checkout}
+              disabled={checking}
               className="w-full inline-flex items-center justify-center gap-2 py-4 px-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold shadow-md shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>Checkout via WhatsApp</span>
-            </a>
+              <span>{checking ? "Checking availability…" : "Checkout via WhatsApp"}</span>
+            </button>
+            {checkoutError && <p role="alert" className="text-sm text-red-600">{checkoutError}</p>}
           </div>
         )}
 

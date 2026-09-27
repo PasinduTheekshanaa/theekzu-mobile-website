@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Search, Filter, RotateCcw, PackageSearch, Sparkles } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/formatCurrency";
 export default function ShopPage() {
   const { products, getLowestPrice } = useProducts();
   const [searchQuery, setSearchQuery] = useState("");
+  useEffect(() => { setSearchQuery(new URLSearchParams(window.location.search).get("q") || ""); }, []);
   const [selectedSeries, setSelectedSeries] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCondition, setSelectedCondition] = useState("all");

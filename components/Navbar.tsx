@@ -108,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 <span className="text-[15px] sm:text-base md:text-lg font-black tracking-wider text-slate-900 dark:text-white">
                   THEEKZU
                 </span>
-                <span className="text-[15px] sm:text-base md:text-lg font-black tracking-wider text-gradient-neon">
+                <span className="max-[359px]:hidden text-[15px] sm:text-base md:text-lg font-black tracking-wider text-gradient-neon">
                   MOBILE
                 </span>
               </div>

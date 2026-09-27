@@ -101,24 +101,17 @@ export function mapSupabaseToProduct(
     sku: v.sku || `TM-${p.slug}-${v.storage}-${v.color}`,
   }));
 
-  // Calculate starting price strictly from minimum active variant price
-  const activePrices = mappedVariants.map((v) => v.price).filter((pr) => pr > 0);
-  const lowestPrice =
-    activePrices.length > 0
-      ? Math.min(...activePrices)
-      : (baseMatch?.price || 0);
-
-  // Old price: from the lowest priced variant with oldPrice, or any variant with oldPrice
-  const lowestVariantWithOldPrice = mappedVariants.find((v) => v.price === lowestPrice && v.oldPrice);
-  const lowestOldPrice =
-    lowestVariantWithOldPrice?.oldPrice ??
-    (mappedVariants.find((v) => v.oldPrice)?.oldPrice ?? baseMatch?.oldPrice ?? null);
+  const priced = mappedVariants.filter(v => v.price > 0);
+  const available = priced.filter(v => v.stock > 0);
+  const displayVariant = (available.length ? available : priced).reduce<ProductVariant | undefined>((best, v) => !best || v.price < best.price ? v : best, undefined);
+  const lowestPrice = displayVariant?.price || 0;
+  const lowestOldPrice = displayVariant?.oldPrice || null;
 
   // Calculated discount percentage
   const discount =
     lowestOldPrice && lowestOldPrice > lowestPrice
       ? `${Math.round(((lowestOldPrice - lowestPrice) / lowestOldPrice) * 100)}% OFF`
-      : baseMatch?.discount;
+      : undefined;
 
   // Image list: public.product_images takes precedence, primary image is first
   const imageList: string[] = [];
@@ -175,10 +168,11 @@ export function mapSupabaseToProduct(
     (p as any).stock_status === "Out of Stock" ||
     (p as any).in_stock === false;
 
-  const hasAnyVariantStock = mappedVariants.length > 0 ? mappedVariants.some((v) => (Number(v.stock) || 0) > 0) : true;
+  const hasAnyVariantStock = mappedVariants.length > 0 ? mappedVariants.some((v) => (Number(v.stock) || 0) > 0) : false;
   const stock = isProductLevelOOS || !hasAnyVariantStock ? "Out of Stock" : "In Stock";
 
   return {
+    updatedAt: p.updated_at,
     id: p.id,
     slug: p.slug,
     name: p.name,
@@ -206,8 +200,8 @@ export function mapSupabaseToProduct(
     },
     stock,
     featured: p.featured !== undefined && p.featured !== null ? Boolean(p.featured) : Boolean(baseMatch?.featured),
-    rating: baseMatch?.rating || 5.0,
-    reviewsCount: baseMatch?.reviewsCount || 10,
+    rating: 0,
+    reviewsCount: 0,
     variants: mappedVariants,
   };
 }
@@ -215,7 +209,7 @@ export function mapSupabaseToProduct(
 export interface StorefrontCatalogResult {
   products: Product[];
   imagesMap: Record<string, SupabaseProductImageRecord[]>;
-  source: "Supabase" | "fallback";
+  source: "Supabase" | "error";
   error?: string;
 }
 
@@ -226,12 +220,12 @@ export interface StorefrontCatalogResult {
 export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResult> {
   if (!isSupabaseConfigured()) {
     if (process.env.NODE_ENV !== "production") {
-      console.warn("[Storefront Data] Supabase is not configured in .env.local; falling back to local data.");
+      console.warn("[Storefront Data] Supabase is not configured in .env.local; catalog unavailable.");
     }
     return {
-      products: baseProducts,
+      products: [],
       imagesMap: {},
-      source: "fallback",
+      source: "error",
       error: "Supabase credentials not configured in .env.local",
     };
   }
@@ -240,7 +234,7 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
     // 1. Query active products from public.products
     const { data: dbProducts, error: prodErr } = await supabase
       .from("products")
-      .select("id, slug, name, series, category, condition, description, featured, active, created_at, updated_at")
+      .select("*")
       .eq("active", true)
       .order("created_at", { ascending: false });
 
@@ -249,44 +243,24 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
         console.error("[Storefront Data] Supabase fetch products query failed:", prodErr);
       }
       return {
-        products: baseProducts,
+        products: [],
         imagesMap: {},
-        source: "fallback",
+        source: "error",
         error: prodErr.message,
       };
     }
 
-    if (!dbProducts || dbProducts.length === 0) {
-      if (process.env.NODE_ENV !== "production") {
-        console.warn("[Storefront Data] Supabase returned 0 active products; falling back to local data.");
-      }
-      return {
-        products: baseProducts,
-        imagesMap: {},
-        source: "fallback",
-        error: "Supabase products table returned 0 active rows",
-      };
+    if (!dbProducts?.length) return { products: [], imagesMap: {}, source: "Supabase" };
+
+    const [variantResult, imageResult] = await Promise.all([
+      supabase.from("product_variants").select("id, product_id, storage, color, price, old_price, stock, sku, active").eq("active", true).in("product_id", dbProducts.map(p => p.id)),
+      supabase.from("product_images").select("id, product_id, storage_path, color, is_primary, created_at").in("product_id", dbProducts.map(p => p.id)).order("is_primary", { ascending: false }),
+    ]);
+    if (variantResult.error || imageResult.error) {
+      return { products: [], imagesMap: {}, source: "error", error: "The catalog is temporarily unavailable." };
     }
-
-    // 2. Query active product variants from public.product_variants
-    const { data: dbVariants, error: varErr } = await supabase
-      .from("product_variants")
-      .select("id, product_id, storage, color, price, old_price, stock, sku, active")
-      .eq("active", true);
-
-    if (varErr && process.env.NODE_ENV !== "production") {
-      console.error("[Storefront Data] Supabase fetch product_variants notice:", varErr);
-    }
-
-    // 3. Query product images from public.product_images (primary images first)
-    const { data: dbImages, error: imgErr } = await supabase
-      .from("product_images")
-      .select("id, product_id, storage_path, color, is_primary, created_at")
-      .order("is_primary", { ascending: false });
-
-    if (imgErr && process.env.NODE_ENV !== "production") {
-      console.warn("[Storefront Data] Supabase fetch product_images notice:", imgErr.message);
-    }
+    const dbVariants = variantResult.data;
+    const dbImages = imageResult.data;
 
     // 4. Group variants and images by product_id
     const variantsByProduct: Record<string, any[]> = {};
@@ -331,12 +305,12 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
     };
   } catch (e: any) {
     if (process.env.NODE_ENV !== "production") {
-      console.error("[Storefront Data] Exception loading from Supabase, falling back:", e);
+      console.error("[Storefront Data] Exception loading from Supabase:", e);
     }
     return {
-      products: baseProducts,
+      products: [],
       imagesMap: {},
-      source: "fallback",
+      source: "error",
       error: e.message || "Unknown error",
     };
   }
@@ -462,7 +436,7 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
       .select("id, product_id, storage, color, stock");
 
     if (existingVarsErr) {
-      console.warn("Notice: could not pre-fetch existing variants:", existingVarsErr.message);
+      throw new Error("Cannot safely seed catalog without reading existing inventory: " + existingVarsErr.message);
     }
 
     const existingVarMap = new Map(
@@ -852,6 +826,7 @@ export async function updateVariantInSupabase(
         ? Number(rawOldPrice)
         : null;
     const stock = Number(variant.stock);
+    if (!Number.isInteger(stock) || stock < 0 || !Number.isFinite(price) || price <= 0) return { success: false, error: "Enter a positive price and non-negative whole stock quantity." };
 
     if (isUUID) {
       const payload: any = {
@@ -1007,14 +982,6 @@ export async function updateProductInSupabase(
       };
     }
 
-    // If overall stock is marked "Out of Stock", synchronize variants to stock = 0
-    if (product.stock && product.stock.toLowerCase().includes("out of stock")) {
-      await supabase
-        .from("product_variants")
-        .update({ stock: 0, updated_at: new Date().toISOString() })
-        .eq("product_id", targetId);
-    }
-
     return { success: true, data: updatedRows[0] };
   } catch (e: any) {
     console.error("[updateProductInSupabase] Exception:", e);
@@ -1058,13 +1025,13 @@ export async function addProductToSupabase(product: Product): Promise<{ success:
         color: v.color,
         price: Number(v.price) || 0,
         old_price: v.oldPrice !== undefined && v.oldPrice !== null ? Number(v.oldPrice) : null,
-        stock: Number(v.stock) || 5,
+        stock: Math.max(0, Number(v.stock) || 0),
         sku: v.sku,
         active: true,
       }));
       const { error: vErr } = await supabase.from("product_variants").insert(varRows);
       if (vErr) {
-        console.error("Error adding variants to Supabase:", vErr);
+        return { success: false, data: newProd, error: "Product created, but variants failed: " + vErr.message };
       }
     }
 
@@ -1114,6 +1081,8 @@ export interface CustomerReview {
   customer_name: string;
   rating: number;
   review_text: string;
+  image_path?: string;
+  image_url?: string;
   review?: string; // Backwards compatible alias
   status: "pending" | "approved" | "rejected";
   created_at: string;
@@ -1123,14 +1092,14 @@ export interface CustomerReview {
 /**
  * Fetch approved reviews for public display on the storefront
  */
-export async function fetchApprovedCustomerReviews(): Promise<{
+export async function fetchApprovedCustomerReviews(page = 0): Promise<{
   reviews: CustomerReview[];
   averageRating: number;
   totalCount: number;
   tableReady: boolean;
 }> {
   if (!isSupabaseConfigured()) {
-    return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: false };
+    return { reviews: [], averageRating: 0, totalCount: 0, tableReady: false };
   }
 
   try {
@@ -1138,7 +1107,8 @@ export async function fetchApprovedCustomerReviews(): Promise<{
       .from("customer_reviews")
       .select("*")
       .eq("status", "approved")
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false }).order("id")
+      .range(page * 12, page * 12 + 11);
 
     if (error) {
       if (
@@ -1147,10 +1117,10 @@ export async function fetchApprovedCustomerReviews(): Promise<{
         error.message.includes("does not exist") ||
         error.message.includes("schema cache")
       ) {
-        return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: false };
+        return { reviews: [], averageRating: 0, totalCount: 0, tableReady: false };
       }
       console.warn("fetchApprovedCustomerReviews notice:", error.message);
-      return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: true };
+      return { reviews: [], averageRating: 0, totalCount: 0, tableReady: false };
     }
 
     const reviews: CustomerReview[] = (data || []).map((r: any) => ({
@@ -1159,95 +1129,38 @@ export async function fetchApprovedCustomerReviews(): Promise<{
       rating: Number(r.rating) || 5,
       review_text: r.review_text || r.review || "",
       review: r.review_text || r.review || "",
+      image_path: r.image_path || undefined,
       status: r.status,
       created_at: r.created_at,
       updated_at: r.updated_at || r.created_at,
     }));
 
-    const totalCount = reviews.length;
-    const averageRating =
-      totalCount > 0
-        ? Math.round((reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0) / totalCount) * 10) / 10
-        : 5.0;
-
+    await attachReviewImages(reviews);
+    const { data: summary, error: summaryError } = await supabase.rpc("store_review_summary");
+    if (summaryError) throw summaryError;
+    const totalCount = Number(summary?.[0]?.total || 0);
+    const averageRating = Number(summary?.[0]?.average || 0);
     return { reviews, averageRating, totalCount, tableReady: true };
   } catch (e) {
     console.error("fetchApprovedCustomerReviews exception:", e);
-    return { reviews: [], averageRating: 5.0, totalCount: 0, tableReady: false };
+    return { reviews: [], averageRating: 0, totalCount: 0, tableReady: false };
   }
 }
 
 /**
  * Submit a new customer review (always pending status by default)
  */
-export async function submitCustomerReview(params: {
-  customerName: string;
-  rating: number;
-  review: string;
-}): Promise<{ success: boolean; error?: string; tableNotCreated?: boolean }> {
-  if (!isSupabaseConfigured()) {
-    return { success: false, error: "Supabase connection is not configured." };
-  }
-
-  const name = params.customerName.trim();
-  const rating = Math.min(5, Math.max(1, Math.round(params.rating)));
-  const reviewText = params.review.trim();
-
-  if (name.length < 2) {
-    return { success: false, error: "Please enter your name (minimum 2 characters)." };
-  }
-  if (name.length > 100) {
-    return { success: false, error: "Name must be 100 characters or fewer." };
-  }
-  if (reviewText.length < 10) {
-    return { success: false, error: "Please share a few words about your experience (minimum 10 characters)." };
-  }
-  if (reviewText.length > 1000) {
-    return { success: false, error: "Review must be 1000 characters or fewer." };
-  }
-
+export async function submitCustomerReview(params: { customerName: string; rating: number; review: string; image?: File | null }): Promise<{ success: boolean; error?: string; tableNotCreated?: boolean }> {
   try {
-    const payload: any = {
-      customer_name: name,
-      rating,
-      review_text: reviewText,
-      status: "pending",
-    };
-
-    let { error } = await supabase.from("customer_reviews").insert([payload]);
-
-    if (error && (error.message.includes("review_text") || error.code === "42703")) {
-      const fallbackPayload = {
-        customer_name: name,
-        rating,
-        review: reviewText,
-        status: "pending",
-      };
-      const resFallback = await supabase.from("customer_reviews").insert([fallbackPayload]);
-      error = resFallback.error;
-    }
-
-    if (error) {
-      if (
-        error.code === "42P01" ||
-        error.code === "PGRST205" ||
-        error.message.includes("does not exist") ||
-        error.message.includes("schema cache")
-      ) {
-        return {
-          success: false,
-          tableNotCreated: true,
-          error: "The customer_reviews table is not yet created in Supabase. Please run supabase_theekzu_schema.sql in your Supabase SQL editor.",
-        };
-      }
-      return { success: false, error: error.message };
-    }
-
-    return { success: true };
-  } catch (e: any) {
-    console.error("submitCustomerReview exception:", e);
-    return { success: false, error: e?.message || "Failed to submit review." };
-  }
+    const form = new FormData();
+    form.set("customerName", params.customerName);
+    form.set("rating", String(params.rating));
+    form.set("review", params.review);
+    if (params.image) form.set("image", params.image);
+    const response = await fetch("/api/reviews", { method: "POST", body: form });
+    const result = await response.json();
+    return { success: response.ok, error: result.error };
+  } catch { return { success: false, error: "Could not connect. Please try again." }; }
 }
 
 /**
@@ -1286,11 +1199,13 @@ export async function fetchAdminCustomerReviews(): Promise<{
       rating: Number(r.rating) || 5,
       review_text: r.review_text || r.review || "",
       review: r.review_text || r.review || "",
+      image_path: r.image_path || undefined,
       status: r.status,
       created_at: r.created_at,
       updated_at: r.updated_at || r.created_at,
     }));
 
+    await attachReviewImages(reviews);
     return { reviews };
   } catch (e: any) {
     console.error("fetchAdminCustomerReviews exception:", e);
@@ -1313,7 +1228,7 @@ export async function updateCustomerReviewStatus(
     const { error } = await supabase
       .from("customer_reviews")
       .update({ status: newStatus, updated_at: new Date().toISOString() })
-      .eq("id", reviewId);
+      .eq("id", reviewId).select("id").single();
 
     if (error) {
       return { success: false, error: error.message };
@@ -1339,7 +1254,7 @@ export async function deleteCustomerReviewFromSupabase(
     const { error } = await supabase
       .from("customer_reviews")
       .delete()
-      .eq("id", reviewId);
+      .eq("id", reviewId).select("id").single();
 
     if (error) {
       return { success: false, error: error.message };
@@ -1357,8 +1272,7 @@ export async function deleteCustomerReviewFromSupabase(
 
 /**
  * Update stock status for an entire product
- * If inStock = false, sets all variants of the product to stock = 0
- * If inStock = true, restores stock = 5 for variants currently at 0
+ * Changes the sales availability override without changing physical inventory.
  */
 export async function updateProductStockInSupabase(
   productId: string,
@@ -1374,37 +1288,14 @@ export async function updateProductStockInSupabase(
       return { success: false, error: `Could not resolve UUID for "${productId}".` };
     }
 
-    const newStockVal = inStock ? 5 : 0;
-
-    // Update variant rows
-    const { error: varErr } = await supabase
-      .from("product_variants")
-      .update({ stock: newStockVal, updated_at: new Date().toISOString() })
-      .eq("product_id", targetProductId);
-
-    if (varErr) {
-      console.error("Error updating variant stock:", varErr);
-      return { success: false, error: varErr.message };
-    }
-
-    // Try updating product stock columns if they exist
-    try {
-      await supabase
-        .from("products")
-        .update({
-          stock: inStock ? "In Stock" : "Out of Stock",
-          stock_status: inStock ? "In Stock" : "Out of Stock",
-          in_stock: inStock,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", targetProductId);
-    } catch {
-      // Safe fallback if column not yet added
-      await supabase
-        .from("products")
-        .update({ updated_at: new Date().toISOString() })
-        .eq("id", targetProductId);
-    }
+    // Availability is a manual sales override; never rewrite inventory quantities.
+    const { data, error } = await supabase.from("products").update({
+      stock: inStock ? "In Stock" : "Out of Stock",
+      stock_status: inStock ? "In Stock" : "Out of Stock",
+      in_stock: inStock,
+      updated_at: new Date().toISOString(),
+    }).eq("id", targetProductId).select("id").single();
+    if (error || !data) return { success: false, error: error?.message || "No product was updated." };
 
     return { success: true };
   } catch (e: any) {
@@ -1430,7 +1321,7 @@ export async function bulkUpdateProductStockInSupabase(
       const res = await updateProductStockInSupabase(pid, inStock);
       if (res.success) count++;
     }
-    return { success: true, updatedCount: count };
+    return { success: count === productIds.length, updatedCount: count, error: count === productIds.length ? undefined : "Some products could not be updated. Refresh and retry." };
   } catch (e: any) {
     console.error("bulkUpdateProductStockInSupabase exception:", e);
     return { success: false, updatedCount: 0, error: e?.message || "Bulk update failed" };
@@ -1451,7 +1342,8 @@ export async function updateVariantStockInSupabase(
   }
 
   try {
-    const qty = Math.max(0, Math.round(stockQty));
+    if (!Number.isInteger(stockQty) || stockQty < 0) return { success: false, error: "Stock must be a non-negative integer." };
+    const qty = stockQty;
     const { data: updatedVariant, error } = await supabase
       .from("product_variants")
       .update({ stock: qty, updated_at: new Date().toISOString() })
@@ -1463,29 +1355,6 @@ export async function updateVariantStockInSupabase(
       return { success: false, error: error.message };
     }
 
-    // Check sibling variants to update parent product status
-    if (updatedVariant && updatedVariant.product_id) {
-      const { data: siblingVariants } = await supabase
-        .from("product_variants")
-        .select("stock")
-        .eq("product_id", updatedVariant.product_id);
-
-      const hasAnyStock = (siblingVariants || []).some((v) => (Number(v.stock) || 0) > 0);
-      try {
-        await supabase
-          .from("products")
-          .update({
-            stock: hasAnyStock ? "In Stock" : "Out of Stock",
-            stock_status: hasAnyStock ? "In Stock" : "Out of Stock",
-            in_stock: hasAnyStock,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", updatedVariant.product_id);
-      } catch {
-        // Safe if column not yet added
-      }
-    }
-
     return { success: true };
   } catch (e: any) {
     console.error("updateVariantStockInSupabase exception:", e);
@@ -1493,3 +1362,11 @@ export async function updateVariantStockInSupabase(
   }
 }
 
+
+async function attachReviewImages(reviews: CustomerReview[]) {
+  const paths = reviews.flatMap(r => r.image_path ? [r.image_path] : []);
+  if (!paths.length) return;
+  const { data } = await supabase.storage.from("review-images").createSignedUrls(paths, 300);
+  const urls = new Map((data || []).map(item => [item.path, item.signedUrl]));
+  for (const review of reviews) review.image_url = urls.get(review.image_path || "") || undefined;
+}

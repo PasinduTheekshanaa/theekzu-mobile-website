@@ -525,6 +525,7 @@ export default function AdminReviewsPage() {
                       </span>
                     </div>
 
+                    {rev.image_url && <a href={rev.image_url} target="_blank" rel="noreferrer" aria-label={"View photo from " + rev.customer_name}><img src={rev.image_url} alt={"Photo submitted by " + rev.customer_name} loading="lazy" className="max-h-64 w-full rounded-xl object-contain bg-slate-100 dark:bg-slate-900" /></a>}
                     {/* Review Text */}
                     <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200/70 dark:border-white/5">
                       "{rev.review_text || rev.review}"

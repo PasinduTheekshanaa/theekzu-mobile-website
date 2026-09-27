@@ -9,7 +9,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const FeaturedProducts: React.FC = () => {
-  const { products } = useProducts();
+  const { products, isLoading, catalogError } = useProducts();
   const featuredIphones = React.useMemo(() => {
     let list = products.filter((p) => p.category === "iphones" && p.featured);
     if (list.length === 0) {
@@ -20,6 +20,7 @@ export const FeaturedProducts: React.FC = () => {
 
   return (
     <section className="container-custom transition-colors duration-300 pb-2 sm:pb-4">
+      {(isLoading || catalogError || products.length === 0) && <p role="status" className="py-6 text-center">{isLoading ? "Loading products…" : catalogError ? "Products are temporarily unavailable. Please try again shortly." : "No products are currently available."}</p>}
       <ScrollReveal direction="up">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 md:mb-10 gap-3 sm:gap-4">
           <div>

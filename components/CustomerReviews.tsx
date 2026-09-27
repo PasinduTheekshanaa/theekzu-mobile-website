@@ -15,7 +15,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { customerReviews as dummyCustomerReviews, CustomerReview as DummyReview } from "@/data/reviews";
+
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 import {
   fetchApprovedCustomerReviews,
@@ -30,6 +30,7 @@ export interface UnifiedReview {
   rating: number;
   productBought?: string;
   reviewText: string;
+  imageUrl?: string;
   verified: boolean;
   date?: string;
   isRealReview?: boolean;
@@ -37,9 +38,12 @@ export interface UnifiedReview {
 
 export const CustomerReviews: React.FC = () => {
   const [supabaseApprovedReviews, setSupabaseApprovedReviews] = useState<SupabaseReview[]>([]);
-  const [averageRating, setAverageRating] = useState<number>(5.0);
+  const [averageRating, setAverageRating] = useState<number>(0);
   const [totalApproved, setTotalApproved] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [page, setPage] = useState(0);
+  const reviewRequest = useRef(0);
 
   // Carousel State
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -57,25 +61,41 @@ export const CustomerReviews: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState(false);
 
+  const [formImage, setFormImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const imageInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!formImage) { setImagePreview(null); return; }
+    const url = URL.createObjectURL(formImage);
+    setImagePreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [formImage]);
+
   // Load approved reviews from Supabase
   const loadApprovedReviews = async () => {
+    const request = ++reviewRequest.current;
     try {
-      const res = await fetchApprovedCustomerReviews();
+      setIsLoading(true);
+      const res = await fetchApprovedCustomerReviews(page);
+      if (request !== reviewRequest.current) return;
+      setLoadError(!res.tableReady);
       if (res && res.reviews) {
         // Strict requirement: Only approved Supabase reviews can be shown
         const approvedOnly = res.reviews.filter((r) => r.status === "approved");
         setSupabaseApprovedReviews(approvedOnly);
-        setAverageRating(res.averageRating || 5.0);
+        setAverageRating(res.averageRating || 0);
         setTotalApproved(res.totalCount || approvedOnly.length);
       }
     } catch (err) {
-      console.warn("Notice: Using local reviews while Supabase is connecting", err);
-    }
+      setLoadError(true);
+    } finally { if (request === reviewRequest.current) setIsLoading(false); }
   };
 
   useEffect(() => {
+    setCurrentIndex(0);
     loadApprovedReviews();
 
+    const timer = setInterval(() => { if (document.visibilityState === "visible") loadApprovedReviews(); }, 60000);
     // Supabase Realtime subscription for live storefront updates
     if (isSupabaseConfigured()) {
       const channel = supabase
@@ -90,10 +110,13 @@ export const CustomerReviews: React.FC = () => {
         .subscribe();
 
       return () => {
+        clearInterval(timer);
+        ++reviewRequest.current;
         supabase.removeChannel(channel);
       };
     }
-  }, []);
+    return () => { clearInterval(timer); ++reviewRequest.current; };
+  }, [page]);
 
   // Format submission date nicely (e.g. "Sep 24, 2026")
   const formatDate = (dateString?: string) => {
@@ -106,7 +129,7 @@ export const CustomerReviews: React.FC = () => {
     }
   };
 
-  // Combine newly approved customer reviews alongside all existing dummy/sample reviews
+  // Display only moderated reviews; approval does not imply a verified purchase.
   const allReviews: UnifiedReview[] = useMemo(() => {
     // 1. Approved reviews from Supabase (displayed at front of carousel)
     const liveItems: UnifiedReview[] = supabaseApprovedReviews
@@ -114,35 +137,22 @@ export const CustomerReviews: React.FC = () => {
       .map((r) => ({
         id: r.id,
         name: r.customer_name,
-        location: "Verified Store Customer",
+        location: undefined,
         rating: r.rating || 5,
-        productBought: "Apple iPhone / Genuine Accessory",
+        productBought: undefined,
         reviewText: r.review_text || r.review || "",
-        verified: true,
+        imageUrl: r.image_url,
+        verified: false,
         date: formatDate(r.created_at),
         isRealReview: true,
       }));
 
-    // 2. All existing sample/dummy reviews preserved exactly as they originally appeared
-    const sampleItems: UnifiedReview[] = dummyCustomerReviews.map((r: DummyReview) => ({
-      id: r.id,
-      name: r.name,
-      location: r.location,
-      rating: r.rating,
-      productBought: r.productBought,
-      reviewText: r.reviewText,
-      verified: r.verified,
-      date: r.date,
-      isRealReview: false,
-    }));
-
-    // Merge: Real approved reviews first, followed by all existing sample reviews
-    return [...liveItems, ...sampleItems];
+    return liveItems;
   }, [supabaseApprovedReviews]);
 
   // Carousel Auto-play every 5 seconds, pauses on mouse hover
   useEffect(() => {
-    if (isPaused || allReviews.length <= 1) return;
+    if (isPaused || allReviews.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % allReviews.length);
     }, 5000);
@@ -162,6 +172,7 @@ export const CustomerReviews: React.FC = () => {
   // Touch handlers for mobile swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
+    touchEndX.current = touchStartX.current;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -196,20 +207,9 @@ export const CustomerReviews: React.FC = () => {
       setFormError("Please share at least 10 characters describing your experience.");
       return;
     }
-    if (trimmedReview.length > 500) {
-      setFormError("Review text must be 500 characters or fewer.");
+    if (trimmedReview.length > 1000) {
+      setFormError("Review text must be 1000 characters or fewer.");
       return;
-    }
-
-    // Anti-spam cooldown check (5 minutes)
-    const lastSubAt = localStorage.getItem("theekzu_last_review_sub");
-    if (lastSubAt) {
-      const elapsedMinutes = (Date.now() - parseInt(lastSubAt, 10)) / (1000 * 60);
-      if (elapsedMinutes < 5) {
-        const waitMins = Math.ceil(5 - elapsedMinutes);
-        setFormError(`Please wait ${waitMins} minute(s) before submitting another review.`);
-        return;
-      }
     }
 
     setIsSubmitting(true);
@@ -219,14 +219,16 @@ export const CustomerReviews: React.FC = () => {
         customerName: trimmedName,
         rating: formRating,
         review: trimmedReview,
+        image: formImage,
       });
 
       if (res.success) {
-        localStorage.setItem("theekzu_last_review_sub", Date.now().toString());
+
         setFormSuccess(true);
         setFormName("");
         setFormReview("");
         setFormRating(5);
+        setFormImage(null);
         // Refresh reviews in background
         loadApprovedReviews();
       } else {
@@ -241,11 +243,12 @@ export const CustomerReviews: React.FC = () => {
 
   const currentReview = allReviews[currentIndex] || allReviews[0];
 
-  // Calculated rating display: uses real approved reviews if available, or 5.0 default
-  const displayedAverage = totalApproved > 0 ? averageRating.toFixed(1) : "5.0";
+  // No rating is displayed until approved reviews exist.
+  const displayedAverage = totalApproved > 0 ? averageRating.toFixed(1) : "—";
 
   return (
-    <section className="container-custom transition-colors duration-300 relative">
+    <section onFocusCapture={() => setIsPaused(true)} onBlurCapture={() => setIsPaused(false)} className="container-custom transition-colors duration-300 relative">
+      {totalApproved > 12 && <div className="flex justify-center gap-4 py-3"><button disabled={page === 0 || isLoading} onClick={() => setPage(p => p - 1)}>Previous reviews</button><span>Page {page + 1}</span><button disabled={(page + 1) * 12 >= totalApproved || isLoading} onClick={() => setPage(p => p + 1)}>More reviews</button></div>}
       <ScrollReveal direction="up">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
@@ -259,7 +262,7 @@ export const CustomerReviews: React.FC = () => {
           </h2>
 
           <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-lg mx-auto leading-relaxed">
-            Read genuine experiences from iPhone buyers across all 25 districts in Sri Lanka.
+            Read experiences shared by our customers. Submissions are reviewed before publication.
           </p>
 
           {/* Rating Summary & Write a Review Action */}
@@ -281,8 +284,8 @@ export const CustomerReviews: React.FC = () => {
                 {displayedAverage}
               </span>
               <span className="text-xs text-slate-500 dark:text-zinc-400">
-                ({allReviews.length} {allReviews.length === 1 ? "review" : "reviews"}
-                {totalApproved > 0 ? ` • ${totalApproved} verified online` : ""})
+                ({totalApproved} {totalApproved === 1 ? "review" : "reviews"}
+                {totalApproved > 0 ? ` • ${totalApproved} approved` : ""})
               </span>
             </div>
 
@@ -353,6 +356,20 @@ export const CustomerReviews: React.FC = () => {
                   </div>
                 )}
 
+                <div className="rounded-xl border border-slate-200 dark:border-cyan-500/20 p-4 space-y-3">
+                  <label htmlFor="review-photo" className="block text-sm font-bold text-slate-700 dark:text-zinc-300">Add a photo <span className="font-normal">(optional)</span></label>
+                  <p id="review-photo-help" className="text-xs text-slate-500 dark:text-zinc-400">JPG, PNG or WebP, up to 3 MB. Your photo is published only after approval.</p>
+                  <input ref={imageInput} id="review-photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={isSubmitting} aria-describedby="review-photo-help" className="block w-full text-xs text-slate-600 dark:text-zinc-300 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white" onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 3 * 1024 * 1024) {
+                      setFormError("Choose a JPG, PNG or WebP image up to 3 MB."); e.target.value = ""; return;
+                    }
+                    setFormError(null); setFormImage(file);
+                  }} />
+                  {imagePreview && <div className="space-y-2"><img src={imagePreview} alt="Selected review photo preview" className="max-h-48 max-w-full rounded-xl object-contain" /><button type="button" disabled={isSubmitting} className="text-xs font-semibold text-rose-600" onClick={() => { setFormImage(null); if (imageInput.current) imageInput.current.value = ""; }}>Remove photo</button></div>}
+                </div>
+
                 {/* Customer Name */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-1">
@@ -420,7 +437,7 @@ export const CustomerReviews: React.FC = () => {
                       Your Review <span className="text-rose-500">*</span>
                     </label>
                     <span className="text-[10px] text-slate-400 dark:text-zinc-500">
-                      {formReview.length}/500 chars
+                      {formReview.length}/1000 chars
                     </span>
                   </div>
                   <textarea
@@ -429,7 +446,7 @@ export const CustomerReviews: React.FC = () => {
                     onChange={(e) => setFormReview(e.target.value)}
                     placeholder="Tell us about the device condition, delivery speed, customer service, or your overall shopping experience..."
                     rows={4}
-                    maxLength={500}
+                    maxLength={1000}
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-600 text-xs sm:text-sm focus:outline-none focus:border-blue-500 dark:focus:border-cyan-400 transition-colors resize-none"
                   />
                 </div>
@@ -484,7 +501,7 @@ export const CustomerReviews: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <div className="flex text-amber-500 dark:text-amber-400 gap-1">
-                  {Array.from({ length: currentReview?.rating || 5 }).map((_, i) => (
+                  {Array.from({ length: currentReview?.rating || 0 }).map((_, i) => (
                     <Star key={i} className="w-4 sm:w-5 h-4 sm:h-5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
@@ -496,10 +513,11 @@ export const CustomerReviews: React.FC = () => {
                 )}
               </div>
 
+              {currentReview?.imageUrl && <img src={currentReview.imageUrl} alt={"Photo shared by " + currentReview.name} loading="lazy" className="mb-5 w-full max-h-80 rounded-2xl object-contain bg-slate-100 dark:bg-slate-900" />}
               <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-blue-500/30 dark:text-cyan-500/30 mb-2 sm:mb-3" />
 
               <p className="text-sm sm:text-lg md:text-xl text-slate-800 dark:text-zinc-200 italic leading-relaxed font-normal">
-                "{currentReview?.reviewText}"
+                {currentReview?.reviewText || (isLoading ? "Loading reviews…" : loadError ? "Reviews are temporarily unavailable." : "No published reviews yet. Share your experience below.")}
               </p>
             </div>
 
@@ -530,6 +548,7 @@ export const CustomerReviews: React.FC = () => {
               {/* Navigation Arrows */}
               <div className="flex items-center gap-2 self-end sm:self-auto">
                 <button
+                  disabled={allReviews.length < 2}
                   onClick={prevSlide}
                   className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
                   aria-label="Previous review"
@@ -537,6 +556,7 @@ export const CustomerReviews: React.FC = () => {
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
+                  disabled={allReviews.length < 2}
                   onClick={nextSlide}
                   className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
                   aria-label="Next review"

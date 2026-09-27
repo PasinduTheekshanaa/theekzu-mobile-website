@@ -12,7 +12,7 @@ import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
 import { BrandedLoader } from "@/components/BrandedLoader";
 import { storeConfig } from "@/config/store";
-import { loadProductsFromSupabase } from "@/lib/supabaseService";
+import { getServerCatalog } from "@/lib/serverCatalog";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -144,14 +144,7 @@ const webSiteJsonLd = {
   name: "Theekzu Mobile",
   alternateName: "Theekzu",
   url: "https://theekzu.vercel.app/",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://theekzu.vercel.app/shop?q={search_term_string}",
-    },
-    "query-input": "required name=search_term_string",
-  },
+
 };
 
 export default async function RootLayout({
@@ -159,7 +152,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { products: initialProducts, imagesMap: initialImagesMap } = await loadProductsFromSupabase();
+  const { products: initialProducts, imagesMap: initialImagesMap, error: initialError } = await getServerCatalog();
 
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
@@ -196,10 +189,10 @@ export default async function RootLayout({
       </head>
       <body className="bg-[#f8fafc] text-slate-900 dark:bg-[#040711] dark:text-slate-100 antialiased selection:bg-cyan-500 selection:text-white flex flex-col min-h-screen transition-colors duration-300">
         <ThemeProvider>
-          <ProductProvider initialProducts={initialProducts} initialImagesMap={initialImagesMap}>
+          <ProductProvider initialProducts={initialProducts} initialImagesMap={initialImagesMap} initialError={initialError}>
             <CartProvider>
               <WishlistProvider>
-                <BrandedLoader />
+
                 <NavbarWrapper />
                 <main className="flex-1 animate-in fade-in duration-300">{children}</main>
                 <Footer />

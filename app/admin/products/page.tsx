@@ -591,14 +591,15 @@ export default function AdminProductsPage() {
       color: "Black",
       price: "150000",
       oldPrice: "",
-      stock: "5",
+      stock: "0",
       sku: "",
     };
 
     const price = parseInt(input.price, 10);
     const oldPrice = input.oldPrice ? parseInt(input.oldPrice, 10) : null;
-    const stock = parseInt(input.stock, 10) || 5;
+    const stock = Number(input.stock);
 
+    if (!Number.isInteger(stock) || stock < 0) { showToast("Stock must be a non-negative whole number", "error"); return; }
     if (!input.storage.trim() || !input.color.trim()) {
       showToast("Storage and Color are required", "error");
       return;
@@ -624,7 +625,7 @@ export default function AdminProductsPage() {
     await addVariant(product.id, newVar);
     setNewVariantInputs((prev) => ({
       ...prev,
-      [product.id]: { storage: "", color: "", price: "", oldPrice: "", stock: "5", sku: "" },
+      [product.id]: { storage: "", color: "", price: "", oldPrice: "", stock: "0", sku: "" },
     }));
     showToast("Variant added and saved to Supabase!", "success");
   };
@@ -731,7 +732,7 @@ export default function AdminProductsPage() {
           color: col,
           price: storagePrice,
           oldPrice: Math.round(storagePrice * 1.08),
-          stock: 5,
+          stock: 0,
           sku: `TM-${newProdModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${st.toUpperCase()}-${col.slice(0, 3).toUpperCase()}`,
         });
       });
@@ -760,8 +761,8 @@ export default function AdminProductsPage() {
       },
       stock: "In Stock",
       featured: false,
-      rating: 5.0,
-      reviewsCount: 1,
+      rating: 0,
+      reviewsCount: 0,
       variants,
     };
 
@@ -1810,7 +1811,7 @@ export default function AdminProductsPage() {
                           onChange={(e) =>
                             setNewVariantInputs((prev) => ({
                               ...prev,
-                              [product.id]: { ...(prev[product.id] || { color: "", price: "", oldPrice: "", stock: "5", sku: "" }), storage: e.target.value },
+                              [product.id]: { ...(prev[product.id] || { color: "", price: "", oldPrice: "", stock: "0", sku: "" }), storage: e.target.value },
                             }))
                           }
                           className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
@@ -1822,7 +1823,7 @@ export default function AdminProductsPage() {
                           onChange={(e) =>
                             setNewVariantInputs((prev) => ({
                               ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", price: "", oldPrice: "", stock: "5", sku: "" }), color: e.target.value },
+                              [product.id]: { ...(prev[product.id] || { storage: "", price: "", oldPrice: "", stock: "0", sku: "" }), color: e.target.value },
                             }))
                           }
                           className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
@@ -1834,7 +1835,7 @@ export default function AdminProductsPage() {
                           onChange={(e) =>
                             setNewVariantInputs((prev) => ({
                               ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", oldPrice: "", stock: "5", sku: "" }), price: e.target.value },
+                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", oldPrice: "", stock: "0", sku: "" }), price: e.target.value },
                             }))
                           }
                           className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
@@ -1846,7 +1847,7 @@ export default function AdminProductsPage() {
                           onChange={(e) =>
                             setNewVariantInputs((prev) => ({
                               ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", price: "", stock: "5", sku: "" }), oldPrice: e.target.value },
+                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", price: "", stock: "0", sku: "" }), oldPrice: e.target.value },
                             }))
                           }
                           className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"

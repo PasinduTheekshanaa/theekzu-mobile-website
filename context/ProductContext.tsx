@@ -27,6 +27,7 @@ export interface ProductContextType {
   products: Product[];
   isLoading: boolean;
   isLiveDatabase: boolean;
+  catalogError?: string;
   getProductBySlug: (slug: string) => Product | undefined;
   getProductById: (id: string) => Product | undefined;
   getRelatedProducts: (product: Product, limit?: number) => Product[];
@@ -60,7 +61,8 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export function computeLowestPrice(product: Product): number {
   if (product.variants && product.variants.length > 0) {
-    const prices = product.variants.map((v) => v.price).filter((p) => p > 0);
+    const available = product.variants.filter(v => v.stock > 0);
+    const prices = (available.length ? available : product.variants).map((v) => v.price).filter((p) => p > 0);
     if (prices.length > 0) {
       return Math.min(...prices);
     }
@@ -82,7 +84,10 @@ export const ProductProvider: React.FC<{
   children: React.ReactNode;
   initialProducts?: Product[];
   initialImagesMap?: Record<string, SupabaseProductImageRecord[]>;
-}> = ({ children, initialProducts, initialImagesMap }) => {
+  initialError?: string;
+}> = ({ children, initialProducts, initialImagesMap, initialError }) => {
+  const [catalogError, setCatalogError] = useState(initialError);
+  const requestId = React.useRef(0);
   const [products, setProducts] = useState<Product[]>(
     initialProducts && initialProducts.length > 0 ? initialProducts : []
   );
@@ -90,16 +95,19 @@ export const ProductProvider: React.FC<{
     initialImagesMap || {}
   );
   const [isLiveDatabase, setIsLiveDatabase] = useState(
-    Boolean(initialProducts && initialProducts.length > 0)
+    Boolean(initialProducts && !initialError)
   );
-  const [isLoading, setIsLoading] = useState(!initialProducts || initialProducts.length === 0);
+  const [isLoading, setIsLoading] = useState(initialProducts === undefined);
 
   // Load from Supabase as single source of truth
   const loadCatalog = useCallback(async () => {
+    const id = ++requestId.current;
     setIsLoading(true);
     try {
       const result = await loadProductsFromSupabase();
-      if (result.products.length > 0) {
+      if (id !== requestId.current) return;
+      setCatalogError(result.error);
+      {
         setProducts(result.products);
         setImagesMap(result.imagesMap);
         setIsLiveDatabase(result.source === "Supabase");
@@ -109,15 +117,19 @@ export const ProductProvider: React.FC<{
         console.error("Failed to load catalog from Supabase:", err);
       }
     } finally {
-      setIsLoading(false);
+      if (id === requestId.current) setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (!initialProducts || initialProducts.length === 0) {
+    if (initialProducts === undefined) {
       loadCatalog();
     }
 
+    let refreshTimer: ReturnType<typeof setTimeout>;
+    const scheduleRefresh = () => { clearTimeout(refreshTimer); refreshTimer = setTimeout(loadCatalog, 300); };
+    const onVisible = () => { if (document.visibilityState === "visible") scheduleRefresh(); };
+    document.addEventListener("visibilitychange", onVisible);
     // Supabase Realtime channel for instant cross-device updates
     if (isSupabaseConfigured()) {
       const channel = supabase
@@ -126,29 +138,32 @@ export const ProductProvider: React.FC<{
           "postgres_changes",
           { event: "*", schema: "public", table: "products" },
           () => {
-            loadCatalog();
+            scheduleRefresh();
           }
         )
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "product_variants" },
           () => {
-            loadCatalog();
+            scheduleRefresh();
           }
         )
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "product_images" },
           () => {
-            loadCatalog();
+            scheduleRefresh();
           }
         )
         .subscribe();
 
       return () => {
+        clearTimeout(refreshTimer);
+        document.removeEventListener("visibilitychange", onVisible);
         supabase.removeChannel(channel);
       };
     }
+    return () => { clearTimeout(refreshTimer); document.removeEventListener("visibilitychange", onVisible); };
   }, [loadCatalog]);
 
   // Update a variant
@@ -210,7 +225,7 @@ export const ProductProvider: React.FC<{
             color: col,
             price: storagePrice,
             oldPrice: Math.round(storagePrice * 1.08),
-            stock: 5,
+            stock: 0,
             sku,
           });
         }
@@ -282,8 +297,7 @@ export const ProductProvider: React.FC<{
     setProducts((prev) =>
       prev.map((p) => {
         if (p.id !== productId) return p;
-        const newStockVal = inStock ? 5 : 0;
-        const updatedVariants = (p.variants || []).map((v) => ({ ...v, stock: newStockVal }));
+        const updatedVariants = p.variants || [];
         return {
           ...p,
           stock: inStock ? "In Stock" : "Out of Stock",
@@ -309,8 +323,7 @@ export const ProductProvider: React.FC<{
     setProducts((prev) =>
       prev.map((p) => {
         if (!productIds.includes(p.id)) return p;
-        const newStockVal = inStock ? 5 : 0;
-        const updatedVariants = (p.variants || []).map((v) => ({ ...v, stock: newStockVal }));
+        const updatedVariants = p.variants || [];
         return {
           ...p,
           stock: inStock ? "In Stock" : "Out of Stock",
@@ -455,6 +468,7 @@ export const ProductProvider: React.FC<{
       products,
       isLoading,
       isLiveDatabase,
+      catalogError,
       getProductBySlug,
       getProductById,
       getRelatedProducts,
@@ -487,6 +501,7 @@ export const ProductProvider: React.FC<{
       products,
       isLoading,
       isLiveDatabase,
+      catalogError,
       getProductBySlug,
       getProductById,
       getRelatedProducts,
