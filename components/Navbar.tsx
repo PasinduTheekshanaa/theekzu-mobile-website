@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   return (
     <>
       <header
-        className={`studio-nav sticky top-0 left-0 right-0 z-40 w-full transition-all duration-300 h-[64px] flex items-center px-[14px] sm:px-6 ${
+        className={`sticky top-0 left-0 right-0 z-40 w-full transition-all duration-300 h-[64px] flex items-center px-[14px] sm:px-6 ${
           isScrolled
             ? "glass-nav shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
             : "bg-white/90 dark:bg-[#040711]/90 backdrop-blur-md border-b border-slate-200/70 dark:border-cyan-500/10"
