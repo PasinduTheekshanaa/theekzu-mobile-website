@@ -13,8 +13,8 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: "dark",
-  resolvedTheme: "dark",
+  theme: "light",
+  resolvedTheme: "light",
   toggleTheme: () => {},
   setTheme: () => {},
   mounted: false,
@@ -23,7 +23,7 @@ const ThemeContext = createContext<ThemeContextType>({
 const STORAGE_KEY = "theekzu_theme";
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -34,15 +34,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setThemeState(stored);
         applyTheme(stored);
       } else {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const initialTheme: Theme = prefersDark ? "dark" : "light";
-        setThemeState(initialTheme);
-        applyTheme(initialTheme);
+        setThemeState("light");
+        applyTheme("light");
       }
     } catch {
       // Fallback if localStorage is inaccessible
-      setThemeState("dark");
-      applyTheme("dark");
+      setThemeState("light");
+      applyTheme("light");
     }
     setMounted(true);
   }, []);

@@ -170,8 +170,7 @@ export default async function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('theekzu_theme');
-                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (stored === 'dark' || (!stored && supportDarkMode)) {
+                  if (stored === 'dark') {
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
                     document.documentElement.style.colorScheme = 'dark';
