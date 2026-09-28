@@ -236,6 +236,20 @@ export default function AdminProductsPage() {
     }, 4000);
   };
 
+  const openAddProduct = () => {
+    const isAccessory = selectedCatalog === "accessories";
+    setNewProdCategory(selectedCatalog);
+    setNewProdSubcategory("chargers-cables");
+    setNewProdName("");
+    setNewProdModel("");
+    setNewProdSeries(isAccessory ? "accessories" : "16");
+    setNewProdCondition("Brand New");
+    setNewProdBasePrice("");
+    setNewProdStorages(isAccessory ? "Standard" : "128GB, 256GB, 512GB");
+    setNewProdColors(isAccessory ? "White" : "Natural Titanium, Black Titanium");
+    setShowAddProductModal(true);
+  };
+
   const toggleExpandVariants = (productId: string) => {
     setExpandedVariants((prev) => ({
       ...prev,
@@ -706,8 +720,8 @@ export default function AdminProductsPage() {
 
   // Add New Product
   const handleCreateProduct = async () => {
-    if (!newProdName.trim() || !newProdModel.trim()) {
-      showToast("Product name and model are required", "error");
+    if (!newProdName.trim()) {
+      showToast("Product title is required", "error");
       return;
     }
     const basePrice = parseInt(newProdBasePrice, 10);
@@ -718,6 +732,7 @@ export default function AdminProductsPage() {
 
     const slug = newProdName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const id = `custom-${Date.now()}`;
+    const productModel = newProdModel.trim() || newProdName.trim();
 
     const storages = newProdStorages.split(",").map((s) => s.trim()).filter(Boolean);
     const colorNames = newProdColors.split(",").map((c) => c.trim()).filter(Boolean);
@@ -738,7 +753,7 @@ export default function AdminProductsPage() {
           price: storagePrice,
           oldPrice: Math.round(storagePrice * 1.08),
           stock: 0,
-          sku: `TM-${newProdModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${st.toUpperCase()}-${col.slice(0, 3).toUpperCase()}`,
+          sku: `TM-${productModel.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${st.toUpperCase()}-${col.slice(0, 3).toUpperCase()}`,
         });
       });
     });
@@ -747,7 +762,7 @@ export default function AdminProductsPage() {
       id,
       slug,
       name: newProdName.trim(),
-      model: newProdModel.trim(),
+      model: productModel,
       series: newProdSeries,
       category: newProdCategory,
       subcategory: newProdCategory === "iphones" ? "latest-iphones" : newProdSubcategory,
@@ -1133,11 +1148,7 @@ export default function AdminProductsPage() {
             )}
 
             <button
-              onClick={() => {
-                setNewProdCategory(selectedCatalog);
-                setNewProdSubcategory("chargers-cables");
-                setShowAddProductModal(true);
-              }}
+              onClick={openAddProduct}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-500/20 active:scale-95 transition-all"
             >
               <Plus className="w-4 h-4" />
@@ -2407,7 +2418,7 @@ export default function AdminProductsPage() {
                 <label className="font-bold block mb-1">Product Title:</label>
                 <input
                   type="text"
-                  placeholder="e.g. Apple iPhone 17 Ultra 5G"
+                  placeholder={newProdCategory === "accessories" ? "e.g. Apple 20W USB-C Power Adapter" : "e.g. Apple iPhone 17 Ultra 5G"}
                   value={newProdName}
                   onChange={(e) => setNewProdName(e.target.value)}
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
@@ -2419,7 +2430,13 @@ export default function AdminProductsPage() {
                   <label className="font-bold block mb-1">Section:</label>
                   <select
                     value={newProdCategory}
-                    onChange={(e) => setNewProdCategory(e.target.value as "iphones" | "accessories")}
+                    onChange={(e) => {
+                      const category = e.target.value as "iphones" | "accessories";
+                      setNewProdCategory(category);
+                      setNewProdSeries(category === "accessories" ? "accessories" : "16");
+                      setNewProdStorages(category === "accessories" ? "Standard" : "128GB, 256GB, 512GB");
+                      setNewProdColors(category === "accessories" ? "White" : "Natural Titanium, Black Titanium");
+                    }}
                     className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
                   >
                     <option value="iphones">iPhones</option>
@@ -2441,35 +2458,47 @@ export default function AdminProductsPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              {newProdCategory === "iphones" ? (
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="font-bold block mb-1">Model Name:</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. iPhone 17 Ultra"
+                      value={newProdModel}
+                      onChange={(e) => setNewProdModel(e.target.value)}
+                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold block mb-1">Series:</label>
+                    <select
+                      value={newProdSeries}
+                      onChange={(e) => setNewProdSeries(e.target.value)}
+                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    >
+                      <option value="17">iPhone 17</option>
+                      <option value="16">iPhone 16</option>
+                      <option value="15">iPhone 15</option>
+                      <option value="14">iPhone 14</option>
+                      <option value="13">iPhone 13</option>
+                      <option value="12">iPhone 12</option>
+                      <option value="11">iPhone 11</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
                 <div>
-                  <label className="font-bold block mb-1">Model Name:</label>
+                  <label className="font-bold block mb-1">Product Model / Short Name:</label>
                   <input
                     type="text"
-                    placeholder="e.g. iPhone 17 Ultra"
+                    placeholder="e.g. Apple 20W USB-C Power Adapter"
                     value={newProdModel}
                     onChange={(e) => setNewProdModel(e.target.value)}
                     className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
                   />
                 </div>
-                <div>
-                  <label className="font-bold block mb-1">Series:</label>
-                  <select
-                    value={newProdSeries}
-                    onChange={(e) => setNewProdSeries(e.target.value)}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
-                  >
-                    <option value="17">iPhone 17</option>
-                    <option value="16">iPhone 16</option>
-                    <option value="15">iPhone 15</option>
-                    <option value="14">iPhone 14</option>
-                    <option value="13">iPhone 13</option>
-                    <option value="12">iPhone 12</option>
-                    <option value="11">iPhone 11</option>
-                    <option value="accessories">Accessories</option>
-                  </select>
-                </div>
-              </div>
+              )}
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -2496,9 +2525,10 @@ export default function AdminProductsPage() {
               </div>
 
               <div>
-                <label className="font-bold block mb-1">Storage Options (comma separated):</label>
+                <label className="font-bold block mb-1">{newProdCategory === "accessories" ? "Compatible Models / Options (comma separated):" : "Storage Options (comma separated):"}</label>
                 <input
                   type="text"
+                  placeholder={newProdCategory === "accessories" ? "e.g. iPhone 13, iPhone 14, iPhone 15" : "e.g. 128GB, 256GB, 512GB"}
                   value={newProdStorages}
                   onChange={(e) => setNewProdStorages(e.target.value)}
                   className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
@@ -2514,6 +2544,12 @@ export default function AdminProductsPage() {
                   className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
+
+              {newProdCategory === "accessories" && (
+                <p className="rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-zinc-300">
+                  Save the product first, then use its <strong>Images</strong> button in the Accessories section to upload the real product photo.
+                </p>
+              )}
             </div>
 
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">

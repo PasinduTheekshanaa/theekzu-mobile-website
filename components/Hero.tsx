@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, MessageCircle, ShieldCheck, Tag, Award, Zap } from "lucide-react";
 import { storeConfig } from "@/config/store";
-import { AnimatedRobotHero } from "@/components/AnimatedRobotHero";
 
 export const Hero: React.FC = () => {
   return (
@@ -109,9 +108,38 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Animated Robot Hero */}
+          {/* Right Column: Theekzu brand film */}
           <div className="md:col-span-5 relative flex items-center justify-center w-full hero-animate-img pt-2 md:pt-0">
-            <AnimatedRobotHero />
+            <div className="relative w-full max-w-[360px] lg:max-w-[400px] aspect-[4/3] md:aspect-[4/5] overflow-hidden rounded-3xl border border-cyan-500/30 bg-slate-950 shadow-xl shadow-blue-950/20 group">
+              <video
+                className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Theekzu Mobile brand video"
+              >
+                <source src="/theekzu-hero.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-slate-950/30 pointer-events-none" />
+              <div className="absolute inset-0 opacity-40 pointer-events-none bg-[radial-gradient(circle_at_75%_15%,rgba(34,211,238,0.35),transparent_35%)]" />
+
+              <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2 text-[10px] font-bold uppercase tracking-wider text-white">
+                <span className="rounded-full border border-white/20 bg-slate-950/70 px-3 py-2 backdrop-blur-sm">Theekzu Mobile</span>
+                <span className="flex items-center gap-1.5 rounded-full border border-emerald-300/30 bg-emerald-500/20 px-3 py-2 backdrop-blur-sm">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                  Sri Lanka
+                </span>
+              </div>
+
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6 text-white pointer-events-none">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-cyan-200">Authentic Apple. Real support.</p>
+                <p className="mt-2 text-lg sm:text-xl font-black leading-tight">Choose your next iPhone with confidence.</p>
+              </div>
+
+              <div className="absolute -bottom-12 -right-12 h-40 w-40 rounded-full border border-cyan-300/30 animate-[spin_12s_linear_infinite] pointer-events-none" />
+            </div>
           </div>
         </div>
       </div>
