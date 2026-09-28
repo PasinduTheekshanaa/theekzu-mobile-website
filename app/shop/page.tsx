@@ -1,10 +1,64 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
-import { Search, Filter, RotateCcw, PackageSearch, Sparkles } from "lucide-react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { Search, Filter, RotateCcw, PackageSearch, Sparkles, ChevronDown } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
 import { formatCurrency } from "@/lib/formatCurrency";
+
+type FilterOption = { value: string; label: string };
+
+function CatalogSelect({ label, value, options, onChange }: { label: string; value: string; options: FilterOption[]; onChange: (value: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selectedLabel = options.find((option) => option.value === value)?.label ?? options[0]?.label;
+
+  useEffect(() => {
+    const close = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, []);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <span className="block text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold mb-1.5">{label}</span>
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="w-full min-h-[42px] flex items-center justify-between gap-2 bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-left text-xs text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-cyan-400 focus:outline-none transition-colors"
+      >
+        <span className="truncate">{selectedLabel}</span>
+        <ChevronDown className={`w-4 h-4 shrink-0 text-slate-500 dark:text-zinc-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div role="listbox" aria-label={label} className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-xl dark:border-cyan-500/30 dark:bg-[#0b1326]">
+          <div className="max-h-64 overflow-y-auto">
+            {options.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                role="option"
+                aria-selected={value === option.value}
+                onClick={() => { onChange(option.value); setOpen(false); }}
+                className={`w-full rounded-lg px-3 py-2 text-left text-xs transition-colors ${
+                  value === option.value
+                    ? "bg-blue-600 text-white dark:bg-cyan-500 dark:text-slate-950"
+                    : "text-slate-700 hover:bg-slate-100 dark:text-zinc-200 dark:hover:bg-white/10"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function ShopPage() {
   const { products, getLowestPrice } = useProducts();
@@ -170,101 +224,25 @@ export default function ShopPage() {
         {/* Dropdowns & Range Sliders */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
           
-          {/* Series Filter */}
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold mb-1.5">
-              iPhone Series
-            </label>
-            <select
-              value={selectedSeries}
-              onChange={(e) => setSelectedSeries(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-cyan-400 focus:outline-none"
-            >
-              <option value="all">All Series</option>
-              <option value="17">iPhone 17 Series</option>
-              <option value="16">iPhone 16 Series</option>
-              <option value="15">iPhone 15 Series</option>
-              <option value="14">iPhone 14 Series</option>
-              <option value="13">iPhone 13 Series</option>
-              <option value="12">iPhone 12 Series</option>
-              <option value="11">iPhone 11 Series</option>
-              <option value="accessories">Accessories</option>
-            </select>
-          </div>
+          <CatalogSelect label="iPhone Series" value={selectedSeries} onChange={setSelectedSeries} options={[
+            { value: "all", label: "All Series" }, { value: "17", label: "iPhone 17 Series" }, { value: "16", label: "iPhone 16 Series" }, { value: "15", label: "iPhone 15 Series" }, { value: "14", label: "iPhone 14 Series" }, { value: "13", label: "iPhone 13 Series" }, { value: "12", label: "iPhone 12 Series" }, { value: "11", label: "iPhone 11 Series" }, { value: "accessories", label: "Accessories" },
+          ]} />
 
-          {/* Category */}
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold mb-1.5">
-              Category
-            </label>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-cyan-400 focus:outline-none"
-            >
-              <option value="all">All Categories</option>
-              <option value="iphones">All iPhones</option>
-              <option value="latest-iphones">Latest Flagships</option>
-              <option value="used-iphones">Used / Pre-Owned</option>
-              <option value="accessories">All Accessories</option>
-              <option value="airpods">AirPods</option>
-              <option value="apple-watch">Apple Watch</option>
-              <option value="chargers-cables">Chargers & Cables</option>
-              <option value="cases-accessories">Cases & Protection</option>
-            </select>
-          </div>
+          <CatalogSelect label="Category" value={selectedCategory} onChange={setSelectedCategory} options={[
+            { value: "all", label: "All Categories" }, { value: "iphones", label: "All iPhones" }, { value: "latest-iphones", label: "Latest Flagships" }, { value: "used-iphones", label: "Used / Pre-Owned" }, { value: "accessories", label: "All Accessories" }, { value: "airpods", label: "AirPods" }, { value: "apple-watch", label: "Apple Watch" }, { value: "chargers-cables", label: "Chargers & Cables" }, { value: "cases-accessories", label: "Cases & Protection" },
+          ]} />
 
-          {/* Condition */}
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold mb-1.5">
-              Condition
-            </label>
-            <select
-              value={selectedCondition}
-              onChange={(e) => setSelectedCondition(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-cyan-400 focus:outline-none"
-            >
-              <option value="all">All Conditions</option>
-              <option value="Brand New">Brand New Sealed</option>
-              <option value="Used">Certified Pre-Owned</option>
-            </select>
-          </div>
+          <CatalogSelect label="Condition" value={selectedCondition} onChange={setSelectedCondition} options={[
+            { value: "all", label: "All Conditions" }, { value: "Brand New", label: "Brand New Sealed" }, { value: "Used", label: "Certified Pre-Owned" },
+          ]} />
 
-          {/* Storage */}
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold mb-1.5">
-              Storage
-            </label>
-            <select
-              value={selectedStorage}
-              onChange={(e) => setSelectedStorage(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-cyan-400 focus:outline-none"
-            >
-              <option value="all">Any Storage</option>
-              {availableStorages.map((st) => (
-                <option key={st} value={st}>
-                  {st}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CatalogSelect label="Storage" value={selectedStorage} onChange={setSelectedStorage} options={[
+            { value: "all", label: "Any Storage" }, ...availableStorages.map((storage) => ({ value: storage, label: storage })),
+          ]} />
 
-          {/* Sort By */}
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold mb-1.5">
-              Sort By
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-cyan-400 focus:outline-none"
-            >
-              <option value="popular">Most Popular</option>
-              <option value="newest">Newest First</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-            </select>
-          </div>
+          <CatalogSelect label="Sort By" value={sortBy} onChange={(value) => setSortBy(value as typeof sortBy)} options={[
+            { value: "popular", label: "Most Popular" }, { value: "newest", label: "Newest First" }, { value: "price-low", label: "Price: Low to High" }, { value: "price-high", label: "Price: High to Low" },
+          ]} />
 
           {/* Price Range Slider */}
           <div>
