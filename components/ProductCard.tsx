@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Heart, MessageCircle, Eye, ShieldCheck, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Product } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -17,6 +18,7 @@ interface ProductCardProps {
 export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) => {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { getProductPrimaryImage, getLowestPrice } = useProducts();
+  const router = useRouter();
   const wishlisted = isWishlisted(product.id);
 
   const defaultColor = product.colors && product.colors[0] ? product.colors[0].name : "Standard";
@@ -32,6 +34,20 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) =>
 
   const cardRef = useRef<HTMLDivElement>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [isOpeningDetails, setIsOpeningDetails] = useState(false);
+  const productUrl = `/product/${product.slug}`;
+
+  const preloadDetails = useCallback(() => {
+    router.prefetch(productUrl);
+  }, [router, productUrl]);
+
+  const openDetails = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    setIsOpeningDetails(true);
+    preloadDetails();
+    router.push(productUrl);
+  }, [preloadDetails, productUrl, router]);
 
   // High performance DOM-based 3D tilt without React state re-renders
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -116,7 +132,11 @@ Can you confirm availability and latest variant pricing?`;
 
       {/* Product Image Area with Smooth Zoom and Lighting */}
       <Link
-        href={`/product/${product.slug}`}
+        href={productUrl}
+        prefetch
+        onPointerEnter={preloadDetails}
+        onTouchStart={preloadDetails}
+        onClick={openDetails}
         className="h-56 w-full rounded-2xl bg-slate-50/80 dark:bg-gradient-to-b dark:from-slate-900/50 dark:to-slate-950/80 border border-slate-200/80 dark:border-cyan-500/10 p-4 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-blue-400/40 dark:group-hover:border-cyan-500/30 transition-all"
       >
         {displayImage ? (
@@ -185,7 +205,7 @@ Can you confirm availability and latest variant pricing?`;
             </div>
           </div>
 
-          <Link href={`/product/${product.slug}`}>
+          <Link href={productUrl} prefetch onPointerEnter={preloadDetails} onTouchStart={preloadDetails} onClick={openDetails}>
             <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-300 transition-colors mb-1.5 line-clamp-1">
               {product.name}
             </h3>
@@ -219,7 +239,11 @@ Can you confirm availability and latest variant pricing?`;
 
           <div className="grid grid-cols-2 gap-2">
             <Link
-              href={`/product/${product.slug}`}
+              href={productUrl}
+              prefetch
+              onPointerEnter={preloadDetails}
+              onTouchStart={preloadDetails}
+              onClick={openDetails}
               className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] btn-press group/btn"
             >
               <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 shrink-0 group-hover/btn:scale-110 transition-transform" />
@@ -244,6 +268,13 @@ Can you confirm availability and latest variant pricing?`;
         </div>
 
       </div>
+
+      {isOpeningDetails && (
+        <div className="absolute inset-0 z-30 rounded-[2rem] bg-white/80 dark:bg-slate-950/80 backdrop-blur-[2px] flex items-center justify-center gap-2 text-xs font-bold text-blue-700 dark:text-cyan-300 animate-in fade-in duration-150 pointer-events-none">
+          <span className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+          Opening details…
+        </div>
+      )}
 
     </div>
   );

@@ -11,6 +11,7 @@ export default function AccessoriesPage() {
 
   const accessories = products.filter((p) => {
     if (p.category !== "accessories") return false;
+    if (p.subcategory !== "chargers-cables" && p.subcategory !== "cases-accessories") return false;
     if (subcat === "all") return true;
     return p.subcategory === subcat;
   });
@@ -24,10 +25,10 @@ export default function AccessoriesPage() {
           <Sparkles className="w-3 h-3" /> Original Apple Ecosystem
         </span>
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mt-1">
-          Accessories & Audio
+          Accessories
         </h1>
         <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
-          Complete your Apple setup with 100% genuine AirPods Pro 2, Apple Watch Ultra 2, official 20W fast wall chargers, MagSafe chargers, and drop-proof cases.
+          Complete your setup with genuine chargers, cables, MagSafe essentials, protective cases, and screen protection.
         </p>
 
         {/* Subcategory Pills */}
@@ -41,28 +42,6 @@ export default function AccessoriesPage() {
             }`}
           >
             All Accessories
-          </button>
-
-          <button
-            onClick={() => setSubcat("airpods")}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-              subcat === "airpods"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            AirPods
-          </button>
-
-          <button
-            onClick={() => setSubcat("apple-watch")}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-              subcat === "apple-watch"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            Apple Watch
           </button>
 
           <button

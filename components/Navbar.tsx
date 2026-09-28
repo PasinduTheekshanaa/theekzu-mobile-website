@@ -20,6 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const { totalCount: wishlistCount, setIsWishlistOpen } = useWishlist();
   const { theme, toggleTheme, mounted } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Scroll detection
@@ -32,9 +33,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Body scroll lock when mobile menu is open
+  // Keep the drawer mounted long enough for its close animation to finish.
   useEffect(() => {
     if (mobileMenuOpen) {
+      setMobileMenuMounted(true);
+      return;
+    }
+    const timer = window.setTimeout(() => setMobileMenuMounted(false), 220);
+    return () => window.clearTimeout(timer);
+  }, [mobileMenuOpen]);
+
+  // Body scroll lock while the mobile drawer is visible.
+  useEffect(() => {
+    if (mobileMenuMounted) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -42,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuMounted]);
 
   // Escape key handler to close mobile menu
   useEffect(() => {
@@ -241,17 +252,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
       </header>
 
       {/* Mobile Drawer Navigation Backdrop & Drawer */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
+      {mobileMenuMounted && (
+        <div className={`fixed inset-0 z-50 lg:hidden flex transition-opacity duration-200 ${mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           {/* Dimmed backdrop - click to close */}
           <div
-            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm sm:backdrop-blur-md"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer Sheet */}
-          <div className="relative ml-auto w-[min(88vw,360px)] h-full bg-white dark:bg-[#070c18] border-l border-slate-200 dark:border-cyan-500/20 shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-250 overflow-hidden">
+          <div className={`relative ml-auto w-[min(88vw,360px)] h-full bg-white dark:bg-[#070c18] border-l border-slate-200 dark:border-cyan-500/20 shadow-2xl flex flex-col z-10 overflow-hidden transform-gpu will-change-transform transition-transform duration-[220ms] ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
             
             {/* Drawer Header */}
             <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-50/80 dark:bg-slate-950/60">

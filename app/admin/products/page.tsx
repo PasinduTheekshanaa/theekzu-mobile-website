@@ -79,6 +79,7 @@ export default function AdminProductsPage() {
   const [selectedCondition, setSelectedCondition] = useState<string>("all");
   const [selectedStock, setSelectedStock] = useState<string>("all");
   const [onlyFeatured, setOnlyFeatured] = useState<boolean>(false);
+  const [selectedCatalog, setSelectedCatalog] = useState<"iphones" | "accessories">("iphones");
 
   // Expanded variant rows (productId => boolean)
   const [expandedVariants, setExpandedVariants] = useState<Record<string, boolean>>({});
@@ -127,6 +128,8 @@ export default function AdminProductsPage() {
   const [formStorages, setFormStorages] = useState("");
   const [formColors, setFormColors] = useState("");
   const [formDescription, setFormDescription] = useState("");
+  const [formCategory, setFormCategory] = useState<"iphones" | "accessories">("iphones");
+  const [formSubcategory, setFormSubcategory] = useState<"chargers-cables" | "cases-accessories">("chargers-cables");
   const [isSavingProductEdit, setIsSavingProductEdit] = useState(false);
 
   // New Product Modal State
@@ -135,6 +138,7 @@ export default function AdminProductsPage() {
   const [newProdModel, setNewProdModel] = useState("");
   const [newProdSeries, setNewProdSeries] = useState("16");
   const [newProdCategory, setNewProdCategory] = useState<"iphones" | "accessories">("iphones");
+  const [newProdSubcategory, setNewProdSubcategory] = useState<"chargers-cables" | "cases-accessories">("chargers-cables");
   const [newProdCondition, setNewProdCondition] = useState<"Brand New" | "Used">("Brand New");
   const [newProdBasePrice, setNewProdBasePrice] = useState("");
   const [newProdStorages, setNewProdStorages] = useState("128GB, 256GB, 512GB");
@@ -256,10 +260,11 @@ export default function AdminProductsPage() {
       const matchesStock =
         selectedStock === "all" || (selectedStock === "in_stock" ? isInStock : !isInStock);
       const matchesFeatured = !onlyFeatured || p.featured;
+      const matchesCatalog = p.category === selectedCatalog;
 
-      return matchesSearch && matchesSeries && matchesCondition && matchesStock && matchesFeatured;
+      return matchesSearch && matchesSeries && matchesCondition && matchesStock && matchesFeatured && matchesCatalog;
     });
-  }, [products, searchQuery, selectedSeries, selectedCondition, selectedStock, onlyFeatured]);
+  }, [products, searchQuery, selectedSeries, selectedCondition, selectedStock, onlyFeatured, selectedCatalog]);
 
   // Stock Metrics for Dashboard Summary Cards
   const stockMetrics = useMemo(() => {
@@ -745,7 +750,7 @@ export default function AdminProductsPage() {
       model: newProdModel.trim(),
       series: newProdSeries,
       category: newProdCategory,
-      subcategory: newProdCategory === "iphones" ? "latest-iphones" : "cases-accessories",
+      subcategory: newProdCategory === "iphones" ? "latest-iphones" : newProdSubcategory,
       condition: newProdCondition,
       conditionBadge: newProdCondition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
       price: basePrice,
@@ -771,6 +776,71 @@ export default function AdminProductsPage() {
     showToast(`Product "${newProdName}" added and synced to Supabase!`, "success");
   };
 
+  const handleAddAccessorySamples = async () => {
+    const samples: Product[] = [
+      {
+        id: "sample-usbc-20w-charger",
+        slug: "apple-20w-usb-c-power-adapter",
+        name: "Apple 20W USB-C Power Adapter",
+        model: "20W USB-C Charger",
+        series: "accessories",
+        category: "accessories",
+        subcategory: "chargers-cables",
+        condition: "Brand New",
+        conditionBadge: "Brand New Sealed",
+        price: 7500,
+        oldPrice: 8500,
+        storage: "Standard",
+        storageOptions: ["Standard"],
+        colors: [{ name: "White", hex: "#f5f5f7" }],
+        images: ["https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=1000&q=80"],
+        description: "Sample product — genuine 20W USB-C fast charging adapter.",
+        specifications: { warranty: "Store warranty", delivery: "Islandwide delivery" },
+        stock: "In Stock",
+        featured: false,
+        rating: 0,
+        reviewsCount: 0,
+        variants: [{ id: "sample-usbc-20w-charger-standard-white", storage: "Standard", color: "White", price: 7500, oldPrice: 8500, stock: 5, sku: "TM-20W-STD-WHI" }],
+      },
+      {
+        id: "sample-magsafe-clear-case",
+        slug: "magsafe-clear-case",
+        name: "MagSafe Clear Case",
+        model: "MagSafe Clear Case",
+        series: "accessories",
+        category: "accessories",
+        subcategory: "cases-accessories",
+        condition: "Brand New",
+        conditionBadge: "Brand New Sealed",
+        price: 4500,
+        oldPrice: 5500,
+        storage: "Standard",
+        storageOptions: ["Standard"],
+        colors: [{ name: "Clear", hex: "#e5e7eb" }],
+        images: ["https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&w=1000&q=80"],
+        description: "Sample product — slim protective MagSafe-compatible clear case.",
+        specifications: { warranty: "Store warranty", delivery: "Islandwide delivery" },
+        stock: "In Stock",
+        featured: false,
+        rating: 0,
+        reviewsCount: 0,
+        variants: [{ id: "sample-magsafe-clear-case-standard-clear", storage: "Standard", color: "Clear", price: 4500, oldPrice: 5500, stock: 5, sku: "TM-CASE-STD-CLE" }],
+      },
+    ];
+
+    const missingSamples = samples.filter((sample) => !products.some((product) => product.slug === sample.slug));
+    if (missingSamples.length === 0) {
+      showToast("Sample accessories are already in the catalog", "info");
+      return;
+    }
+
+    for (const sample of missingSamples) {
+      await addProduct(sample);
+    }
+    await refreshCatalog();
+    showToast(`${missingSamples.length} sample accessory products added to Supabase`, "success");
+  };
+
   // Open Edit Modal for general details
   const handleOpenEdit = (p: Product) => {
     setEditingProduct(p);
@@ -783,6 +853,8 @@ export default function AdminProductsPage() {
     setFormStorages(p.storageOptions ? p.storageOptions.join(", ") : p.storage || "128GB");
     setFormColors(p.colors ? p.colors.map((c) => c.name).join(", ") : "");
     setFormDescription(p.description);
+    setFormCategory(p.category === "accessories" ? "accessories" : "iphones");
+    setFormSubcategory(p.subcategory === "chargers-cables" ? "chargers-cables" : "cases-accessories");
   };
 
   const handleSaveProductEdit = async () => {
@@ -810,6 +882,8 @@ export default function AdminProductsPage() {
         name: formName.trim(),
         model: formModel.trim() || formName.trim(),
         series: formSeries,
+        category: formCategory,
+        subcategory: formCategory === "iphones" ? editingProduct.subcategory : formSubcategory,
         condition: formCondition,
         conditionBadge: formCondition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
         stock: formInStock ? "In Stock" : "Out of Stock",
@@ -1000,7 +1074,7 @@ export default function AdminProductsPage() {
                 )}
               </div>
               <p className="text-xs text-slate-500 dark:text-zinc-400">
-                Manage 29 iPhone models, variants, prices, and images. All edits save directly to Supabase in real-time.
+                Manage iPhones, accessories, variants, prices, images, and customer feedback. All edits save directly to Supabase.
               </p>
             </div>
           </div>
@@ -1032,8 +1106,38 @@ export default function AdminProductsPage() {
               <span>Reviews &amp; Feedback</span>
             </Link>
 
+            <div className="flex items-center rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-800 p-1 text-xs font-bold">
+              <button
+                onClick={() => setSelectedCatalog("iphones")}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${selectedCatalog === "iphones" ? "bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-cyan-300" : "text-slate-500 dark:text-zinc-400"}`}
+              >
+                iPhones
+              </button>
+              <button
+                onClick={() => setSelectedCatalog("accessories")}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${selectedCatalog === "accessories" ? "bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-cyan-300" : "text-slate-500 dark:text-zinc-400"}`}
+              >
+                Accessories
+              </button>
+            </div>
+
+            {selectedCatalog === "accessories" && (
+              <button
+                onClick={handleAddAccessorySamples}
+                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 transition-all"
+                title="Add two editable sample products: a charger and a protective case"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Add Sample Data</span>
+              </button>
+            )}
+
             <button
-              onClick={() => setShowAddProductModal(true)}
+              onClick={() => {
+                setNewProdCategory(selectedCatalog);
+                setNewProdSubcategory("chargers-cables");
+                setShowAddProductModal(true);
+              }}
               className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-500/20 active:scale-95 transition-all"
             >
               <Plus className="w-4 h-4" />
@@ -1216,7 +1320,7 @@ export default function AdminProductsPage() {
 
           <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-white/5 text-xs text-slate-500 dark:text-zinc-400">
             <span>
-              Showing {filteredProducts.length} of {products.length} products
+              Showing {filteredProducts.length} {selectedCatalog === "iphones" ? "iPhones" : "accessories"}
             </span>
             <label className="flex items-center gap-2 cursor-pointer font-medium">
               <input
@@ -2312,6 +2416,33 @@ export default function AdminProductsPage() {
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
+                  <label className="font-bold block mb-1">Section:</label>
+                  <select
+                    value={newProdCategory}
+                    onChange={(e) => setNewProdCategory(e.target.value as "iphones" | "accessories")}
+                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  >
+                    <option value="iphones">iPhones</option>
+                    <option value="accessories">Accessories</option>
+                  </select>
+                </div>
+                {newProdCategory === "accessories" && (
+                  <div>
+                    <label className="font-bold block mb-1">Accessory Type:</label>
+                    <select
+                      value={newProdSubcategory}
+                      onChange={(e) => setNewProdSubcategory(e.target.value as "chargers-cables" | "cases-accessories")}
+                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    >
+                      <option value="chargers-cables">Chargers &amp; Cables</option>
+                      <option value="cases-accessories">Cases &amp; Protection</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
                   <label className="font-bold block mb-1">Model Name:</label>
                   <input
                     type="text"
@@ -2443,6 +2574,33 @@ export default function AdminProductsPage() {
                   onChange={(e) => setFormName(e.target.value)}
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-bold block mb-1">Section:</label>
+                  <select
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value as "iphones" | "accessories")}
+                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  >
+                    <option value="iphones">iPhones</option>
+                    <option value="accessories">Accessories</option>
+                  </select>
+                </div>
+                {formCategory === "accessories" && (
+                  <div>
+                    <label className="font-bold block mb-1">Accessory Type:</label>
+                    <select
+                      value={formSubcategory}
+                      onChange={(e) => setFormSubcategory(e.target.value as "chargers-cables" | "cases-accessories")}
+                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    >
+                      <option value="chargers-cables">Chargers &amp; Cables</option>
+                      <option value="cases-accessories">Cases &amp; Protection</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-2">

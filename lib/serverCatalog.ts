@@ -1,5 +1,10 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { loadProductsFromSupabase } from "./supabaseService";
 
-// Share one catalog snapshot between layout, metadata and page within a request.
-export const getServerCatalog = cache(loadProductsFromSupabase);
+// Keep storefront navigation fast while retaining a short refresh window for
+// stock and price changes made in the admin dashboard.
+export const getServerCatalog = unstable_cache(
+  async () => loadProductsFromSupabase(),
+  ["theekzu-server-catalog"],
+  { revalidate: 30 }
+);

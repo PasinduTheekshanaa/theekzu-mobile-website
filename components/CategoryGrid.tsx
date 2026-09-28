@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Smartphone, ShieldCheck, Headphones, Watch, Zap, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, Smartphone, ShieldCheck, Zap, Shield, Sparkles } from "lucide-react";
 
 import { ScrollReveal } from "@/components/ScrollReveal";
 
@@ -29,28 +29,6 @@ export const CategoryGrid: React.FC = () => {
       badgeColor: "text-purple-600 dark:text-purple-300",
     },
     {
-      name: "AirPods",
-      count: "Pro & Gen 3 / 4",
-      href: "/accessories?sub=airpods",
-      icon: Headphones,
-      description: "Active Noise Cancellation, Transparency mode and crystal clear Spatial Audio.",
-      glow: "from-sky-500/15 via-teal-500/10 to-transparent",
-      borderColor: "border-slate-200 dark:border-sky-500/30 hover:border-sky-500 dark:hover:border-sky-400",
-      iconColor: "text-sky-600 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-500/15 border-sky-500/20 dark:border-sky-500/30",
-      badgeColor: "text-sky-600 dark:text-sky-300",
-    },
-    {
-      name: "Apple Watch",
-      count: "Ultra 2 & Series 9/10",
-      href: "/accessories?sub=apple-watch",
-      icon: Watch,
-      description: "Precision health sensors, fitness telemetry, ECG, and all-day sapphire display.",
-      glow: "from-emerald-500/15 via-teal-500/10 to-transparent",
-      borderColor: "border-slate-200 dark:border-emerald-500/30 hover:border-emerald-500 dark:hover:border-emerald-400",
-      iconColor: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15 border-emerald-500/20 dark:border-emerald-500/30",
-      badgeColor: "text-emerald-600 dark:text-emerald-300",
-    },
-    {
       name: "Chargers & Cables",
       count: "Fast 20W & MagSafe",
       href: "/accessories?sub=chargers-cables",
@@ -62,7 +40,7 @@ export const CategoryGrid: React.FC = () => {
       badgeColor: "text-amber-600 dark:text-amber-300",
     },
     {
-      name: "Cases & Accessories",
+      name: "Cases & Protection",
       count: "MagSafe & 9H Glass",
       href: "/accessories?sub=cases-accessories",
       icon: Shield,

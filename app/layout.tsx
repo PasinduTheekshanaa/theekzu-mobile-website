@@ -14,8 +14,7 @@ import { BrandedLoader } from "@/components/BrandedLoader";
 import { storeConfig } from "@/config/store";
 import { getServerCatalog } from "@/lib/serverCatalog";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
 
 export const viewport: Viewport = {
   themeColor: [

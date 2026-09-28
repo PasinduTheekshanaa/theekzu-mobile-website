@@ -111,13 +111,13 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/accessories" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">
-                  Apple AirPods & Audio
+                <Link href="/accessories?sub=chargers-cables" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">
+                  Chargers & Cables
                 </Link>
               </li>
               <li>
-                <Link href="/accessories?sub=apple-watch" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">
-                  Apple Watches
+                <Link href="/accessories?sub=cases-accessories" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">
+                  Cases & Protection
                 </Link>
               </li>
               <li>

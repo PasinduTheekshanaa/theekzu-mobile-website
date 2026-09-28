@@ -5,13 +5,12 @@ export const metadata: Metadata = {
     absolute: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
   },
   description:
-    "Shop 100% genuine Apple accessories in Sri Lanka. AirPods Pro 2, Apple Watch Ultra, official 20W USB-C fast chargers, MagSafe cases and cables.",
+    "Shop genuine chargers, cables, MagSafe cases, screen protectors and Apple accessories in Sri Lanka.",
   keywords: [
     "Apple accessories Sri Lanka",
-    "AirPods Pro Sri Lanka",
     "Apple 20W charger Sri Lanka",
-    "Apple Watch Ultra Colombo",
     "MagSafe charger Sri Lanka",
+    "iPhone cases Sri Lanka",
   ],
   alternates: {
     canonical: "https://theekzu.vercel.app/accessories",
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
     description:
-      "Shop 100% genuine Apple accessories in Sri Lanka. AirPods Pro 2, Apple Watch Ultra, official 20W fast chargers, MagSafe cases and cables.",
+      "Shop genuine chargers, cables, MagSafe cases, screen protectors and Apple accessories in Sri Lanka.",
     url: "https://theekzu.vercel.app/accessories",
     siteName: "Theekzu Mobile",
     images: [
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
     description:
-      "Shop 100% genuine Apple accessories in Sri Lanka. AirPods Pro 2, Apple Watch Ultra, official 20W chargers and MagSafe accessories.",
+      "Shop genuine chargers, cables, MagSafe cases and screen protection in Sri Lanka.",
     images: ["/logo.png"],
   },
 };
