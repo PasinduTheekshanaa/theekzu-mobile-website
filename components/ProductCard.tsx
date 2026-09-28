@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -32,7 +32,6 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) =>
     product.stock === "Out of Stock" ||
     (product.variants && product.variants.length > 0 && product.variants.every((v) => (Number(v.stock) || 0) <= 0));
 
-  const cardRef = useRef<HTMLDivElement>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [isOpeningDetails, setIsOpeningDetails] = useState(false);
   const productUrl = `/product/${product.slug}`;
@@ -48,20 +47,6 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) =>
     preloadDetails();
     router.push(productUrl);
   }, [preloadDetails, productUrl, router]);
-
-  // High performance DOM-based 3D tilt without React state re-renders
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!cardRef.current || window.innerWidth < 1024 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 8;
-    cardRef.current.style.transform = `perspective(800px) rotateY(${x}deg) rotateX(${-y}deg) translateY(-6px)`;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = "perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0px)";
-  }, []);
 
   const waMessage = isOutOfStock
     ? `Hello Theekzu Mobile,
@@ -87,13 +72,6 @@ Can you confirm availability and latest variant pricing?`;
 
   return (
     <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transform: "perspective(800px) rotateY(0deg) rotateX(0deg) translateY(0px)",
-        transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease",
-      }}
       className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500/50 dark:hover:border-cyan-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(0,102,255,0.35)]"
     >
       {/* Top badges & Wishlist */}
@@ -150,7 +128,7 @@ Can you confirm availability and latest variant pricing?`;
               width={280}
               height={280}
               onLoad={() => setImgLoaded(true)}
-              className={`max-h-full max-w-full object-contain group-hover:scale-108 transition-all duration-500 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] relative z-10 ${
+              className={`max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] group-hover:drop-shadow-[0_18px_28px_rgba(0,102,255,0.3)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] relative z-10 ${
                 imgLoaded ? "opacity-100" : "opacity-0"
               }`}
             />
