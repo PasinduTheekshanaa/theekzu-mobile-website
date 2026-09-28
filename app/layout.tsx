@@ -170,7 +170,7 @@ export default async function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('theekzu_theme');
-                  if (stored === 'dark') {
+                  if (stored !== 'light') {
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
                     document.documentElement.style.colorScheme = 'dark';
@@ -185,7 +185,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#f8fafc] text-slate-900 dark:bg-[#040711] dark:text-slate-100 antialiased selection:bg-cyan-500 selection:text-white flex flex-col min-h-screen transition-colors duration-300">
+      <body suppressHydrationWarning className="bg-[#f8fafc] text-slate-900 dark:bg-[#040711] dark:text-slate-100 antialiased selection:bg-cyan-500 selection:text-white flex flex-col min-h-screen transition-colors duration-300">
         <ThemeProvider>
           <ProductProvider initialProducts={initialProducts} initialImagesMap={initialImagesMap} initialError={initialError}>
             <CartProvider>

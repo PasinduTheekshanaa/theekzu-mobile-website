@@ -9,7 +9,7 @@ export const Hero: React.FC = () => {
   return (
     <section className="relative min-h-[680px] sm:min-h-[720px] md:min-h-[650px] lg:min-h-[700px] flex items-center py-10 sm:py-14 md:py-16 overflow-hidden bg-slate-100 dark:bg-slate-950 w-full">
       <video
-        className="absolute inset-0 h-full w-full object-cover brightness-100 contrast-120 saturate-115 dark:brightness-110 dark:contrast-110 dark:saturate-110 motion-reduce:hidden"
+        className="absolute inset-0 h-full w-full object-cover transform-gpu brightness-100 contrast-120 saturate-115 dark:brightness-110 dark:contrast-110 dark:saturate-110 motion-reduce:hidden"
         autoPlay
         muted
         loop

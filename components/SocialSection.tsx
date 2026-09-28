@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { Instagram, Facebook, MessageCircle, Sparkles, ExternalLink } from "lucide-react";
 import { storeConfig } from "@/config/store";
 
@@ -89,54 +88,6 @@ export const SocialSection: React.FC = () => {
             </a>
           );
         })}
-      </div>
-
-      {/* Visual Image Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="glass-card rounded-2xl overflow-hidden aspect-square relative group border border-slate-200 dark:border-cyan-500/20 shadow-sm">
-          <Image
-            src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80"
-            alt="iPhone unboxing customer"
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-            <span className="text-[11px] font-bold text-white">Genuine Delivery</span>
-          </div>
-        </div>
-        <div className="glass-card rounded-2xl overflow-hidden aspect-square relative group border border-slate-200 dark:border-cyan-500/20 shadow-sm">
-          <Image
-            src="https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=600&q=80"
-            alt="AirPods Pro genuine"
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-            <span className="text-[11px] font-bold text-white">AirPods Pro 2</span>
-          </div>
-        </div>
-        <div className="glass-card rounded-2xl overflow-hidden aspect-square relative group border border-slate-200 dark:border-cyan-500/20 shadow-sm">
-          <Image
-            src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=600&q=80"
-            alt="Apple Watch display"
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-            <span className="text-[11px] font-bold text-white">Apple Watch Series</span>
-          </div>
-        </div>
-        <div className="glass-card rounded-2xl overflow-hidden aspect-square relative group border border-slate-200 dark:border-cyan-500/20 shadow-sm">
-          <Image
-            src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=600&q=80"
-            alt="iPhone express delivery"
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-            <span className="text-[11px] font-bold text-white">Islandwide Courier</span>
-          </div>
-        </div>
       </div>
     </section>
   );

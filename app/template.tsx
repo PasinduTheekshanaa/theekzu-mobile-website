@@ -1,11 +1,5 @@
-"use client";
+import type { ReactNode } from "react";
 
-import React from "react";
-
-export default function Template({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="page-enter w-full">
-      {children}
-    </div>
-  );
+export default function PageTemplate({ children }: { children: ReactNode }) {
+  return <div className="page-transition">{children}</div>;
 }

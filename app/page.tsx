@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { CategoryGrid } from "@/components/CategoryGrid";
-import { SpecialOffers } from "@/components/SpecialOffers";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { TradeInBanner } from "@/components/TradeInBanner";
 import { ShowroomPreview } from "@/components/ShowroomPreview";
@@ -64,9 +63,6 @@ export default function HomePage() {
 
       {/* 3. Shop by Category */}
       <CategoryGrid />
-
-      {/* 4. Special Offers with Countdown */}
-      <SpecialOffers />
 
       {/* 5. Why Choose Theekzu Mobile */}
       <WhyChooseUs />
