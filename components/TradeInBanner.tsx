@@ -14,6 +14,9 @@ export const TradeInBanner: React.FC = () => {
     condition: "Good",
     batteryHealth: "88%",
     notes: "",
+    wantedModel: "",
+    wantedStorage: "",
+    wantedCondition: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,6 +32,11 @@ export const TradeInBanner: React.FC = () => {
       `Condition: ${formData.condition}`,
       `Battery Health: ${formData.batteryHealth}`,
       `Notes: ${formData.notes || "None"}`,
+      "",
+      "Preferred Upgrade:",
+      `Model: ${formData.wantedModel || "Not decided yet"}`,
+      `Storage: ${formData.wantedStorage || "Any storage"}`,
+      `Condition: ${formData.wantedCondition || "Any condition"}`,
       "",
       "Please let me know the estimated trade-in value.",
     ];
@@ -84,6 +92,64 @@ export const TradeInBanner: React.FC = () => {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="pt-1 border-t border-slate-200 dark:border-white/10">
+                <div className="flex items-center justify-between gap-3 pt-4 mb-3">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">
+                    Your Next iPhone
+                  </label>
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-500">Optional</span>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-zinc-400 mb-3">Tell us what you would like to upgrade to, so we can quote the exact price difference.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-zinc-400 mb-1.5">Preferred Model</label>
+                    <select
+                      value={formData.wantedModel}
+                      onChange={(e) => setFormData({ ...formData, wantedModel: e.target.value })}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-cyan-500/20 rounded-xl px-3 py-2.5 text-sm text-slate-900 dark:text-white focus:border-blue-600 dark:focus:border-cyan-400 focus:outline-none"
+                    >
+                      <option value="">Choose a model</option>
+                      <option value="iPhone 17 Pro Max">iPhone 17 Pro Max</option>
+                      <option value="iPhone 17 Pro">iPhone 17 Pro</option>
+                      <option value="iPhone 17">iPhone 17</option>
+                      <option value="iPhone 16 Pro Max">iPhone 16 Pro Max</option>
+                      <option value="iPhone 16 Pro">iPhone 16 Pro</option>
+                      <option value="iPhone 16">iPhone 16</option>
+                      <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
+                      <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+                      <option value="iPhone 15">iPhone 15</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-zinc-400 mb-1.5">Preferred Storage</label>
+                    <select
+                      value={formData.wantedStorage}
+                      onChange={(e) => setFormData({ ...formData, wantedStorage: e.target.value })}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-cyan-500/20 rounded-xl px-3 py-2.5 text-sm text-slate-900 dark:text-white focus:border-blue-600 dark:focus:border-cyan-400 focus:outline-none"
+                    >
+                      <option value="">Any storage</option>
+                      <option value="128GB">128GB</option>
+                      <option value="256GB">256GB</option>
+                      <option value="512GB">512GB</option>
+                      <option value="1TB">1TB</option>
+                      <option value="2TB">2TB</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-zinc-400 mb-1.5">Preferred Condition</label>
+                    <select
+                      value={formData.wantedCondition}
+                      onChange={(e) => setFormData({ ...formData, wantedCondition: e.target.value })}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-cyan-500/20 rounded-xl px-3 py-2.5 text-sm text-slate-900 dark:text-white focus:border-blue-600 dark:focus:border-cyan-400 focus:outline-none"
+                    >
+                      <option value="">Any condition</option>
+                      <option value="Brand New Sealed">Brand New Sealed</option>
+                      <option value="Certified Pre-Owned">Certified Pre-Owned</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-400 mb-1.5">
