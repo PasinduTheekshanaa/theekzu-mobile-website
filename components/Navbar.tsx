@@ -123,8 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                   MOBILE
                 </span>
               </div>
-              <span className="hidden min-[420px]:flex text-[9px] sm:text-[10px] text-blue-600 dark:text-cyan-300/80 tracking-widest uppercase font-semibold items-center gap-1 mt-0.5 whitespace-nowrap">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-cyan-400 animate-ping inline-block" />
+              <span className="hidden min-[420px]:block text-[9px] sm:text-[10px] text-blue-600 dark:text-cyan-300/80 tracking-widest uppercase font-semibold mt-0.5 whitespace-nowrap">
                 {storeConfig.tagline}
               </span>
             </div>
@@ -138,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 href={link.href}
                 className={`text-xs xl:text-sm font-medium transition-all duration-200 relative py-1.5 whitespace-nowrap flex items-center gap-1.5 group ${
                   isActive(link.href)
-                    ? "text-blue-600 dark:text-cyan-400 font-bold drop-shadow-[0_0_12px_rgba(0,102,255,0.2)] dark:drop-shadow-[0_0_12px_rgba(0,210,255,0.5)]"
+                    ? "text-blue-600 dark:text-cyan-400 font-bold"
                     : "text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-white"
                 }`}
               >

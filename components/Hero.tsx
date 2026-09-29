@@ -22,10 +22,6 @@ export const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-slate-950/18 dark:bg-slate-950/12 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-slate-950/82 via-slate-950/42 to-transparent dark:from-slate-950/75 dark:via-slate-950/35 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-slate-950/15 dark:from-slate-950/45 dark:to-slate-950/10 pointer-events-none" />
-      <div className="absolute -right-24 top-12 h-72 w-72 rounded-full bg-cyan-400/18 blur-[90px] pointer-events-none dark:bg-cyan-400/15" />
-      <div className="absolute -bottom-24 left-1/3 h-64 w-64 rounded-full bg-indigo-500/15 blur-[90px] pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_78%_22%,rgba(34,211,238,0.18),transparent_35%)] dark:bg-[radial-gradient(circle_at_78%_22%,rgba(34,211,238,0.16),transparent_35%)]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent pointer-events-none" />
 
       <div className="container-custom w-full relative z-10">
         <div className="max-w-2xl rounded-[2rem] border border-white/25 bg-slate-950/12 px-4 py-6 shadow-[0_24px_60px_rgba(30,64,175,0.28)] backdrop-blur-[3px] sm:px-6 sm:py-8 md:px-0 md:py-0 md:border-transparent md:bg-transparent md:shadow-none md:backdrop-blur-none dark:border-transparent dark:bg-transparent dark:shadow-none dark:backdrop-blur-none">
@@ -33,11 +29,7 @@ export const Hero: React.FC = () => {
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4 sm:space-y-5 md:space-y-6 pt-1 md:pt-0">
             
             {/* Announcement Badge */}
-            <div className="hero-animate-1 inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-slate-950/60 border border-white/30 text-[11px] sm:text-xs font-bold text-cyan-100 shadow-lg backdrop-blur-md max-w-full dark:bg-slate-950/65 dark:border-white/20">
-              <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 flex-shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 dark:bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-blue-600 dark:bg-cyan-500"></span>
-              </span>
+            <div className="hero-animate-1 inline-flex px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-slate-950/60 border border-white/30 text-[11px] sm:text-xs font-bold text-cyan-100 shadow-lg backdrop-blur-md max-w-full dark:bg-slate-950/65 dark:border-white/20">
               <span className="tracking-wide truncate">Official Brand New &amp; Certified iPhones • Sri Lanka</span>
             </div>
 
@@ -48,7 +40,7 @@ export const Hero: React.FC = () => {
             >
               Upgrade Your World with <br className="hidden sm:inline" />
               <span className="text-white drop-shadow-[0_4px_16px_rgba(15,23,42,0.7)]">Theekzu</span>{" "}
-              <span className="text-gradient-neon drop-shadow-sm dark:drop-shadow-[0_0_30px_rgba(0,180,255,0.45)]">Mobile</span>
+              <span className="text-gradient-neon">Mobile</span>
               <span className="sr-only"> - Premium iPhone Store in Sri Lanka</span>
             </h1>
 
