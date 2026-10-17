@@ -11,7 +11,7 @@ export const CategoryGrid: React.FC = () => {
       count: "iPhone 15 & 16 Series",
       href: "/iphones?type=new",
       icon: Smartphone,
-      description: "Brand new factory-sealed Apple smartphones with official warranty.",
+      description: "Brand new factory-sealed Apple smartphones with a 6-month warranty from Theekzu Mobile.",
       glow: "from-blue-600/15 via-cyan-500/10 to-transparent",
       borderColor: "border-slate-200 dark:border-cyan-500/30 hover:border-blue-500 dark:hover:border-cyan-400",
       iconColor: "text-blue-600 dark:text-cyan-400 bg-blue-500/10 dark:bg-cyan-500/15 border-blue-500/20 dark:border-cyan-500/30",

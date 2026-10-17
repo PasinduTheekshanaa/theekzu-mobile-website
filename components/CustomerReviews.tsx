@@ -37,6 +37,23 @@ export interface UnifiedReview {
 }
 
 export const CustomerReviews: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [nearViewport, setNearViewport] = useState(false);
+
+  useEffect(() => {
+    if (!("IntersectionObserver" in window)) {
+      setNearViewport(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNearViewport(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "400px" });
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
   const [supabaseApprovedReviews, setSupabaseApprovedReviews] = useState<SupabaseReview[]>([]);
   const [averageRating, setAverageRating] = useState<number>(0);
   const [totalApproved, setTotalApproved] = useState<number>(0);
@@ -92,6 +109,7 @@ export const CustomerReviews: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!nearViewport) return;
     setCurrentIndex(0);
     loadApprovedReviews();
 
@@ -116,7 +134,7 @@ export const CustomerReviews: React.FC = () => {
       };
     }
     return () => { clearInterval(timer); ++reviewRequest.current; };
-  }, [page]);
+  }, [page, nearViewport]);
 
   // Format submission date nicely (e.g. "Sep 24, 2026")
   const formatDate = (dateString?: string) => {
@@ -247,7 +265,7 @@ export const CustomerReviews: React.FC = () => {
   const displayedAverage = totalApproved > 0 ? averageRating.toFixed(1) : "—";
 
   return (
-    <section onFocusCapture={() => setIsPaused(true)} onBlurCapture={() => setIsPaused(false)} className="container-custom transition-colors duration-300 relative">
+    <section ref={sectionRef} onFocusCapture={() => setIsPaused(true)} onBlurCapture={() => setIsPaused(false)} className="container-custom transition-colors duration-300 relative">
       {totalApproved > 12 && <div className="flex justify-center gap-4 py-3"><button disabled={page === 0 || isLoading} onClick={() => setPage(p => p - 1)}>Previous reviews</button><span>Page {page + 1}</span><button disabled={(page + 1) * 12 >= totalApproved || isLoading} onClick={() => setPage(p => p + 1)}>More reviews</button></div>}
       <ScrollReveal direction="up">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">

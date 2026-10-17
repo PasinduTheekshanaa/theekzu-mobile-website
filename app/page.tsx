@@ -13,8 +13,7 @@ import { FinalCTA } from "@/components/FinalCTA";
 import { FAQSection } from "@/components/FAQSection";
 import { DeliveryInfo } from "@/components/DeliveryInfo";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: {

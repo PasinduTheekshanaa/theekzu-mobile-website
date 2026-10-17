@@ -6,11 +6,11 @@ export interface FAQItem {
 export const faqs: FAQItem[] = [
   {
     question: "Do you sell brand-new iPhones?",
-    answer: "Yes, all our brand-new iPhones are 100% genuine, factory-sealed in original Apple packaging, and come with official 1-Year Apple International Warranty along with Theekzu Mobile store customer care.",
+    answer: "Yes, all our brand-new iPhones are 100% genuine, factory-sealed in original Apple packaging, and come with a 6-month warranty from Theekzu Mobile.",
   },
   {
     question: "Do you sell used iPhones?",
-    answer: "Yes, our certified pre-owned iPhones undergo rigorous 32-point hardware and diagnostic checks. They are Grade A+ condition with verified battery health (typically 90%+), original components, and include store warranty.",
+    answer: "Yes, our certified pre-owned iPhones undergo rigorous 32-point hardware and diagnostic checks. They are Grade A+ condition with verified battery health (typically 90%+), original components, and include a 6-month warranty from Theekzu Mobile.",
   },
   {
     question: "Can I order through WhatsApp?",

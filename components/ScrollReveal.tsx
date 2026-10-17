@@ -15,7 +15,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   delay = 0,
   direction = "up",
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  // Keep server-rendered content readable before JavaScript hydrates.
+  const [isVisible, setIsVisible] = useState(true);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,6 +29,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       }
     }
 
+    const element = ref.current;
+    if (!element || !("IntersectionObserver" in window) || element.getBoundingClientRect().top < window.innerHeight) return;
+    setIsVisible(false);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -37,7 +42,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       },
       {
         threshold: 0.08,
-        rootMargin: "0px 0px -30px 0px",
+        rootMargin: "0px 0px 100px 0px",
       }
     );
 

@@ -1,4 +1,5 @@
 "use client";
+import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -800,7 +801,7 @@ export default function AdminProductsPage() {
       images: ["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80"],
       description: `Official ${newProdName} available at Theekzu Mobile Sri Lanka.`,
       specifications: {
-        warranty: newProdConditions[0] === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty",
+        warranty: PRODUCT_WARRANTY_NOTICE,
         delivery: "1-2 Days Islandwide Delivery",
       },
       stock: "In Stock",
@@ -838,7 +839,7 @@ export default function AdminProductsPage() {
         colors: [{ name: "White", hex: "#f5f5f7" }],
         images: ["https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=1000&q=80"],
         description: "Sample product — genuine 20W USB-C fast charging adapter.",
-        specifications: { warranty: "Store warranty", delivery: "Islandwide delivery" },
+        specifications: { warranty: PRODUCT_WARRANTY_NOTICE, delivery: "Islandwide delivery" },
         stock: "In Stock",
         featured: false,
         rating: 0,
@@ -862,7 +863,7 @@ export default function AdminProductsPage() {
         colors: [{ name: "Clear", hex: "#e5e7eb" }],
         images: ["https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&w=1000&q=80"],
         description: "Sample product — slim protective MagSafe-compatible clear case.",
-        specifications: { warranty: "Store warranty", delivery: "Islandwide delivery" },
+        specifications: { warranty: PRODUCT_WARRANTY_NOTICE, delivery: "Islandwide delivery" },
         stock: "In Stock",
         featured: false,
         rating: 0,

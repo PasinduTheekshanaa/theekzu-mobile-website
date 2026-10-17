@@ -27,7 +27,7 @@ export const WhyChooseUs: React.FC = () => {
     },
     {
       title: "Reliable After-Sales Support",
-      description: "Enjoy official Apple warranty and Theekzu Mobile's comprehensive store replacement warranty support.",
+      description: "Every product comes with a 6-month warranty from Theekzu Mobile.",
       icon: ShieldAlert,
       color: "text-indigo-600 dark:text-blue-400 bg-indigo-500/10 dark:bg-blue-500/15 border-indigo-500/20 dark:border-blue-500/30",
       glowBorder: "hover:border-indigo-500 dark:hover:border-blue-400/60",

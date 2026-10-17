@@ -4,21 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, MessageCircle, ShieldCheck, Tag, Award, Zap } from "lucide-react";
 import { storeConfig } from "@/config/store";
+import { HeroVideo } from "./HeroVideo";
 
 export const Hero: React.FC = () => {
   return (
     <section className="relative min-h-[680px] sm:min-h-[720px] md:min-h-[650px] lg:min-h-[700px] flex items-center py-10 sm:py-14 md:py-16 overflow-hidden bg-slate-100 dark:bg-slate-950 w-full">
-      <video
-        className="absolute inset-0 h-full w-full object-cover transform-gpu brightness-100 contrast-120 saturate-115 dark:brightness-110 dark:contrast-110 dark:saturate-110 motion-reduce:hidden"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-label="Theekzu Mobile brand video"
-      >
-        <source src="/theekzu-hero.mp4" type="video/mp4" />
-      </video>
+      <HeroVideo />
       <div className="absolute inset-0 bg-slate-950/18 dark:bg-slate-950/12 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-slate-950/82 via-slate-950/42 to-transparent dark:from-slate-950/75 dark:via-slate-950/35 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-slate-950/15 dark:from-slate-950/45 dark:to-slate-950/10 pointer-events-none" />

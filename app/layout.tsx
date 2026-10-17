@@ -5,12 +5,10 @@ import { ProductProvider } from "@/context/ProductContext";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { NavbarWrapper } from "@/components/NavbarWrapper";
-import { CartDrawer } from "@/components/CartDrawer";
-import { WishlistDrawer } from "@/components/WishlistDrawer";
+import { StoreOverlays } from "@/components/StoreOverlays";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
-import { BrandedLoader } from "@/components/BrandedLoader";
 import { storeConfig } from "@/config/store";
 import { getServerCatalog } from "@/lib/serverCatalog";
 
@@ -194,8 +192,7 @@ export default async function RootLayout({
                 <NavbarWrapper />
                 <main className="flex-1 animate-in fade-in duration-300">{children}</main>
                 <Footer />
-                <CartDrawer />
-                <WishlistDrawer />
+                <StoreOverlays />
                 <FloatingWhatsApp />
                 <BackToTop />
               </WishlistProvider>

@@ -3,6 +3,7 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
   ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
   : undefined;
 const nextConfig = {
+  distDir: process.env.THEEKZU_BUILD_DIR || ".next",
   images: {
     remotePatterns: [
       {

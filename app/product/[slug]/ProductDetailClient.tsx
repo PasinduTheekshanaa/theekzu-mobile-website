@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Star, MessageCircle, ShoppingBag, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Product, ProductVariant, ProductCondition, getProductConditions } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -226,8 +227,8 @@ Please confirm availability and islandwide delivery options!`;
           <div className="glass-card p-4 rounded-2xl flex items-center gap-3 text-xs text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-cyan-500/20 shadow-xs">
             <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
             <div>
-              <strong className="text-slate-900 dark:text-white block font-bold">Official Theekzu Guarantee:</strong>
-              <span className="text-slate-500 dark:text-zinc-400">{(availableConditions.length > 1 ? (selectedCondition === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty") : liveProduct.specifications.warranty) || "Official warranty, verified battery health, and reliable after-sales store support."}</span>
+              <strong className="text-slate-900 dark:text-white block font-bold">Theekzu Mobile Warranty:</strong>
+              <span className="text-slate-500 dark:text-zinc-400">{PRODUCT_WARRANTY_NOTICE}</span>
             </div>
           </div>
         </div>

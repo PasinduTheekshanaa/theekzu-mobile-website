@@ -30,7 +30,7 @@ export default function IPhonesPage() {
           Apple iPhones in Sri Lanka
         </h1>
         <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
-          From the flagship titanium iPhone 16 Pro Max to certified pre-owned iPhone 13 models. All devices covered with Apple warranty or Theekzu Mobile store warranty.
+          From the flagship titanium iPhone 16 Pro Max to certified pre-owned iPhone 13 models. All devices come with a 6-month warranty from Theekzu Mobile.
         </p>
 
         {/* Filter Pills */}

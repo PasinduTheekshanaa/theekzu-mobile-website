@@ -1,4 +1,5 @@
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient";
+import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { Product, ProductVariant, ProductColor, getProductConditions, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
 
 export interface SupabaseAdminUser {
@@ -196,10 +197,10 @@ export function mapSupabaseToProduct(
       ? p.description
       : (baseMatch?.description || ""),
     specifications: {
-      warranty: (p.condition || baseMatch?.condition) === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty",
       delivery: "1-2 Days Islandwide Delivery",
       authenticity: "100% Original Guaranteed",
       ...(baseMatch?.specifications || {}),
+      warranty: PRODUCT_WARRANTY_NOTICE,
     },
     stock,
     featured: p.featured !== undefined && p.featured !== null ? Boolean(p.featured) : Boolean(baseMatch?.featured),

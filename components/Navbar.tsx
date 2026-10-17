@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Heart, ShoppingBag, MessageCircle, Menu, X, Sun, Moon, ArrowRight, ShieldCheck } from "lucide-react";
+import { Search, Heart, ShoppingBag, Menu, X, Sun, Moon, ArrowRight, ShieldCheck } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -105,7 +105,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             <div className="relative w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-xl sm:rounded-2xl p-[1px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-[0_0_15px_rgba(0,102,255,0.2)] dark:shadow-[0_0_20px_rgba(0,180,255,0.35)] group-hover:scale-105 transition-all flex-shrink-0">
               <div className="w-full h-full bg-[#040711] rounded-[11px] sm:rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
                 <Image
-                  src="/logo.png"
+                  src="/logo-small.webp"
                   alt="Theekzu Mobile Logo"
                   width={38}
                   height={38}
@@ -219,18 +219,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 </span>
               )}
             </button>
-
-            {/* Desktop WhatsApp Quick Chat (>= 1024px) */}
-            <a
-              href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs font-bold transition-all shadow-sm shadow-emerald-500/20 dark:shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-[0.98] btn-press group"
-              title="Chat on WhatsApp"
-            >
-              <MessageCircle className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-              <span>Chat</span>
-            </a>
 
             {/* Mobile / Tablet Hamburger Button (< 1024px) */}
             <button
@@ -367,18 +355,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               })}
             </div>
 
-            {/* Drawer Footer CTA */}
+            {/* Drawer Contact Details */}
             <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/80 space-y-3">
-              <a
-                href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to inquire about your available iPhones.")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-500/20 active:scale-98 transition-all"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Chat with Us on WhatsApp</span>
-              </a>
-
               <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 px-1 pt-1">
                 <span>Hotline: {storeConfig.phone}</span>
                 <span>Mon - Sun: 9AM - 9PM</span>

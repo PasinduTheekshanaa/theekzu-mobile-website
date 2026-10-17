@@ -112,9 +112,8 @@ Can you confirm availability and latest variant pricing?`;
       {/* Product Image Area with Smooth Zoom and Lighting */}
       <Link
         href={productUrl}
-        prefetch
-        onPointerEnter={preloadDetails}
-        onTouchStart={preloadDetails}
+        prefetch={false}
+        onMouseEnter={preloadDetails}
         onClick={openDetails}
         className="h-56 w-full rounded-2xl bg-slate-50/80 dark:bg-gradient-to-b dark:from-slate-900/50 dark:to-slate-950/80 border border-slate-200/80 dark:border-cyan-500/10 p-4 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-blue-400/40 dark:group-hover:border-cyan-500/30 transition-all"
       >
@@ -184,7 +183,7 @@ Can you confirm availability and latest variant pricing?`;
             </div>
           </div>
 
-          <Link href={productUrl} prefetch onPointerEnter={preloadDetails} onTouchStart={preloadDetails} onClick={openDetails}>
+          <Link href={productUrl} prefetch={false} onMouseEnter={preloadDetails} onClick={openDetails}>
             <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-300 transition-colors mb-1.5 line-clamp-1">
               {product.name}
             </h3>
@@ -219,9 +218,8 @@ Can you confirm availability and latest variant pricing?`;
           <div className="grid grid-cols-2 gap-2">
             <Link
               href={productUrl}
-              prefetch
-              onPointerEnter={preloadDetails}
-              onTouchStart={preloadDetails}
+              prefetch={false}
+              onMouseEnter={preloadDetails}
               onClick={openDetails}
               className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] btn-press group/btn"
             >

@@ -105,7 +105,7 @@ export default async function ProductDetailPage({ params }: Props) {
       product.images && product.images.length > 0
         ? product.images.map((img) => (img.startsWith("http") ? img : `https://theekzu.vercel.app${img}`))
         : [fullImageUrl],
-    description: product.description || `Buy ${product.name} in Sri Lanka with Apple warranty at Theekzu Mobile.`,
+    description: product.description || `Buy ${product.name} in Sri Lanka with a 6-month warranty from Theekzu Mobile.`,
     sku: product.variants?.[0]?.sku || `TM-${product.slug}`,
     brand: {
       "@type": "Brand",
