@@ -485,9 +485,7 @@ input, select, textarea {
 :root [data-ui="whatsapp"][data-ui]:disabled { opacity: 0.45; cursor: not-allowed; }
 :root [data-ui="whatsapp-link"][data-ui] {
   color: rgb(var(--ui-foreground));
-  text-decoration: underline;
-  text-decoration-color: rgb(var(--ui-whatsapp));
-  text-underline-offset: 4px;
+  text-decoration: none;
 }
 :root [data-ui="whatsapp-link"][data-ui] svg,
 :root [data-ui="whatsapp-icon"][data-ui] {
