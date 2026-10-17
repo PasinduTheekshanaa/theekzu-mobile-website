@@ -56,8 +56,8 @@ export default function AdminIndexPage() {
   return (
     <div className="min-h-[75vh] flex items-center justify-center p-4">
       <div className="text-center space-y-3">
-        <div className="w-10 h-10 border-4 border-blue-600 dark:border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
+        <div className="w-10 h-10 border-4 border-neutral-600 dark:border-neutral-400 border-t-transparent rounded-full animate-spin mx-auto" />
+        <p className="text-sm font-semibold text-ink dark:text-ink">
           Verifying Admin Access with Supabase...
         </p>
       </div>

@@ -1,0 +1,1416 @@
+[
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "Instagram"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "Facebook"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "WhatsApp Store"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/",
+    "prices": 13,
+    "stars": [
+      {
+        "color": "rgb(212, 212, 212)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(212, 212, 212)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(212, 212, 212)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(212, 212, 212)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(212, 212, 212)",
+        "fill": "none"
+      }
+    ],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "w-12 h-12 rounded-2xl border flex items-center justify-center group-hover:scale-110 transition-all bg-canvas text-ink dark:text-ink border-neutral-500/20",
+        "tag": "DIV"
+      }
+    ],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/shop",
+    "prices": 65,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/iphones",
+    "prices": 58,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/accessories",
+    "prices": 6,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/offers",
+    "prices": 64,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/product/iphone-13-pro-max",
+    "prices": 8,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/showroom",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/trade-in",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/about",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "Direct Phone"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "WhatsApp Chat"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "Email Support"
+      },
+      {
+        "color": "rgb(225, 29, 72)",
+        "name": "Store Location"
+      },
+      {
+        "color": "rgb(217, 119, 6)",
+        "name": "Business Hours"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/contact",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "w-10 sm:w-11 h-10 sm:h-11 rounded-2xl border flex items-center justify-center mb-3 sm:mb-4 text-ink dark:text-ink bg-canvas dark:bg-canvas border-neutral-500/20 dark:border-neutral-500/30",
+        "tag": "DIV"
+      },
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "w-10 sm:w-11 h-10 sm:h-11 rounded-2xl border flex items-center justify-center mb-3 sm:mb-4 text-ink dark:text-ink bg-canvas dark:bg-canvas border-neutral-500/20 dark:border-neutral-500/30",
+        "tag": "DIV"
+      },
+      {
+        "bg": "rgb(0, 0, 0)",
+        "cls": "min-h-[44px] py-3.5 px-4 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md bg-canvas       text-ink shadow-neutral-600/25 dark:shadow-[0_0_25px_rgba(147,147,147,0.4)] hover:scale-[1.01] active:scale-[0.98]",
+        "tag": "BUTTON"
+      }
+    ],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/admin/login",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(255, 255, 255)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": false,
+    "overflow": false,
+    "path": "/admin/reset-password",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "Instagram"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "Facebook"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "WhatsApp Store"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/",
+    "prices": 13,
+    "stars": [
+      {
+        "color": "rgb(64, 64, 64)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(64, 64, 64)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(64, 64, 64)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(64, 64, 64)",
+        "fill": "none"
+      },
+      {
+        "color": "rgb(64, 64, 64)",
+        "fill": "none"
+      }
+    ],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "w-12 h-12 rounded-2xl border flex items-center justify-center group-hover:scale-110 transition-all bg-canvas text-ink dark:text-ink border-neutral-500/20",
+        "tag": "DIV"
+      }
+    ],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/shop",
+    "prices": 65,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/iphones",
+    "prices": 58,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/accessories",
+    "prices": 6,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/offers",
+    "prices": 64,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/product/iphone-13-pro-max",
+    "prices": 8,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/showroom",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/trade-in",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/about",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "Direct Phone"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "WhatsApp Chat"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "Email Support"
+      },
+      {
+        "color": "rgb(225, 29, 72)",
+        "name": "Store Location"
+      },
+      {
+        "color": "rgb(217, 119, 6)",
+        "name": "Business Hours"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/contact",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "w-10 sm:w-11 h-10 sm:h-11 rounded-2xl border flex items-center justify-center mb-3 sm:mb-4 text-ink dark:text-ink bg-canvas dark:bg-canvas border-neutral-500/20 dark:border-neutral-500/30",
+        "tag": "DIV"
+      },
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "w-10 sm:w-11 h-10 sm:h-11 rounded-2xl border flex items-center justify-center mb-3 sm:mb-4 text-ink dark:text-ink bg-canvas dark:bg-canvas border-neutral-500/20 dark:border-neutral-500/30",
+        "tag": "DIV"
+      },
+      {
+        "bg": "rgb(255, 255, 255)",
+        "cls": "min-h-[44px] py-3.5 px-4 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md bg-canvas       text-ink shadow-neutral-600/25 dark:shadow-[0_0_25px_rgba(147,147,147,0.4)] hover:scale-[1.01] active:scale-[0.98]",
+        "tag": "BUTTON"
+      }
+    ],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/admin/login",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  },
+  {
+    "body": "rgb(0, 0, 0)",
+    "brand": [
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "facebook"
+      },
+      {
+        "color": "rgb(219, 39, 119)",
+        "name": "instagram"
+      },
+      {
+        "color": "rgb(8, 145, 178)",
+        "name": "TikTok"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(37, 99, 235)",
+        "name": "#2563eb"
+      },
+      {
+        "color": "rgb(5, 150, 105)",
+        "name": "#059669"
+      },
+      {
+        "color": "rgb(79, 70, 229)",
+        "name": "#4f46e5"
+      },
+      {
+        "color": "rgb(244, 63, 94)",
+        "name": "#f43f5e"
+      },
+      {
+        "color": "rgb(245, 158, 11)",
+        "name": "#f59e0b"
+      }
+    ],
+    "dark": true,
+    "overflow": false,
+    "path": "/admin/reset-password",
+    "prices": 0,
+    "stars": [],
+    "width": 1280,
+    "wrongOffer": 0,
+    "wrongPrices": [],
+    "wrongSurfaces": [],
+    "wrongWhatsApp": 0
+  }
+]

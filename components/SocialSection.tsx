@@ -9,8 +9,8 @@ export const SocialSection: React.FC = () => {
       handle: "@theekzu_mobile",
       href: storeConfig.social.instagram,
       icon: Instagram,
-      color: "hover:text-pink-600 dark:hover:text-pink-400 hover:border-pink-500/50",
-      iconBg: "bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20",
+      color: "hover:text-ink dark:hover:text-ink hover:border-neutral-500/50",
+      iconBg: "bg-canvas text-ink dark:text-ink border-neutral-500/20",
       description: "Daily drops, unboxing stories, and customer delivery reels.",
     },
     {
@@ -18,8 +18,8 @@ export const SocialSection: React.FC = () => {
       handle: "Theekzu Mobile",
       href: storeConfig.social.facebook,
       icon: Facebook,
-      color: "hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-500/50",
-      iconBg: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+      color: "hover:text-ink dark:hover:text-ink hover:border-neutral-500/50",
+      iconBg: "bg-canvas text-ink dark:text-ink border-neutral-500/20",
       description: "Official community announcements, reviews, and price updates.",
     },
     {
@@ -27,8 +27,8 @@ export const SocialSection: React.FC = () => {
       handle: "@theekzu",
       href: storeConfig.social.tiktok,
       icon: null,
-      color: "hover:text-cyan-600 dark:hover:text-cyan-400 hover:border-cyan-500/50",
-      iconBg: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+      color: "hover:text-ink dark:hover:text-ink hover:border-neutral-500/50",
+      iconBg: "bg-canvas text-ink dark:text-ink border-neutral-500/20",
       description: "Device comparisons, camera tests, and tips & tricks.",
     },
     {
@@ -36,8 +36,8 @@ export const SocialSection: React.FC = () => {
       handle: "+94 74 024 5749",
       href: storeConfig.social.whatsapp,
       icon: MessageCircle,
-      color: "hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-500/50",
-      iconBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      color: "hover:text-ink dark:hover:text-ink hover:border-neutral-500/50",
+      iconBg: "bg-canvas text-ink dark:text-ink border-neutral-500/20",
       description: "Direct instant chat, order support, and priority stock alerts.",
     },
   ];
@@ -46,13 +46,13 @@ export const SocialSection: React.FC = () => {
     <section className="container-custom transition-colors duration-300">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
         <div>
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
             <Sparkles className="w-3 h-3" /> Official Channels
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-3">
             Follow Theekzu Mobile
           </h2>
-          <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-1">
+          <p className="text-ink dark:text-ink text-xs sm:text-sm mt-1">
             Stay connected for new arrivals, unboxings, offers and community drops.
           </p>
         </div>
@@ -64,14 +64,15 @@ export const SocialSection: React.FC = () => {
           const Icon = sc.icon;
           return (
             <a
+              data-ui={sc.name === "WhatsApp Store" ? "whatsapp-link" : undefined}
               key={sc.name}
               href={sc.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`glass-card p-5 sm:p-6 rounded-2xl sm:rounded-[2rem] border border-slate-200 dark:border-cyan-500/20 transition-all duration-300 block group hover:-translate-y-1 shadow-sm hover:shadow-xl active:scale-98 ${sc.color}`}
+              className={`glass-card p-5 sm:p-6 rounded-2xl sm:rounded-[2rem] border border-neutral-200 dark:border-neutral-500/20 transition-all duration-300 block group hover:-translate-y-1 shadow-sm hover:shadow-xl active:scale-98 ${sc.color}`}
             >
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center group-hover:scale-110 transition-all ${sc.iconBg}`}>
+                <div data-brand-color={sc.name} className={`w-12 h-12 rounded-2xl border flex items-center justify-center group-hover:scale-110 transition-all ${sc.iconBg}`}>
                   {Icon ? (
                     <Icon className="w-6 h-6" />
                   ) : (
@@ -80,11 +81,11 @@ export const SocialSection: React.FC = () => {
                     </svg>
                   )}
                 </div>
-                <ExternalLink className="w-4 h-4 text-slate-400 dark:text-zinc-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
+                <ExternalLink className="w-4 h-4 text-ink dark:text-ink group-hover:text-ink dark:group-hover:text-ink transition-colors" />
               </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">{sc.name}</h4>
-              <p className="text-xs font-semibold text-blue-600 dark:text-cyan-300 mb-2">{sc.handle}</p>
-              <p className="text-xs text-slate-600 dark:text-zinc-400">{sc.description}</p>
+              <h4 className="text-base font-bold text-ink dark:text-ink mb-1">{sc.name}</h4>
+              <p className="text-xs font-semibold text-ink dark:text-ink mb-2">{sc.handle}</p>
+              <p className="text-xs text-ink dark:text-ink">{sc.description}</p>
             </a>
           );
         })}

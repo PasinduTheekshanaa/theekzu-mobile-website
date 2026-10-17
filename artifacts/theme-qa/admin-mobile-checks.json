@@ -1,0 +1,29 @@
+[
+  {
+    "dark": true,
+    "height": 844,
+    "overflow": false,
+    "path": "/shop",
+    "width": 390,
+    "wrongOffer": 0,
+    "wrongWhatsApp": 0
+  },
+  {
+    "dark": true,
+    "height": 844,
+    "overflow": false,
+    "path": "/admin/products",
+    "width": 390,
+    "wrongOffer": 0,
+    "wrongWhatsApp": 0
+  },
+  {
+    "dark": false,
+    "height": 844,
+    "overflow": false,
+    "path": "/admin/products",
+    "width": 390,
+    "wrongOffer": 0,
+    "wrongWhatsApp": 0
+  }
+]

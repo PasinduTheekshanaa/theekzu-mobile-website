@@ -126,14 +126,14 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-8 sm:py-12 transition-colors duration-300">
-      <div className="w-full max-w-md glass-card-glow rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-slate-200 dark:border-cyan-500/30 text-center relative overflow-hidden shadow-2xl">
+      <div className="w-full max-w-md glass-panel rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-neutral-200 dark:border-neutral-500/30 text-center relative overflow-hidden shadow-2xl">
         
         {/* Glow backdrop */}
-        <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 dark:bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-48 h-48 bg-canvas dark:bg-canvas rounded-full blur-3xl pointer-events-none" />
 
         {/* Brand Logo */}
-        <div className="relative w-16 h-16 mx-auto rounded-2xl p-[1.5px] bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 shadow-md dark:shadow-[0_0_20px_rgba(0,180,255,0.4)] mb-4">
-          <div className="w-full h-full bg-[#040711] rounded-[14px] p-1 flex items-center justify-center overflow-hidden">
+        <div className="relative w-16 h-16 mx-auto rounded-2xl p-[1.5px] bg-canvas    shadow-md dark:shadow-[0_0_20px_rgba(147,147,147,0.4)] mb-4">
+          <div className="w-full h-full bg-canvas rounded-[14px] p-1 flex items-center justify-center overflow-hidden">
             <Image
               src="/logo.png"
               alt="Theekzu Mobile"
@@ -146,26 +146,26 @@ export default function ResetPasswordPage() {
         </div>
 
         <div className="flex items-center justify-center gap-1.5 mb-1">
-          <span className="text-base font-black tracking-wider text-slate-900 dark:text-white">THEEKZU</span>
-          <span className="text-base font-black tracking-wider text-gradient-neon">ADMIN</span>
+          <span className="text-base font-black tracking-wider text-ink dark:text-ink">THEEKZU</span>
+          <span className="text-base font-black tracking-wider text-brand">ADMIN</span>
         </div>
 
-        <h1 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-lg font-bold text-ink dark:text-ink mb-2">
           Reset Admin Password
         </h1>
 
         {isChecking ? (
           <div className="py-8 space-y-3">
-            <div className="w-8 h-8 border-3 border-blue-600 dark:border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs text-slate-500 dark:text-zinc-400">
+            <div className="w-8 h-8 border-3 border-neutral-600 dark:border-neutral-400 border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs text-ink dark:text-ink">
               Validating recovery security link...
             </p>
           </div>
         ) : isValidLink === false ? (
           /* Invalid / Expired Link State */
           <div className="py-4 space-y-4 text-left">
-            <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2.5">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
+            <div className="p-4 rounded-2xl bg-canvas border border-neutral-500/30 text-ink dark:text-ink text-xs flex items-start gap-2.5">
+              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-ink dark:text-ink" />
               <div className="space-y-1">
                 <strong className="block font-bold">Invalid or Expired Link</strong>
                 <span className="leading-relaxed">
@@ -174,9 +174,9 @@ export default function ResetPasswordPage() {
               </div>
             </div>
 
-            <Link
+            <Link data-ui="primary"
               href="/admin/login"
-              className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-bold shadow-md shadow-blue-500/20 active:scale-95 transition-all"
+              className="w-full inline-flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-canvas     text-ink text-xs font-bold shadow-md shadow-neutral-500/20 active:scale-95 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Request New Reset Link</span>
@@ -185,22 +185,22 @@ export default function ResetPasswordPage() {
         ) : (
           /* Valid Form State */
           <div className="space-y-4 text-left">
-            <p className="text-xs text-slate-500 dark:text-zinc-400 text-center mb-4">
+            <p className="text-xs text-ink dark:text-ink text-center mb-4">
               Enter and confirm your new administrator password below.
             </p>
 
             {/* Success message */}
             {successMessage && (
-              <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-emerald-500" />
+              <div className="p-3 rounded-2xl bg-canvas border border-neutral-500/30 text-ink dark:text-ink text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0 text-ink" />
                 <span className="font-semibold">{successMessage}</span>
               </div>
             )}
 
             {/* Error message */}
             {errorMessage && (
-              <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-500" />
+              <div className="p-3 rounded-2xl bg-canvas border border-neutral-500/30 text-ink dark:text-ink text-xs flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-ink" />
                 <span className="leading-relaxed">{errorMessage}</span>
               </div>
             )}
@@ -208,12 +208,12 @@ export default function ResetPasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* New Password */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-400 mb-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-ink dark:text-ink mb-1.5">
                   New Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <Lock className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink">
+                    <Lock className="w-4 h-4 text-ink dark:text-ink" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -221,12 +221,12 @@ export default function ResetPasswordPage() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-cyan-500/20 text-slate-900 dark:text-white rounded-2xl pl-10 pr-10 py-3 text-xs sm:text-sm focus:outline-none focus:border-blue-600 dark:focus:border-cyan-400 transition-colors"
+                    className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 text-ink dark:text-ink rounded-2xl pl-10 pr-10 py-3 text-xs sm:text-sm focus:outline-none focus:border-neutral-600 dark:focus:border-neutral-400 transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-ink hover:text-ink dark:hover:text-ink"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -235,12 +235,12 @@ export default function ResetPasswordPage() {
 
               {/* Confirm New Password */}
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-400 mb-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-ink dark:text-ink mb-1.5">
                   Confirm New Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <KeyRound className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-ink">
+                    <KeyRound className="w-4 h-4 text-ink dark:text-ink" />
                   </div>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -248,12 +248,12 @@ export default function ResetPasswordPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm new password"
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-cyan-500/20 text-slate-900 dark:text-white rounded-2xl pl-10 pr-10 py-3 text-xs sm:text-sm focus:outline-none focus:border-blue-600 dark:focus:border-cyan-400 transition-colors"
+                    className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 text-ink dark:text-ink rounded-2xl pl-10 pr-10 py-3 text-xs sm:text-sm focus:outline-none focus:border-neutral-600 dark:focus:border-neutral-400 transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-ink hover:text-ink dark:hover:text-ink"
                   >
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -261,10 +261,10 @@ export default function ResetPasswordPage() {
               </div>
 
               {/* Update Password button */}
-              <button
+              <button data-ui="primary"
                 type="submit"
                 disabled={loading || Boolean(successMessage)}
-                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:to-blue-600 text-white text-xs font-bold shadow-md shadow-blue-500/20 active:scale-[0.98] transition-all disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-canvas       text-ink text-xs font-bold shadow-md shadow-neutral-500/20 active:scale-[0.98] transition-all disabled:opacity-50"
               >
                 {loading ? (
                   <span>Updating Password...</span>
@@ -280,7 +280,7 @@ export default function ResetPasswordPage() {
             <div className="pt-3 text-center">
               <Link
                 href="/admin/login"
-                className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-cyan-400 hover:underline font-semibold"
+                className="inline-flex items-center gap-1.5 text-xs text-ink dark:text-ink hover:underline font-semibold"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to Admin Login</span>

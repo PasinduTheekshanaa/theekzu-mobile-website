@@ -225,10 +225,10 @@ export default function AdminReviewsPage() {
 
   if (isVerifyingAuth) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-canvas dark:bg-canvas">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-4 border-blue-600 dark:border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
+          <div className="w-10 h-10 border-4 border-neutral-600 dark:border-neutral-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-semibold text-ink dark:text-ink">
             Verifying Admin Authorization with Supabase...
           </p>
         </div>
@@ -237,17 +237,17 @@ export default function AdminReviewsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-canvas dark:bg-canvas text-ink dark:text-ink transition-colors duration-300">
       
       {/* Toast Notification */}
       {toast && (
         <div
           className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border backdrop-blur-xl animate-in slide-in-from-top-4 duration-300 ${
             toast.type === "success"
-              ? "bg-emerald-500/95 text-white border-emerald-400"
+              ? "bg-canvas text-ink border-neutral-400"
               : toast.type === "error"
-              ? "bg-rose-600/95 text-white border-rose-500"
-              : "bg-blue-600/95 text-white border-blue-400"
+              ? "bg-canvas text-ink border-neutral-500"
+              : "bg-canvas text-ink border-neutral-400"
           }`}
         >
           {toast.type === "success" ? (
@@ -260,12 +260,12 @@ export default function AdminReviewsPage() {
       )}
 
       {/* Top Header Navigation */}
-      <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 px-4 sm:px-8 py-4">
+      <header className="sticky top-0 z-30 bg-canvas dark:bg-canvas backdrop-blur-xl border-b border-neutral-200 dark:border-white/10 px-4 sm:px-8 py-4">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link
               href="/admin/products"
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
+              className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors"
               title="Return to Product Dashboard"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -275,18 +275,18 @@ export default function AdminReviewsPage() {
                 <h1 className="text-lg sm:text-xl font-black tracking-tight">
                   Customer Reviews & Feedback Moderation
                 </h1>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase flex items-center gap-1">
+                <span className="px-2 py-0.5 rounded-full bg-canvas text-ink dark:text-ink border border-neutral-500/20 text-[10px] font-bold uppercase flex items-center gap-1">
                   <Database className="w-3 h-3" />
                   <span>Supabase Live</span>
                 </span>
                 {adminEmail && (
-                  <span className="text-xs text-slate-500 dark:text-zinc-400 hidden sm:inline flex items-center gap-1">
-                    <UserCheck className="w-3 h-3 text-blue-500" />
+                  <span className="text-xs text-ink dark:text-ink hidden sm:inline flex items-center gap-1">
+                    <UserCheck className="w-3 h-3 text-ink" />
                     <span>{adminEmail}</span>
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">
+              <p className="text-xs text-ink dark:text-ink">
                 Review submitted feedback from customers. Approved reviews instantly appear on the public storefront.
               </p>
             </div>
@@ -296,9 +296,9 @@ export default function AdminReviewsPage() {
             {/* Link to Products Admin */}
             <Link
               href="/admin/products"
-              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-200 text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-white/10"
+              className="px-3.5 py-2 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink text-xs font-bold flex items-center gap-1.5 transition-colors border border-neutral-200 dark:border-white/10"
             >
-              <ShoppingBag className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+              <ShoppingBag className="w-4 h-4 text-ink dark:text-ink" />
               <span>Products Dashboard</span>
             </Link>
 
@@ -306,7 +306,7 @@ export default function AdminReviewsPage() {
             <button
               onClick={loadReviews}
               disabled={isLoading}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-white/10 transition-colors disabled:opacity-50"
+              className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink border border-neutral-200 dark:border-white/10 transition-colors disabled:opacity-50"
               title="Refresh Reviews"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
@@ -316,7 +316,7 @@ export default function AdminReviewsPage() {
             <Link
               href="/"
               target="_blank"
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-cyan-400 border border-slate-200 dark:border-white/10 transition-colors"
+              className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink border border-neutral-200 dark:border-white/10 transition-colors"
               title="Open Public Website"
             >
               <ExternalLink className="w-4 h-4" />
@@ -325,7 +325,7 @@ export default function AdminReviewsPage() {
             {/* Logout */}
             <button
               onClick={handleLogout}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200 dark:border-white/10 transition-colors"
+              className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink border border-neutral-200 dark:border-white/10 transition-colors"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -339,19 +339,19 @@ export default function AdminReviewsPage() {
         
         {/* SQL Migration Notice if table is not created yet */}
         {tableNotCreated && (
-          <div className="p-5 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 space-y-3">
+          <div className="p-5 rounded-3xl bg-canvas border border-neutral-500/30 text-ink dark:text-ink space-y-3">
             <div className="flex items-center gap-2 font-bold text-sm">
-              <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
+              <AlertCircle className="w-5 h-5 text-ink shrink-0" />
               <span>Database Table 'customer_reviews' Setup Needed</span>
             </div>
             <p className="text-xs leading-relaxed max-w-3xl">
-              The <code>customer_reviews</code> table has not been created in your Supabase project yet. We have generated the complete unified SQL migration script for you at <code className="px-1.5 py-0.5 rounded bg-amber-500/20 font-mono font-bold">supabase_theekzu_schema.sql</code>.
+              The <code>customer_reviews</code> table has not been created in your Supabase project yet. We have generated the complete unified SQL migration script for you at <code className="px-1.5 py-0.5 rounded bg-canvas font-mono font-bold">supabase_theekzu_schema.sql</code>.
             </p>
             <div className="pt-1">
               <p className="text-xs font-semibold">To activate live review storage &amp; real-time sync in Supabase:</p>
-              <ol className="list-decimal list-inside text-xs space-y-1 mt-1 text-slate-600 dark:text-zinc-300">
-                <li>Open your Supabase dashboard at <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-cyan-400 underline font-semibold">supabase.com/dashboard</a>.</li>
-                <li>Go to the <strong>SQL Editor</strong> tab on the left navigation (or <a href="https://supabase.com/dashboard/project/_/sql/new" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-cyan-400 underline font-semibold">New query</a>).</li>
+              <ol className="list-decimal list-inside text-xs space-y-1 mt-1 text-ink dark:text-ink">
+                <li>Open your Supabase dashboard at <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-ink dark:text-ink underline font-semibold">supabase.com/dashboard</a>.</li>
+                <li>Go to the <strong>SQL Editor</strong> tab on the left navigation (or <a href="https://supabase.com/dashboard/project/_/sql/new" target="_blank" rel="noopener noreferrer" className="text-ink dark:text-ink underline font-semibold">New query</a>).</li>
                 <li>Open the file <strong>supabase_theekzu_schema.sql</strong> (or <strong>supabase_customer_reviews.sql</strong>) in this project, copy all its SQL contents, paste it into the editor, and click <strong>Run</strong>.</li>
                 <li>Click the "Refresh Reviews" button above or reload once executed. The warning will disappear immediately!</li>
               </ol>
@@ -360,20 +360,20 @@ export default function AdminReviewsPage() {
         )}
 
         {/* Filter Navigation Tabs */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-2 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-2 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 shadow-xs">
           <div className="flex items-center gap-1.5 flex-wrap">
             <button
               onClick={() => setSelectedStatus("pending")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedStatus === "pending"
-                  ? "bg-amber-500 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-action text-on-action shadow-xs"
+                  : "text-ink dark:text-ink hover:text-ink dark:hover:text-ink"
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
               <span>Pending Moderation</span>
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                selectedStatus === "pending" ? "bg-white/30 text-white" : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
+                selectedStatus === "pending" ? "bg-canvas text-ink" : "bg-canvas text-ink dark:text-ink"
               }`}>
                 {counts.pending}
               </span>
@@ -383,14 +383,14 @@ export default function AdminReviewsPage() {
               onClick={() => setSelectedStatus("approved")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedStatus === "approved"
-                  ? "bg-emerald-600 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-action text-on-action shadow-xs"
+                  : "text-ink dark:text-ink hover:text-ink dark:hover:text-ink"
               }`}
             >
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>Approved Live</span>
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                selectedStatus === "approved" ? "bg-white/30 text-white" : "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                selectedStatus === "approved" ? "bg-canvas text-ink" : "bg-canvas text-ink dark:text-ink"
               }`}>
                 {counts.approved}
               </span>
@@ -400,14 +400,14 @@ export default function AdminReviewsPage() {
               onClick={() => setSelectedStatus("rejected")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedStatus === "rejected"
-                  ? "bg-rose-600 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-action text-on-action shadow-xs"
+                  : "text-ink dark:text-ink hover:text-ink dark:hover:text-ink"
               }`}
             >
               <XCircle className="w-3.5 h-3.5" />
               <span>Rejected</span>
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                selectedStatus === "rejected" ? "bg-white/30 text-white" : "bg-rose-500/20 text-rose-600 dark:text-rose-400"
+                selectedStatus === "rejected" ? "bg-canvas text-ink" : "bg-canvas text-ink dark:text-ink"
               }`}>
                 {counts.rejected}
               </span>
@@ -417,21 +417,21 @@ export default function AdminReviewsPage() {
               onClick={() => setSelectedStatus("all")}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                 selectedStatus === "all"
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-action text-on-action shadow-xs"
+                  : "text-ink dark:text-ink hover:text-ink dark:hover:text-ink"
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
               <span>All Submissions</span>
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
-                selectedStatus === "all" ? "bg-white/30 text-white" : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-zinc-300"
+                selectedStatus === "all" ? "bg-canvas text-ink" : "bg-canvas dark:bg-canvas text-ink dark:text-ink"
               }`}>
                 {counts.all}
               </span>
             </button>
           </div>
 
-          <div className="text-xs text-slate-500 dark:text-zinc-400 pr-2">
+          <div className="text-xs text-ink dark:text-ink pr-2">
             Showing {filteredReviews.length} {filteredReviews.length === 1 ? "review" : "reviews"}
           </div>
         </div>
@@ -439,18 +439,18 @@ export default function AdminReviewsPage() {
         {/* Reviews List */}
         {isLoading ? (
           <div className="p-16 text-center">
-            <div className="w-8 h-8 border-3 border-blue-600 dark:border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-xs text-slate-500 dark:text-zinc-400 font-semibold">
+            <div className="w-8 h-8 border-3 border-neutral-600 dark:border-neutral-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-xs text-ink dark:text-ink font-semibold">
               Loading reviews from Supabase...
             </p>
           </div>
         ) : filteredReviews.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl glass-card border border-slate-200 dark:border-cyan-500/20 space-y-3">
-            <MessageSquare className="w-10 h-10 text-slate-400 mx-auto" />
-            <h3 className="text-base font-bold text-slate-800 dark:text-white">
+          <div className="p-12 text-center rounded-3xl glass-card border border-neutral-200 dark:border-neutral-500/20 space-y-3">
+            <MessageSquare className="w-10 h-10 text-ink mx-auto" />
+            <h3 className="text-base font-bold text-ink dark:text-ink">
               No {selectedStatus !== "all" ? selectedStatus : ""} reviews found
             </h3>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 max-w-md mx-auto">
+            <p className="text-xs text-ink dark:text-ink max-w-md mx-auto">
               {selectedStatus === "pending"
                 ? "No pending submissions currently need moderation. Newly submitted reviews will appear here."
                 : "No customer reviews match the selected filter."}
@@ -464,16 +464,16 @@ export default function AdminReviewsPage() {
               return (
                 <div
                   key={rev.id}
-                  className="glass-card rounded-2xl p-5 border border-slate-200 dark:border-cyan-500/20 flex flex-col justify-between space-y-4 hover:border-blue-400/40 dark:hover:border-cyan-400/40 transition-all shadow-sm"
+                  className="glass-card rounded-2xl p-5 border border-neutral-200 dark:border-neutral-500/20 flex flex-col justify-between space-y-4 hover:border-neutral-400/40 dark:hover:border-neutral-400/40 transition-all shadow-sm"
                 >
                   <div className="space-y-3">
                     {/* Header: Customer Name & Status Badge */}
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                        <h4 className="text-sm font-bold text-ink dark:text-ink">
                           {rev.customer_name}
                         </h4>
-                        <p className="text-[11px] text-slate-400 dark:text-zinc-500 flex items-center gap-1 mt-0.5">
+                        <p className="text-[11px] text-ink dark:text-ink flex items-center gap-1 mt-0.5">
                           <Clock className="w-3 h-3" />
                           <span>{new Date(rev.created_at).toLocaleString()}</span>
                         </p>
@@ -483,10 +483,10 @@ export default function AdminReviewsPage() {
                       <span
                         className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 ${
                           rev.status === "approved"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                            ? "bg-canvas text-ink dark:text-ink border border-neutral-500/30"
                             : rev.status === "rejected"
-                            ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30"
-                            : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                            ? "bg-canvas text-ink dark:text-ink border border-neutral-500/30"
+                            : "bg-canvas text-ink dark:text-ink border border-neutral-500/30"
                         }`}
                       >
                         {rev.status === "approved" ? (
@@ -509,37 +509,37 @@ export default function AdminReviewsPage() {
                     </div>
 
                     {/* Star Rating */}
-                    <div className="flex text-amber-400 gap-0.5">
+                    <div className="flex text-ink gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
                           className={`w-4 h-4 ${
                             i < rev.rating
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-slate-300 dark:text-slate-700"
+                              ? "fill-[#FFC107] text-[#FFC107]"
+                              : "text-neutral-300 dark:text-neutral-700"
                           }`}
                         />
                       ))}
-                      <span className="text-xs font-bold text-slate-700 dark:text-zinc-300 ml-1.5">
+                      <span className="text-xs font-bold text-ink dark:text-ink ml-1.5">
                         {rev.rating} / 5
                       </span>
                     </div>
 
                     {rev.image_url && <a href={rev.image_url} target="_blank" rel="noreferrer" aria-label={"View photo from " + rev.customer_name}><img src={rev.image_url} alt={"Photo submitted by " + rev.customer_name} loading="lazy" className="max-h-64 w-full rounded-xl object-contain bg-slate-100 dark:bg-slate-900" /></a>}
                     {/* Review Text */}
-                    <p className="text-xs sm:text-sm text-slate-700 dark:text-zinc-300 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200/70 dark:border-white/5">
+                    <p className="text-xs sm:text-sm text-ink dark:text-ink leading-relaxed bg-canvas dark:bg-canvas p-3.5 rounded-xl border border-neutral-200/70 dark:border-white/5">
                       "{rev.review_text || rev.review}"
                     </p>
                   </div>
 
                   {/* Moderation Action Buttons */}
-                  <div className="pt-3 border-t border-slate-200 dark:border-cyan-500/15 flex items-center justify-between gap-2 flex-wrap">
+                  <div className="pt-3 border-t border-neutral-200 dark:border-neutral-500/15 flex items-center justify-between gap-2 flex-wrap">
                     <div className="flex items-center gap-2">
                       {rev.status !== "approved" && (
-                        <button
+                        <button data-ui="primary"
                           onClick={() => handleApprove(rev.id)}
                           disabled={isActionRunning}
-                          className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs active:scale-95 disabled:opacity-50"
+                          className="px-3.5 py-1.5 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs active:scale-95 disabled:opacity-50"
                         >
                           <Check className="w-3.5 h-3.5" />
                           <span>Approve &amp; Publish</span>
@@ -550,7 +550,7 @@ export default function AdminReviewsPage() {
                         <button
                           onClick={() => handleReject(rev.id)}
                           disabled={isActionRunning}
-                          className="px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-300 text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 disabled:opacity-50"
+                          className="px-3 py-1.5 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-95 disabled:opacity-50"
                         >
                           <X className="w-3.5 h-3.5" />
                           <span>Reject</span>
@@ -561,7 +561,7 @@ export default function AdminReviewsPage() {
                     <button
                       onClick={() => handleDelete(rev.id)}
                       disabled={isActionRunning}
-                      className="p-2 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors active:scale-95 disabled:opacity-50"
+                      className="p-2 rounded-xl text-ink hover:bg-canvas dark:hover:bg-canvas transition-colors active:scale-95 disabled:opacity-50"
                       title="Permanently Delete Review"
                     >
                       <Trash2 className="w-4 h-4" />

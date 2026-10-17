@@ -270,50 +270,50 @@ export const CustomerReviews: React.FC = () => {
       <ScrollReveal direction="up">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 text-xs font-bold tracking-widest text-blue-700 dark:text-cyan-400 uppercase shadow-xs">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
               <Sparkles className="w-3 h-3" /> Real Client Feedback
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-1">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-1">
             What Our Customers Say
           </h2>
 
-          <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-lg mx-auto leading-relaxed">
+          <p className="text-ink dark:text-ink text-xs sm:text-sm mt-2 max-w-lg mx-auto leading-relaxed">
             Read experiences shared by our customers. Submissions are reviewed before publication.
           </p>
 
           {/* Rating Summary & Write a Review Action */}
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/25 shadow-xs">
-              <div className="flex text-amber-400 gap-0.5">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/25 shadow-xs">
+              <div className="flex text-ink gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
                       i < Math.round(Number(displayedAverage))
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-slate-300 dark:text-slate-700"
+                        ? "fill-[#FFC107] text-[#FFC107]"
+                        : "text-neutral-300 dark:text-neutral-700"
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-sm font-black text-slate-900 dark:text-white">
+              <span className="text-sm font-black text-ink dark:text-ink">
                 {displayedAverage}
               </span>
-              <span className="text-xs text-slate-500 dark:text-zinc-400">
+              <span className="text-xs text-ink dark:text-ink">
                 ({totalApproved} {totalApproved === 1 ? "review" : "reviews"}
                 {totalApproved > 0 ? ` • ${totalApproved} approved` : ""})
               </span>
             </div>
 
-            <button
+            <button data-ui="primary"
               onClick={() => {
                 setShowForm(!showForm);
                 setFormSuccess(false);
                 setFormError(null);
               }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-bold shadow-md shadow-blue-500/20 active:scale-95 transition-all btn-press"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-canvas     text-ink text-xs font-bold shadow-md shadow-neutral-500/20 active:scale-95 transition-all btn-press"
             >
               <MessageSquarePlus className="w-4 h-4" />
               <span>{showForm ? "Close Review Form" : "Write a Review"}</span>
@@ -325,19 +325,19 @@ export const CustomerReviews: React.FC = () => {
       {/* FEEDBACK SUBMISSION FORM DRAWER */}
       {showForm && (
         <div className="max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-top-4 duration-300">
-          <div className="p-6 sm:p-8 rounded-3xl glass-card border border-blue-500/30 dark:border-cyan-500/30 shadow-xl bg-white/95 dark:bg-slate-900/95 relative">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-4 mb-5">
+          <div className="p-6 sm:p-8 rounded-3xl glass-card border border-neutral-500/30 dark:border-neutral-500/30 shadow-xl bg-canvas dark:bg-canvas relative">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 pb-4 mb-5">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-500/10 dark:bg-cyan-500/15 border border-blue-500/20 dark:border-cyan-500/30 flex items-center justify-center text-blue-600 dark:text-cyan-400">
+                <div className="w-9 h-9 rounded-xl bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink dark:text-ink">
                   <MessageSquarePlus className="w-4 h-4" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base font-bold text-ink dark:text-ink">
                   Share Your Experience with Theekzu Mobile
                 </h3>
               </div>
-              <button
+              <button data-ui="primary"
                 onClick={() => setShowForm(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-xl text-ink hover:text-ink dark:hover:text-ink hover:bg-canvas dark:hover:bg-canvas transition-colors"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
@@ -345,22 +345,22 @@ export const CustomerReviews: React.FC = () => {
             </div>
 
             {formSuccess ? (
-              <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
+              <div className="p-6 rounded-2xl bg-canvas border border-neutral-500/30 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-canvas text-ink dark:text-ink flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="text-base font-bold text-emerald-700 dark:text-emerald-300">
+                <h4 className="text-base font-bold text-ink dark:text-ink">
                   Thank You for Your Feedback!
                 </h4>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-300 max-w-md mx-auto leading-relaxed">
+                <p className="text-xs sm:text-sm text-ink dark:text-ink max-w-md mx-auto leading-relaxed">
                   Your review has been submitted successfully. To maintain genuine feedback standards, our team verifies all submissions before they appear live on the storefront.
                 </p>
-                <button
+                <button data-ui="primary"
                   onClick={() => {
                     setFormSuccess(false);
                     setShowForm(false);
                   }}
-                  className="mt-2 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-xs"
+                  className="mt-2 px-5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold transition-all shadow-xs"
                 >
                   Done
                 </button>
@@ -368,16 +368,16 @@ export const CustomerReviews: React.FC = () => {
             ) : (
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 {formError && (
-                  <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+                  <div className="p-3.5 rounded-xl bg-canvas border border-neutral-500/30 text-ink dark:text-ink text-xs font-semibold flex items-center gap-2 animate-in fade-in">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{formError}</span>
                   </div>
                 )}
 
-                <div className="rounded-xl border border-slate-200 dark:border-cyan-500/20 p-4 space-y-3">
-                  <label htmlFor="review-photo" className="block text-sm font-bold text-slate-700 dark:text-zinc-300">Add a photo <span className="font-normal">(optional)</span></label>
-                  <p id="review-photo-help" className="text-xs text-slate-500 dark:text-zinc-400">JPG, PNG or WebP, up to 3 MB. Your photo is published only after approval.</p>
-                  <input ref={imageInput} id="review-photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={isSubmitting} aria-describedby="review-photo-help" className="block w-full text-xs text-slate-600 dark:text-zinc-300 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-600 file:px-3 file:py-2 file:text-white" onChange={e => {
+                <div className="rounded-xl border border-neutral-200 dark:border-neutral-500/20 p-4 space-y-3">
+                  <label htmlFor="review-photo" className="block text-sm font-bold text-ink dark:text-ink">Add a photo <span className="font-normal">(optional)</span></label>
+                  <p id="review-photo-help" className="text-xs text-ink dark:text-ink">JPG, PNG or WebP, up to 3 MB. Your photo is published only after approval.</p>
+                  <input ref={imageInput} id="review-photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={isSubmitting} aria-describedby="review-photo-help" className="block w-full text-xs text-ink dark:text-ink file:mr-3 file:rounded-lg file:border-0 file:bg-canvas file:px-3 file:py-2 file:text-ink" onChange={e => {
                     const file = e.target.files?.[0];
                     if (!file) return;
                     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 3 * 1024 * 1024) {
@@ -385,13 +385,13 @@ export const CustomerReviews: React.FC = () => {
                     }
                     setFormError(null); setFormImage(file);
                   }} />
-                  {imagePreview && <div className="space-y-2"><img src={imagePreview} alt="Selected review photo preview" className="max-h-48 max-w-full rounded-xl object-contain" /><button type="button" disabled={isSubmitting} className="text-xs font-semibold text-rose-600" onClick={() => { setFormImage(null); if (imageInput.current) imageInput.current.value = ""; }}>Remove photo</button></div>}
+                  {imagePreview && <div className="space-y-2"><img src={imagePreview} alt="Selected review photo preview" className="max-h-48 max-w-full rounded-xl object-contain" /><button type="button" disabled={isSubmitting} className="text-xs font-semibold text-ink" onClick={() => { setFormImage(null); if (imageInput.current) imageInput.current.value = ""; }}>Remove photo</button></div>}
                 </div>
 
                 {/* Customer Name */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-1">
-                    Your Name <span className="text-rose-500">*</span>
+                  <label className="block text-xs font-bold text-ink dark:text-ink mb-1">
+                    Your Name <span className="text-ink">*</span>
                   </label>
                   <input
                     type="text"
@@ -400,14 +400,14 @@ export const CustomerReviews: React.FC = () => {
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="e.g. Kasun Perera"
                     maxLength={100}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-600 text-xs sm:text-sm focus:outline-none focus:border-blue-500 dark:focus:border-cyan-400 transition-colors"
+                    className="w-full px-4 py-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 text-ink dark:text-ink placeholder:text-ink dark:placeholder:text-ink text-xs sm:text-sm focus:outline-none focus:border-neutral-500 dark:focus:border-neutral-400 transition-colors"
                   />
                 </div>
 
                 {/* Star Rating Picker */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-1.5">
-                    Your Rating <span className="text-rose-500">*</span>
+                  <label className="block text-xs font-bold text-ink dark:text-ink mb-1.5">
+                    Your Rating <span className="text-ink">*</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1">
@@ -426,15 +426,15 @@ export const CustomerReviews: React.FC = () => {
                             <Star
                               className={`w-6 h-6 transition-colors ${
                                 isFilled
-                                  ? "fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
-                                  : "text-slate-300 dark:text-slate-700"
+                                  ? "fill-[#FFC107] text-[#FFC107] "
+                                  : "text-neutral-300 dark:text-neutral-700"
                               }`}
                             />
                           </button>
                         );
                       })}
                     </div>
-                    <span className="text-xs font-bold text-slate-600 dark:text-zinc-400 ml-2">
+                    <span className="text-xs font-bold text-ink dark:text-ink ml-2">
                       {formRating === 5
                         ? "5 Stars - Excellent!"
                         : formRating === 4
@@ -451,10 +451,10 @@ export const CustomerReviews: React.FC = () => {
                 {/* Feedback Textarea */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="text-xs font-bold text-slate-700 dark:text-zinc-300">
-                      Your Review <span className="text-rose-500">*</span>
+                    <label className="text-xs font-bold text-ink dark:text-ink">
+                      Your Review <span className="text-ink">*</span>
                     </label>
-                    <span className="text-[10px] text-slate-400 dark:text-zinc-500">
+                    <span className="text-[10px] text-ink dark:text-ink">
                       {formReview.length}/1000 chars
                     </span>
                   </div>
@@ -465,21 +465,21 @@ export const CustomerReviews: React.FC = () => {
                     placeholder="Tell us about the device condition, delivery speed, customer service, or your overall shopping experience..."
                     rows={4}
                     maxLength={1000}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-600 text-xs sm:text-sm focus:outline-none focus:border-blue-500 dark:focus:border-cyan-400 transition-colors resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 text-ink dark:text-ink placeholder:text-ink dark:placeholder:text-ink text-xs sm:text-sm focus:outline-none focus:border-neutral-500 dark:focus:border-neutral-400 transition-colors resize-none"
                   />
                 </div>
 
                 {/* Moderation Notice & Submit */}
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-zinc-400">
-                    <ShieldCheck className="w-3.5 h-3.5 text-blue-500 dark:text-cyan-400 shrink-0" />
+                  <div className="flex items-center gap-1.5 text-[11px] text-ink dark:text-ink">
+                    <ShieldCheck className="w-3.5 h-3.5 text-ink dark:text-ink shrink-0" />
                     <span>All reviews undergo verification before public publishing.</span>
                   </div>
 
-                  <button
+                  <button data-ui="primary"
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 active:scale-95 transition-all disabled:opacity-60"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-canvas     text-ink font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-neutral-500/20 active:scale-95 transition-all disabled:opacity-60"
                   >
                     {isSubmitting ? (
                       <>
@@ -510,52 +510,52 @@ export const CustomerReviews: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         {/* Main Review Card */}
-        <div className="glass-card-glow rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-cyan-500/25 shadow-xl relative overflow-hidden transition-all duration-500">
+        <div className="glass-panel rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-12 border border-neutral-200 dark:border-neutral-500/25 shadow-xl relative overflow-hidden transition-all duration-500">
           
           {/* Ambient Lighting */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 dark:bg-cyan-500/15 rounded-full blur-[90px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-canvas dark:bg-canvas rounded-full blur-[90px] pointer-events-none" />
 
           <div className="relative z-10 flex flex-col justify-between min-h-[180px] sm:min-h-[200px]">
             <div>
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <div className="flex text-amber-500 dark:text-amber-400 gap-1">
+                <div className="flex text-ink dark:text-ink gap-1">
                   {Array.from({ length: currentReview?.rating || 0 }).map((_, i) => (
-                    <Star key={i} className="w-4 sm:w-5 h-4 sm:h-5 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-4 sm:w-5 h-4 sm:h-5 fill-[#FFC107] text-[#FFC107]" />
                   ))}
                 </div>
 
                 {currentReview?.verified && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold shadow-xs">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold shadow-xs">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Verified Purchase
                   </span>
                 )}
               </div>
 
               {currentReview?.imageUrl && <img src={currentReview.imageUrl} alt={"Photo shared by " + currentReview.name} loading="lazy" className="mb-5 w-full max-h-80 rounded-2xl object-contain bg-slate-100 dark:bg-slate-900" />}
-              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-blue-500/30 dark:text-cyan-500/30 mb-2 sm:mb-3" />
+              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-ink dark:text-ink mb-2 sm:mb-3" />
 
-              <p className="text-sm sm:text-lg md:text-xl text-slate-800 dark:text-zinc-200 italic leading-relaxed font-normal">
+              <p className="text-sm sm:text-lg md:text-xl text-ink dark:text-ink italic leading-relaxed font-normal">
                 {currentReview?.reviewText || (isLoading ? "Loading reviews…" : loadError ? "Reviews are temporarily unavailable." : "No published reviews yet. Share your experience below.")}
               </p>
             </div>
 
-            <div className="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-slate-200 dark:border-cyan-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-neutral-200 dark:border-neutral-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                <h4 className="text-sm sm:text-base font-bold text-ink dark:text-ink">
                   {currentReview?.name}
                 </h4>
-                <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+                <p className="text-xs text-ink dark:text-ink mt-0.5">
                   {currentReview?.location ? `${currentReview.location} • ` : ""}
                   {currentReview?.productBought ? (
                     <>
                       Purchased{" "}
-                      <span className="text-blue-600 dark:text-cyan-400 font-semibold">
+                      <span className="text-ink dark:text-ink font-semibold">
                         {currentReview.productBought}
                       </span>
                     </>
                   ) : null}
                   {currentReview?.date ? (
-                    <span className="text-slate-400 dark:text-zinc-500">
+                    <span className="text-ink dark:text-ink">
                       {currentReview?.productBought ? " • " : ""}
                       {currentReview.date}
                     </span>
@@ -568,7 +568,7 @@ export const CustomerReviews: React.FC = () => {
                 <button
                   disabled={allReviews.length < 2}
                   onClick={prevSlide}
-                  className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
+                  className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink hover:border-neutral-400 transition-colors active:scale-95 shadow-xs"
                   aria-label="Previous review"
                 >
                   <ChevronLeft className="w-5 h-5" />
@@ -576,7 +576,7 @@ export const CustomerReviews: React.FC = () => {
                 <button
                   disabled={allReviews.length < 2}
                   onClick={nextSlide}
-                  className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 hover:border-blue-400 transition-colors active:scale-95 shadow-xs"
+                  className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink hover:border-neutral-400 transition-colors active:scale-95 shadow-xs"
                   aria-label="Next review"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -596,8 +596,8 @@ export const CustomerReviews: React.FC = () => {
                 onClick={() => setCurrentIndex(idx)}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   idx === currentIndex
-                    ? "w-8 bg-gradient-to-r from-blue-600 to-cyan-400 dark:from-cyan-400 dark:to-blue-600"
-                    : "w-2 bg-slate-300 dark:bg-slate-800 hover:bg-slate-400"
+                    ? "w-8 bg-canvas    "
+                    : "w-2 bg-canvas dark:bg-canvas hover:bg-canvas"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />

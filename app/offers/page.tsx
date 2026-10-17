@@ -14,10 +14,10 @@ export default function OffersPage() {
       <div>
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">Discounted Devices & Accessories</h2>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">Available at special promotional pricing while stock lasts.</p>
+            <h2 className="text-2xl font-extrabold text-ink dark:text-ink">Discounted Devices & Accessories</h2>
+            <p className="text-xs text-ink dark:text-ink mt-1">Available at special promotional pricing while stock lasts.</p>
           </div>
-          <span className="text-xs font-bold text-rose-600 dark:text-rose-400">{deals.length} active offers</span>
+          <span data-ui="offer-badge" className="text-xs font-bold rounded-full px-3 py-1">{deals.length} active offers</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-300">

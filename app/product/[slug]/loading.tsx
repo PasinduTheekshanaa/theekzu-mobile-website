@@ -12,7 +12,7 @@ export default function ProductLoading() {
           <div className="h-14 rounded-full skeleton" />
         </div>
       </div>
-      <p className="mt-6 text-center text-xs font-medium text-slate-500 dark:text-zinc-400">Opening product details…</p>
+      <p className="mt-6 text-center text-xs font-medium text-ink dark:text-ink">Opening product details…</p>
     </div>
   );
 }

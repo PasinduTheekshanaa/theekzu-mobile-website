@@ -8,19 +8,19 @@ import { HeroVideo } from "./HeroVideo";
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-[680px] sm:min-h-[720px] md:min-h-[650px] lg:min-h-[700px] flex items-center py-10 sm:py-14 md:py-16 overflow-hidden bg-slate-100 dark:bg-slate-950 w-full">
+    <section data-surface="media" className="relative min-h-[680px] sm:min-h-[720px] md:min-h-[650px] lg:min-h-[700px] flex items-center py-10 sm:py-14 md:py-16 overflow-hidden bg-canvas dark:bg-canvas w-full">
       <HeroVideo />
       <div className="absolute inset-0 bg-slate-950/18 dark:bg-slate-950/12 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-slate-950/82 via-slate-950/42 to-transparent dark:from-slate-950/75 dark:via-slate-950/35 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-slate-950/15 dark:from-slate-950/45 dark:to-slate-950/10 pointer-events-none" />
 
       <div className="container-custom w-full relative z-10">
-        <div className="max-w-2xl rounded-[2rem] border border-white/25 bg-slate-950/12 px-4 py-6 shadow-[0_24px_60px_rgba(30,64,175,0.28)] backdrop-blur-[3px] sm:px-6 sm:py-8 md:px-0 md:py-0 md:border-transparent md:bg-transparent md:shadow-none md:backdrop-blur-none dark:border-transparent dark:bg-transparent dark:shadow-none dark:backdrop-blur-none">
+        <div className="max-w-2xl rounded-[2rem] border border-white/25 bg-transparent px-4 py-6 shadow-[0_24px_60px_rgba(65,65,65,0.28)] backdrop-blur-[3px] sm:px-6 sm:py-8 md:px-0 md:py-0 md:border-transparent md:bg-transparent md:shadow-none md:backdrop-blur-none dark:border-transparent dark:bg-transparent dark:shadow-none dark:backdrop-blur-none">
           {/* Main Content Column */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-4 sm:space-y-5 md:space-y-6 pt-1 md:pt-0">
             
             {/* Announcement Badge */}
-            <div className="hero-animate-1 inline-flex px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-slate-950/60 border border-white/30 text-[11px] sm:text-xs font-bold text-cyan-100 shadow-lg backdrop-blur-md max-w-full dark:bg-slate-950/65 dark:border-white/20">
+            <div className="hero-animate-1 inline-flex px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-canvas border border-white/30 text-[11px] sm:text-xs font-bold text-ink shadow-lg backdrop-blur-md max-w-full dark:bg-canvas dark:border-white/20">
               <span className="tracking-wide truncate">Official Brand New &amp; Certified iPhones • Sri Lanka</span>
             </div>
 
@@ -30,31 +30,31 @@ export const Hero: React.FC = () => {
               style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.5rem)" }}
             >
               Upgrade Your World with <br className="hidden sm:inline" />
-              <span className="text-white drop-shadow-[0_4px_16px_rgba(15,23,42,0.7)]">Theekzu</span>{" "}
-              <span className="text-gradient-neon">Mobile</span>
+              <span className="text-white drop-shadow-[0_4px_16px_rgba(23,23,23,0.7)]">Theekzu</span>{" "}
+              <span className="text-brand">Mobile</span>
               <span className="sr-only"> - Premium iPhone Store in Sri Lanka</span>
             </h1>
 
             {/* Subheading */}
-            <p className="hero-animate-3 text-[15px] sm:text-base lg:text-lg text-slate-100/95 font-medium leading-[1.6] md:leading-relaxed max-w-xl mx-auto md:mx-0 drop-shadow-md dark:text-slate-100/90 dark:font-normal">
+            <p className="hero-animate-3 text-[15px] sm:text-base lg:text-lg text-white font-medium leading-[1.6] md:leading-relaxed max-w-xl mx-auto md:mx-0 drop-shadow-md dark:text-white dark:font-normal">
               Discover authentic Apple iPhones, original accessories and exclusive deals with trusted Sri Lanka warranty and instant WhatsApp ordering.
             </p>
 
             {/* Action Buttons */}
             <div className="hero-animate-4 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 sm:gap-4 pt-1 sm:pt-2 w-full">
-              <Link
+              <Link data-ui="primary"
                 href="/iphones"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:via-blue-600 dark:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-600/25 dark:shadow-[0_0_30px_rgba(0,102,255,0.5)] active:scale-[0.98] transition-all min-h-[44px] btn-press group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-canvas        text-white text-sm font-bold shadow-lg shadow-neutral-600/25 dark:shadow-[0_0_30px_rgba(91,91,91,0.5)] active:scale-[0.98] transition-all min-h-[44px] btn-press group"
               >
                 <span>Shop iPhones</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
-              <a
+              <a data-ui="whatsapp"
                 href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to know more about your available iPhones.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm font-bold shadow-md shadow-emerald-500/20 dark:shadow-[0_0_25px_rgba(16,185,129,0.4)] active:scale-[0.98] transition-all min-h-[44px] btn-press group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 px-6 sm:px-7 py-3.5 rounded-full bg-canvas     text-white text-sm font-bold shadow-md shadow-neutral-500/20 dark:shadow-[0_0_25px_rgba(145,145,145,0.4)] active:scale-[0.98] transition-all min-h-[44px] btn-press group"
               >
                 <MessageCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 <span>Chat on WhatsApp</span>
@@ -63,43 +63,43 @@ export const Hero: React.FC = () => {
 
             {/* Trust Feature Cards */}
             <div className="hero-animate-5 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 pt-3 sm:pt-6 border-t border-white/25 dark:border-white/20 w-full">
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-white/18 border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-slate-950/50 dark:border-white/15">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/30 flex items-center justify-center text-blue-600 dark:text-cyan-400 shrink-0">
+              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-canvas border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-canvas dark:border-white/15">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink shrink-0">
                   <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-white leading-snug">Quality Checked</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-200 leading-snug dark:text-slate-300">32-Point Tested</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-ink leading-snug">Quality Checked</h4>
+                  <p className="text-[9px] sm:text-[10px] text-ink leading-snug">32-Point Tested</p>
                 </div>
               </div>
 
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-white/18 border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-slate-950/50 dark:border-white/15">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-canvas border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-canvas dark:border-white/15">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink shrink-0">
                   <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-white leading-snug">Best Prices</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-200 leading-snug dark:text-slate-300">Transparent LKR</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-ink leading-snug">Best Prices</h4>
+                  <p className="text-[9px] sm:text-[10px] text-ink leading-snug">Transparent LKR</p>
                 </div>
               </div>
 
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-white/18 border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-slate-950/50 dark:border-white/15">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-500/10 border border-indigo-500/20 dark:border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-canvas border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-canvas dark:border-white/15">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink shrink-0">
                   <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-white leading-snug">Trusted Service</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-200 leading-snug dark:text-slate-300">Verified Seller</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-ink leading-snug">Trusted Service</h4>
+                  <p className="text-[9px] sm:text-[10px] text-ink leading-snug">Verified Seller</p>
                 </div>
               </div>
 
-              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-white/18 border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-slate-950/50 dark:border-white/15">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20 dark:border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+              <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center gap-2 sm:gap-3 bg-canvas border border-white/30 backdrop-blur-md shadow-lg min-w-0 text-left dark:bg-canvas dark:border-white/15">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink shrink-0">
                   <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-[11px] sm:text-xs font-bold text-white leading-snug">Fast Support</h4>
-                  <p className="text-[9px] sm:text-[10px] text-slate-200 leading-snug dark:text-slate-300">8 AM – 8 PM Daily</p>
+                  <h4 className="text-[11px] sm:text-xs font-bold text-ink leading-snug">Fast Support</h4>
+                  <p className="text-[9px] sm:text-[10px] text-ink leading-snug">8 AM – 8 PM Daily</p>
                 </div>
               </div>
             </div>

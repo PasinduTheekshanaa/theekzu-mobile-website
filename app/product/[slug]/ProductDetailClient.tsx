@@ -153,14 +153,14 @@ Please confirm availability and islandwide delivery options!`;
     <div className="space-y-16 transition-colors duration-300">
       
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-xs text-slate-500 dark:text-zinc-400">
-        <Link href="/" className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors">Home</Link>
-        <ChevronRight className="w-3 h-3 text-slate-400 dark:text-zinc-600" />
-        <Link href={liveProduct.category === "iphones" ? "/iphones" : "/accessories"} className="hover:text-blue-600 dark:hover:text-cyan-400 transition-colors capitalize">
+      <nav className="flex items-center gap-2 text-xs text-ink dark:text-ink">
+        <Link href="/" className="hover:text-ink dark:hover:text-ink transition-colors">Home</Link>
+        <ChevronRight className="w-3 h-3 text-ink dark:text-ink" />
+        <Link href={liveProduct.category === "iphones" ? "/iphones" : "/accessories"} className="hover:text-ink dark:hover:text-ink transition-colors capitalize">
           {liveProduct.category}
         </Link>
-        <ChevronRight className="w-3 h-3 text-slate-400 dark:text-zinc-600" />
-        <span className="text-slate-900 dark:text-white font-medium truncate">{liveProduct.name}</span>
+        <ChevronRight className="w-3 h-3 text-ink dark:text-ink" />
+        <span className="text-ink dark:text-ink font-medium truncate">{liveProduct.name}</span>
       </nav>
 
       {/* Main Product Layout (2 columns) */}
@@ -168,7 +168,7 @@ Please confirm availability and islandwide delivery options!`;
         
         {/* LEFT COLUMN: Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-slate-50 dark:bg-gradient-to-b dark:from-slate-900/60 dark:to-slate-950/80 border border-slate-200 dark:border-cyan-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden shadow-sm dark:shadow-[0_0_35px_rgba(0,102,255,0.2)]">
+          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-canvas bg-canvas   border border-neutral-200 dark:border-neutral-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden shadow-sm dark:shadow-[0_0_35px_rgba(91,91,91,0.2)]">
             {activeImage ? (
               <Image
                 key={activeImage}
@@ -180,21 +180,21 @@ Please confirm availability and islandwide delivery options!`;
                 className="max-h-full max-w-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)] transition-all duration-300 animate-in fade-in zoom-in-95"
               />
             ) : (
-              <div className="text-slate-400 font-mono text-sm">No Image Available</div>
+              <div className="text-ink font-mono text-sm">No Image Available</div>
             )}
 
             {discountPercent && discountPercent > 0 && (
-              <span className="absolute top-4 left-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-black text-xs px-3.5 py-1 rounded-xl shadow-xs">
+              <span data-ui="offer-badge" className="absolute top-4 left-4 bg-canvas   text-ink font-black text-xs px-3.5 py-1 rounded-xl shadow-xs">
                 {discountPercent}% OFF
               </span>
             )}
 
             <button
               onClick={() => toggleWishlist(liveProduct.id)}
-              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/30 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-rose-500 shadow-sm active:scale-90 transition-transform"
+              className="absolute top-4 right-4 w-11 h-11 rounded-full bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/30 flex items-center justify-center text-ink dark:text-ink hover:text-ink shadow-sm active:scale-90 transition-transform"
               title="Save to Wishlist"
             >
-              <Heart className={`w-4 h-4 ${wishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
+              <Heart className={`w-4 h-4 ${wishlisted ? "fill-neutral-500 text-ink" : ""}`} />
             </button>
           </div>
 
@@ -205,10 +205,10 @@ Please confirm availability and islandwide delivery options!`;
                 <button
                   key={idx}
                   onClick={() => setActiveImage(img)}
-                  className={`w-20 h-20 rounded-2xl overflow-hidden border p-1 bg-white dark:bg-slate-900/90 flex-shrink-0 transition-all ${
+                  className={`w-20 h-20 rounded-2xl overflow-hidden border p-1 bg-canvas dark:bg-canvas flex-shrink-0 transition-all ${
                     activeImage === img
-                      ? "border-blue-600 ring-2 ring-blue-500/30 dark:border-cyan-400 dark:ring-cyan-500/30"
-                      : "border-slate-200 dark:border-cyan-500/20"
+                      ? "border-neutral-600 ring-2 ring-neutral-500/30 dark:border-neutral-400 dark:ring-neutral-500/30"
+                      : "border-neutral-200 dark:border-neutral-500/20"
                   }`}
                 >
                   <Image
@@ -224,11 +224,11 @@ Please confirm availability and islandwide delivery options!`;
           )}
 
           {/* Guarantee Banner */}
-          <div className="glass-card p-4 rounded-2xl flex items-center gap-3 text-xs text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-cyan-500/20 shadow-xs">
-            <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+          <div className="glass-card p-4 rounded-2xl flex items-center gap-3 text-xs text-ink dark:text-ink border border-neutral-200 dark:border-neutral-500/20 shadow-xs">
+            <ShieldCheck className="w-5 h-5 text-ink dark:text-ink flex-shrink-0" />
             <div>
-              <strong className="text-slate-900 dark:text-white block font-bold">Theekzu Mobile Warranty:</strong>
-              <span className="text-slate-500 dark:text-zinc-400">{PRODUCT_WARRANTY_NOTICE}</span>
+              <strong className="text-ink dark:text-ink block font-bold">Theekzu Mobile Warranty:</strong>
+              <span className="text-ink dark:text-ink">{PRODUCT_WARRANTY_NOTICE}</span>
             </div>
           </div>
         </div>
@@ -239,14 +239,14 @@ Please confirm availability and islandwide delivery options!`;
           <div>
             {/* Badges & SKU */}
             <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 dark:bg-cyan-500/15 border border-blue-500/20 dark:border-cyan-500/30 text-blue-700 dark:text-cyan-300">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink">
                 {availableConditions.join(" & ")}
               </span>
               
               <span className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${
                 isOutOfStock
-                  ? "bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400"
-                  : "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
+                  ? "bg-canvas border-neutral-500/30 text-ink dark:text-ink"
+                  : "bg-canvas border-neutral-500/30 text-ink dark:text-ink"
               }`}>
                 {isOutOfStock ? (
                   <>
@@ -262,32 +262,33 @@ Please confirm availability and islandwide delivery options!`;
               </span>
 
               {sku && (
-                <span className="text-[11px] font-mono text-slate-400 dark:text-zinc-500 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-0.5 rounded-md border border-slate-200 dark:border-white/5">
+                <span className="text-[11px] font-mono text-ink dark:text-ink bg-canvas dark:bg-canvas px-2.5 py-0.5 rounded-md border border-neutral-200 dark:border-white/5">
                   SKU: {sku}
                 </span>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mb-2">
               {liveProduct.name}
             </h1>
 
-            <p className="text-xs mb-5 text-blue-600 dark:text-cyan-400">Islandwide Courier</p>
+            <p className="text-xs mb-5 text-ink dark:text-ink">Islandwide Courier</p>
 
             {/* Price Display */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-cyan-500/25 mb-6 flex flex-wrap sm:flex-nowrap items-baseline gap-2.5 sm:gap-3 shadow-xs">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/25 mb-6 flex flex-wrap sm:flex-nowrap items-baseline gap-2.5 sm:gap-3 shadow-xs">
               <span
                 key={currentPrice}
-                className="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-blue-700 dark:from-white dark:via-slate-100 dark:to-cyan-300 animate-price-change"
+                data-ui={discountPercent ? "sale-price" : undefined}
+                className="text-2xl sm:text-3xl md:text-4xl font-black text-ink text-ink text-ink      animate-price-change"
               >
                 {formatCurrency(currentPrice)}
               </span>
               {oldPrice && (
-                <span className="text-xs sm:text-sm text-slate-400 dark:text-zinc-500 line-through">
+                <span className="text-xs sm:text-sm text-ink dark:text-ink line-through">
                   {formatCurrency(oldPrice)}
                 </span>
               )}
-              <span className="text-[11px] sm:text-xs text-blue-600 dark:text-cyan-400/80 sm:ml-auto font-medium">
+              <span className="text-[11px] sm:text-xs text-ink dark:text-ink sm:ml-auto font-medium">
                 Variant Price (LKR)
               </span>
             </div>
@@ -298,7 +299,7 @@ Please confirm availability and islandwide delivery options!`;
                 {availableConditions.map(condition => (
                   <button key={condition} type="button" aria-pressed={condition === selectedCondition}
                     onClick={() => setConditionChoice(condition)}
-                    className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${condition === selectedCondition ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-cyan-500/20 dark:text-cyan-200" : "border-slate-200 dark:border-white/10"}`}>
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${condition === selectedCondition ? "border-neutral-600 bg-canvas text-ink dark:bg-canvas dark:text-ink" : "border-neutral-200 dark:border-white/10"}`}>
                     {condition}
                   </button>
                 ))}
@@ -309,8 +310,8 @@ Please confirm availability and islandwide delivery options!`;
             {liveProduct.storageOptions && liveProduct.storageOptions.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2.5">
-                  <label className="text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold">
-                    Storage Capacity: <span className="text-blue-600 dark:text-cyan-400">{selectedStorage}</span>
+                  <label className="text-xs uppercase tracking-wider text-ink dark:text-ink font-bold">
+                    Storage Capacity: <span className="text-ink dark:text-ink">{selectedStorage}</span>
                   </label>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
@@ -327,13 +328,13 @@ Please confirm availability and islandwide delivery options!`;
                         onClick={() => setSelectedStorage(st)}
                         className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 btn-press ${
                           isSelected
-                            ? "border-blue-600 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20 dark:border-cyan-400 dark:bg-cyan-500/20 dark:text-cyan-200 dark:ring-cyan-500/40 shadow-xs animate-variant-pop"
-                            : "border-slate-200 bg-white dark:border-white/10 dark:bg-slate-900/70 text-slate-700 dark:text-zinc-300 hover:border-blue-400 dark:hover:border-cyan-500/40"
+                            ? "border-neutral-600 bg-canvas text-ink ring-2 ring-neutral-500/20 dark:border-neutral-400 dark:bg-canvas dark:text-ink dark:ring-neutral-500/40 shadow-xs animate-variant-pop"
+                            : "border-neutral-200 bg-canvas dark:border-white/10 dark:bg-canvas text-ink dark:text-ink hover:border-neutral-400 dark:hover:border-neutral-500/40"
                         }`}
                       >
                         <span>{st}</span>
                         {stStock !== undefined && stStock <= 0 && (
-                          <span className="text-[10px] text-rose-500 font-normal">(Sold out)</span>
+                          <span className="text-[10px] text-ink font-normal">(Sold out)</span>
                         )}
                       </button>
                     );
@@ -346,8 +347,8 @@ Please confirm availability and islandwide delivery options!`;
             {liveProduct.colors && liveProduct.colors.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2.5">
-                  <label className="text-xs uppercase tracking-wider text-slate-700 dark:text-zinc-400 font-bold">
-                    Select Color: <span className="text-blue-600 dark:text-cyan-400">{selectedColor}</span>
+                  <label className="text-xs uppercase tracking-wider text-ink dark:text-ink font-bold">
+                    Select Color: <span className="text-ink dark:text-ink">{selectedColor}</span>
                   </label>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
@@ -366,8 +367,8 @@ Please confirm availability and islandwide delivery options!`;
                         onClick={() => setSelectedColor(col.name)}
                         className={`flex items-center gap-2 px-3.5 py-2 rounded-xl border transition-all text-xs font-semibold btn-press ${
                           isSelected
-                            ? "border-blue-600 bg-blue-50 text-slate-900 ring-1 ring-blue-500/30 dark:border-cyan-400 dark:bg-slate-800 dark:text-white dark:ring-cyan-400 shadow-xs animate-variant-pop"
-                            : "border-slate-200 bg-white dark:border-white/10 dark:bg-slate-900/60 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                            ? "border-neutral-600 bg-action text-on-action ring-1 ring-neutral-500/30 dark:border-neutral-400 dark:bg-action dark:text-on-action dark:ring-neutral-400 shadow-xs animate-variant-pop"
+                            : "border-neutral-200 bg-canvas dark:border-white/10 dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink"
                         }`}
                       >
                         <span
@@ -376,7 +377,7 @@ Please confirm availability and islandwide delivery options!`;
                         />
                         <span>{col.name}</span>
                         {colStock <= 0 && (
-                          <span className="text-[10px] text-rose-500 font-bold">Sold Out</span>
+                          <span className="text-[10px] text-ink font-bold">Sold Out</span>
                         )}
                       </button>
                     );
@@ -388,19 +389,19 @@ Please confirm availability and islandwide delivery options!`;
             {/* Quantity Selector, Add to Cart & WhatsApp */}
             <div className="space-y-3 pt-2">
               <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex items-center justify-between border border-slate-200 dark:border-cyan-500/25 bg-slate-50 dark:bg-slate-900 rounded-2xl p-1.5 w-full sm:w-36 shadow-xs">
-                  <button
+                <div className="flex items-center justify-between border border-neutral-200 dark:border-neutral-500/25 bg-canvas dark:bg-canvas rounded-2xl p-1.5 w-full sm:w-36 shadow-xs">
+                  <button data-ui="primary"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     disabled={isOutOfStock}
-                    className="w-8 h-8 rounded-xl bg-white hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-white font-bold shadow-xs disabled:opacity-40 btn-press"
+                    className="w-8 h-8 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas flex items-center justify-center text-ink dark:text-ink font-bold shadow-xs disabled:opacity-40 btn-press"
                   >
                     <Minus className="w-3 h-3" />
                   </button>
-                  <span className="font-bold text-sm text-slate-900 dark:text-white px-2">{quantity}</span>
-                  <button
+                  <span className="font-bold text-sm text-ink dark:text-ink px-2">{quantity}</span>
+                  <button data-ui="primary"
                     onClick={() => setQuantity(Math.min(currentVariantStock, quantity + 1))}
                     disabled={isOutOfStock}
-                    className="w-8 h-8 rounded-xl bg-white hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-white font-bold shadow-xs disabled:opacity-40 btn-press"
+                    className="w-8 h-8 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas flex items-center justify-center text-ink dark:text-ink font-bold shadow-xs disabled:opacity-40 btn-press"
                   >
                     <Plus className="w-3 h-3" />
                   </button>
@@ -408,11 +409,12 @@ Please confirm availability and islandwide delivery options!`;
 
                 <button
                   onClick={handleAddToCart}
+                  data-ui="primary"
                   disabled={isOutOfStock}
-                  className={`flex-1 min-h-[44px] py-3.5 px-6 rounded-full text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
+                  className={`flex-1 min-h-[44px] py-3.5 px-6 rounded-full text-ink text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
                     isOutOfStock
-                      ? "bg-slate-400 dark:bg-slate-700 cursor-not-allowed opacity-60"
-                      : "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 dark:from-cyan-500 dark:to-blue-600 dark:hover:from-cyan-400 dark:hover:to-blue-500 shadow-blue-500/20"
+                      ? "bg-canvas dark:bg-canvas cursor-not-allowed opacity-60"
+                      : "bg-canvas         shadow-neutral-500/20"
                   }`}
                 >
                   <ShoppingBag className="w-4 h-4 shrink-0" />
@@ -422,14 +424,14 @@ Please confirm availability and islandwide delivery options!`;
 
               <div className="grid grid-cols-1 gap-3">
 
-                <a
+                <a data-ui="whatsapp"
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`min-h-[44px] py-3.5 px-4 rounded-full text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
+                  className={`min-h-[44px] py-3.5 px-4 rounded-full text-ink text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
                     isOutOfStock
-                      ? "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-amber-500/20"
-                      : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(16,185,129,0.35)]"
+                      ? "bg-canvas     shadow-neutral-500/20"
+                      : "bg-canvas     shadow-neutral-500/20 dark:shadow-[0_0_20px_rgba(145,145,145,0.35)]"
                   }`}
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
@@ -441,11 +443,11 @@ Please confirm availability and islandwide delivery options!`;
           </div>
 
           {/* Description */}
-          <div className="pt-6 border-t border-slate-200 dark:border-cyan-500/15">
-            <h3 className="text-xs uppercase tracking-wider text-blue-600 dark:text-cyan-300 font-bold mb-2">
+          <div className="pt-6 border-t border-neutral-200 dark:border-neutral-500/15">
+            <h3 className="text-xs uppercase tracking-wider text-ink dark:text-ink font-bold mb-2">
               Overview
             </h3>
-            <p className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed">
+            <p className="text-sm text-ink dark:text-ink leading-relaxed">
               {liveProduct.description}
             </p>
           </div>
@@ -455,20 +457,20 @@ Please confirm availability and islandwide delivery options!`;
       </div>
 
       {/* Specifications Detailed Accordion / Table */}
-      <div className="glass-card rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-slate-200 dark:border-cyan-500/20 space-y-6 shadow-sm">
-        <h3 className="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-cyan-500/15 pb-4 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+      <div className="glass-card rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-neutral-200 dark:border-neutral-500/20 space-y-6 shadow-sm">
+        <h3 className="text-xl font-bold text-ink dark:text-ink border-b border-neutral-200 dark:border-neutral-500/15 pb-4 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-ink dark:text-ink" />
           <span>Detailed Specifications</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
           {liveProduct.specifications &&
             Object.entries(liveProduct.specifications).map(([key, val]) => (
-              <div key={key} className="py-2.5 border-b border-slate-200/80 dark:border-cyan-500/10 flex items-baseline justify-between text-xs gap-4">
-                <span className="text-slate-500 dark:text-zinc-400 uppercase tracking-wider font-semibold capitalize">
+              <div key={key} className="py-2.5 border-b border-neutral-200/80 dark:border-neutral-500/10 flex items-baseline justify-between text-xs gap-4">
+                <span className="text-ink dark:text-ink uppercase tracking-wider font-semibold capitalize">
                   {key}:
                 </span>
-                <span className="text-slate-800 dark:text-zinc-200 text-right font-medium">{val}</span>
+                <span className="text-ink dark:text-ink text-right font-medium">{val}</span>
               </div>
             ))}
         </div>
@@ -478,10 +480,10 @@ Please confirm availability and islandwide delivery options!`;
       {liveRelated.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Related Products</h3>
+            <h3 className="text-2xl font-bold text-ink dark:text-ink">Related Products</h3>
             <Link
               href={liveProduct.category === "iphones" ? "/iphones" : "/accessories"}
-              className="text-xs font-bold text-blue-600 dark:text-cyan-400 hover:underline"
+              className="text-xs font-bold text-ink dark:text-ink hover:underline"
             >
               View More
             </Link>

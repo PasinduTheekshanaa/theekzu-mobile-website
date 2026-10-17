@@ -10,22 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          black: "#040711",
-          dark: "#070c18",
-          charcoal: "#0b1326",
-          surface: "#0f1a36",
-          card: "rgba(15, 23, 42, 0.7)",
-          border: "rgba(0, 210, 255, 0.15)",
-          blue: "#0066ff",
-          electric: "#0070f3",
-          neon: "#00d2ff",
-          cyan: "#00f0ff",
-          purple: "#8b5cf6",
-          indigo: "#6366f1",
-          silver: "#cbd5e1",
-          titanium: "#94a3b8",
-        },
+        canvas: "rgb(var(--ui-background) / <alpha-value>)",
+        surface: "rgb(var(--ui-surface) / <alpha-value>)",
+        elevated: "rgb(var(--ui-elevated) / <alpha-value>)",
+        ink: "rgb(var(--ui-foreground) / <alpha-value>)",
+        muted: "rgb(var(--ui-muted) / <alpha-value>)",
+        line: "rgb(var(--ui-border) / <alpha-value>)",
+        action: "rgb(var(--ui-action) / <alpha-value>)",
+        "on-action": "rgb(var(--ui-on-action) / <alpha-value>)",
+        whatsapp: "rgb(var(--ui-whatsapp) / <alpha-value>)",
+        offer: "rgb(var(--ui-offer) / <alpha-value>)",
       },
       fontFamily: {
         sans: [
@@ -38,10 +32,7 @@ const config: Config = {
         ],
       },
       boxShadow: {
-        "neon-blue": "0 0 25px -3px rgba(0, 102, 255, 0.4)",
-        "neon-cyan": "0 0 25px -3px rgba(0, 210, 255, 0.4)",
-        "neon-glow": "0 0 35px 2px rgba(0, 180, 255, 0.25)",
-        "card-hover": "0 16px 40px -10px rgba(0, 102, 255, 0.3)",
+        "card-hover": "0 16px 40px -10px rgb(0 0 0 / 0.18)",
       },
       animation: {
         "float": "float 6s ease-in-out infinite",

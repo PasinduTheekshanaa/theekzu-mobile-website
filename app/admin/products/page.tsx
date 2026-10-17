@@ -1027,8 +1027,8 @@ export default function AdminProductsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center space-y-3">
-          <div className="w-10 h-10 border-4 border-blue-600 dark:border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
+          <div className="w-10 h-10 border-4 border-neutral-600 dark:border-neutral-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-semibold text-ink dark:text-ink">
             Verifying Admin Authorization with Supabase...
           </p>
         </div>
@@ -1037,17 +1037,17 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-canvas dark:bg-canvas text-ink dark:text-ink transition-colors duration-300">
       
       {/* Toast Notification */}
       {toast && (
         <div
           className={`fixed top-5 right-5 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border backdrop-blur-xl animate-in slide-in-from-top-4 duration-300 ${
             toast.type === "success"
-              ? "bg-emerald-500/95 text-white border-emerald-400"
+              ? "bg-canvas text-ink border-neutral-400"
               : toast.type === "error"
-              ? "bg-rose-600/95 text-white border-rose-500"
-              : "bg-blue-600/95 text-white border-blue-400"
+              ? "bg-canvas text-ink border-neutral-500"
+              : "bg-canvas text-ink border-neutral-400"
           }`}
         >
           {toast.type === "success" ? (
@@ -1062,8 +1062,8 @@ export default function AdminProductsPage() {
       {/* Supabase Live Status Notice Banner */}
       <div className={`px-4 py-2 text-center text-xs font-semibold shadow-md flex items-center justify-center gap-2 ${
         isLiveDatabase
-          ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white"
-          : "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white"
+          ? "bg-canvas    text-ink"
+          : "bg-canvas    text-ink"
       }`}>
         <Database className="w-4 h-4 flex-shrink-0" />
         <span>
@@ -1073,17 +1073,17 @@ export default function AdminProductsPage() {
 
       {/* Sync Prompt Banner when missing models are detected */}
       {isLiveDatabase && products.length < 29 && (
-        <div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-3 text-xs flex flex-wrap items-center justify-between gap-3 text-amber-900 dark:text-amber-200">
+        <div className="bg-canvas border-b border-neutral-500/30 px-4 py-3 text-xs flex flex-wrap items-center justify-between gap-3 text-ink dark:text-ink">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500 flex-shrink-0 animate-pulse" />
+            <Sparkles className="w-4 h-4 text-ink flex-shrink-0 animate-pulse" />
             <span>
               <strong>Price List & Catalog Update Ready:</strong> Database currently has {products.length} products. 8 new iPhone models (SE 2nd Gen, X, XS, XS Max, 12 Mini, 13 Mini, 14 Plus, 15 Plus) and revised prices are ready to sync into Supabase.
             </span>
           </div>
-          <button
+          <button data-ui="primary"
             onClick={handleMigrateAll}
             disabled={isMigrating}
-            className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition-all disabled:opacity-50"
+            className="px-3 py-1.5 rounded-lg bg-canvas hover:bg-canvas text-ink font-bold text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition-all disabled:opacity-50"
           >
             <RefreshCw className={`w-3 h-3 ${isMigrating ? "animate-spin" : ""}`} />
             <span>{isMigrating ? "Applying..." : "Apply Database Update Now"}</span>
@@ -1092,12 +1092,12 @@ export default function AdminProductsPage() {
       )}
 
       {/* Top Header Navigation */}
-      <header className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-white/10 px-4 sm:px-8 py-4">
+      <header className="sticky top-0 z-30 bg-canvas dark:bg-canvas backdrop-blur-xl border-b border-neutral-200 dark:border-white/10 px-4 sm:px-8 py-4">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link
               href="/"
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-cyan-400 transition-colors"
+              className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors"
               title="Return to Public Website"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -1107,34 +1107,34 @@ export default function AdminProductsPage() {
                 <h1 className="text-lg sm:text-xl font-black tracking-tight">
                   Theekzu Mobile Admin Dashboard
                 </h1>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[10px] font-bold uppercase flex items-center gap-1">
+                <span className="px-2 py-0.5 rounded-full bg-canvas text-ink dark:text-ink border border-neutral-500/20 text-[10px] font-bold uppercase flex items-center gap-1">
                   <Database className="w-3 h-3" />
                   <span>Supabase Live</span>
                 </span>
                 {adminEmail && (
-                  <span className="text-xs text-slate-500 dark:text-zinc-400 hidden sm:inline flex items-center gap-1">
-                    <UserCheck className="w-3 h-3 text-blue-500" />
+                  <span className="text-xs text-ink dark:text-ink hidden sm:inline flex items-center gap-1">
+                    <UserCheck className="w-3 h-3 text-ink" />
                     <span>{adminEmail}</span>
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">
+              <p className="text-xs text-ink dark:text-ink">
                 Manage iPhones, accessories, variants, prices, images, and customer feedback. All edits save directly to Supabase.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-canvas text-ink dark:text-ink border border-neutral-500/20 text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-canvas animate-pulse" />
               <span>Live Database • Edits save directly</span>
             </div>
 
             {products.length < 29 && (
-              <button
+              <button data-ui="primary"
                 onClick={handleMigrateAll}
                 disabled={isMigrating}
-                className="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-purple-600/20 active:scale-95 transition-all disabled:opacity-50"
+                className="px-3.5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 shadow-md shadow-neutral-600/20 active:scale-95 transition-all disabled:opacity-50"
                 title="Only use if initial products are missing from Supabase"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isMigrating ? "animate-spin" : ""}`} />
@@ -1144,23 +1144,23 @@ export default function AdminProductsPage() {
 
             <Link
               href="/admin/reviews"
-              className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-200 text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-white/10"
+              className="px-3.5 py-2 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink text-xs font-bold flex items-center gap-1.5 transition-colors border border-neutral-200 dark:border-white/10"
               title="Moderate customer reviews and feedback"
             >
-              <MessageSquare className="w-4 h-4 text-amber-500" />
+              <MessageSquare className="w-4 h-4 text-ink" />
               <span>Reviews &amp; Feedback</span>
             </Link>
 
-            <div className="flex items-center rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-800 p-1 text-xs font-bold">
+            <div className="flex items-center rounded-xl border border-neutral-200 dark:border-white/10 bg-canvas dark:bg-canvas p-1 text-xs font-bold">
               <button
                 onClick={() => setSelectedCatalog("iphones")}
-                className={`rounded-lg px-3 py-1.5 transition-colors ${selectedCatalog === "iphones" ? "bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-cyan-300" : "text-slate-500 dark:text-zinc-400"}`}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${selectedCatalog === "iphones" ? "bg-canvas text-ink shadow-sm dark:bg-canvas dark:text-ink" : "text-ink dark:text-ink"}`}
               >
                 iPhones
               </button>
               <button
                 onClick={() => setSelectedCatalog("accessories")}
-                className={`rounded-lg px-3 py-1.5 transition-colors ${selectedCatalog === "accessories" ? "bg-white text-blue-600 shadow-sm dark:bg-slate-700 dark:text-cyan-300" : "text-slate-500 dark:text-zinc-400"}`}
+                className={`rounded-lg px-3 py-1.5 transition-colors ${selectedCatalog === "accessories" ? "bg-canvas text-ink shadow-sm dark:bg-canvas dark:text-ink" : "text-ink dark:text-ink"}`}
               >
                 Accessories
               </button>
@@ -1169,7 +1169,7 @@ export default function AdminProductsPage() {
             {selectedCatalog === "accessories" && (
               <button
                 onClick={handleAddAccessorySamples}
-                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95 transition-all"
+                className="px-3.5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 shadow-md shadow-neutral-500/20 active:scale-95 transition-all"
                 title="Add two editable sample products: a charger and a protective case"
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -1177,9 +1177,9 @@ export default function AdminProductsPage() {
               </button>
             )}
 
-            <button
+            <button data-ui="primary"
               onClick={openAddProduct}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-500/20 active:scale-95 transition-all"
+              className="px-4 py-2 rounded-xl bg-canvas     text-ink text-xs font-bold flex items-center gap-1.5 shadow-md shadow-neutral-500/20 active:scale-95 transition-all"
             >
               <Plus className="w-4 h-4" />
               <span>Add Product</span>
@@ -1187,7 +1187,7 @@ export default function AdminProductsPage() {
 
             <button
               onClick={handleLogout}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200 dark:border-white/10 transition-colors"
+              className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink border border-neutral-200 dark:border-white/10 transition-colors"
               title="Sign Out from Admin"
             >
               <LogOut className="w-4 h-4" />
@@ -1201,49 +1201,49 @@ export default function AdminProductsPage() {
         
         {/* Stock & Catalog Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-cyan-500/20 shadow-xs flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 shadow-xs flex items-center justify-between">
             <div>
-              <p className="text-xs text-slate-500 dark:text-zinc-400 font-semibold">Total Catalog</p>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{products.length} Products</h3>
-              <p className="text-[10px] text-slate-400 dark:text-zinc-500">{stockMetrics.totalVariants} total variants</p>
+              <p className="text-xs text-ink dark:text-ink font-semibold">Total Catalog</p>
+              <h3 className="text-2xl font-black text-ink dark:text-ink mt-0.5">{products.length} Products</h3>
+              <p className="text-[10px] text-ink dark:text-ink">{stockMetrics.totalVariants} total variants</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-cyan-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-canvas text-ink dark:text-ink flex items-center justify-center">
               <Layers className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-emerald-500/30 dark:border-emerald-500/20 shadow-xs flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-500/30 dark:border-neutral-500/20 shadow-xs flex items-center justify-between">
             <div>
-              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">In Stock</p>
-              <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{stockMetrics.inStock} Products</h3>
-              <p className="text-[10px] text-slate-400 dark:text-zinc-500">Available for customer orders</p>
+              <p className="text-xs text-ink dark:text-ink font-bold">In Stock</p>
+              <h3 className="text-2xl font-black text-ink dark:text-ink mt-0.5">{stockMetrics.inStock} Products</h3>
+              <p className="text-[10px] text-ink dark:text-ink">Available for customer orders</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-canvas text-ink dark:text-ink flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-rose-500/30 dark:border-rose-500/20 shadow-xs flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-500/30 dark:border-neutral-500/20 shadow-xs flex items-center justify-between">
             <div>
-              <p className="text-xs text-rose-600 dark:text-rose-400 font-bold">Out of Stock</p>
-              <h3 className="text-2xl font-black text-rose-600 dark:text-rose-400 mt-0.5">{stockMetrics.outOfStock} Products</h3>
-              <p className="text-[10px] text-slate-400 dark:text-zinc-500">Orders disabled on storefront</p>
+              <p className="text-xs text-ink dark:text-ink font-bold">Out of Stock</p>
+              <h3 className="text-2xl font-black text-ink dark:text-ink mt-0.5">{stockMetrics.outOfStock} Products</h3>
+              <p className="text-[10px] text-ink dark:text-ink">Orders disabled on storefront</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-canvas text-ink dark:text-ink flex items-center justify-center">
               <AlertCircle className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-amber-500/30 dark:border-amber-500/20 shadow-xs flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-500/30 dark:border-neutral-500/20 shadow-xs flex items-center justify-between">
             <div>
-              <p className="text-xs text-amber-600 dark:text-amber-400 font-bold">Customer Feedback</p>
-              <Link href="/admin/reviews" className="text-sm font-bold text-blue-600 dark:text-cyan-400 hover:underline flex items-center gap-1 mt-1">
+              <p className="text-xs text-ink dark:text-ink font-bold">Customer Feedback</p>
+              <Link href="/admin/reviews" className="text-sm font-bold text-ink dark:text-ink hover:underline flex items-center gap-1 mt-1">
                 <span>Manage Reviews</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <p className="text-[10px] text-slate-400 dark:text-zinc-500">Moderate customer submissions</p>
+              <p className="text-[10px] text-ink dark:text-ink">Moderate customer submissions</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-canvas text-ink flex items-center justify-center">
               <MessageSquare className="w-5 h-5" />
             </div>
           </div>
@@ -1251,28 +1251,28 @@ export default function AdminProductsPage() {
 
         {/* Floating Bulk Actions Bar when products are selected */}
         {selectedProductIds.length > 0 && (
-          <div className="sticky top-20 z-20 p-3 sm:p-4 rounded-2xl bg-slate-900 text-white shadow-2xl border border-cyan-500/30 flex items-center justify-between gap-4 flex-wrap animate-in slide-in-from-top-2">
+          <div className="sticky top-20 z-20 p-3 sm:p-4 rounded-2xl bg-canvas text-ink shadow-2xl border border-neutral-500/30 flex items-center justify-between gap-4 flex-wrap animate-in slide-in-from-top-2">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-full bg-canvas animate-pulse" />
               <span className="text-xs font-bold">
                 {selectedProductIds.length} {selectedProductIds.length === 1 ? "product" : "products"} selected
               </span>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              <button
+              <button data-ui="primary"
                 onClick={() => handleBulkStockUpdate(true)}
                 disabled={isBulkUpdating}
-                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-50"
+                className="px-3.5 py-1.5 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-50"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Mark Selected In Stock</span>
               </button>
 
-              <button
+              <button data-ui="primary"
                 onClick={() => handleBulkStockUpdate(false)}
                 disabled={isBulkUpdating}
-                className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-50"
+                className="px-3.5 py-1.5 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-50"
               >
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>Mark Selected Out of Stock</span>
@@ -1280,7 +1280,7 @@ export default function AdminProductsPage() {
 
               <button
                 onClick={() => setSelectedProductIds([])}
-                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all"
+                className="px-3 py-1.5 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-semibold transition-all"
               >
                 Deselect All
               </button>
@@ -1289,21 +1289,21 @@ export default function AdminProductsPage() {
         )}
         
         {/* Filters & Search Bar */}
-        <div className="glass-card p-5 rounded-3xl border border-slate-200 dark:border-cyan-500/20 space-y-4 shadow-sm">
+        <div className="glass-card p-5 rounded-3xl border border-neutral-200 dark:border-neutral-500/20 space-y-4 shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             
             {/* Search Input */}
-            <div className="lg:col-span-2 flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3.5 py-2">
-              <Search className="w-4 h-4 text-blue-600 dark:text-cyan-400 flex-shrink-0" />
+            <div className="lg:col-span-2 flex items-center gap-2 bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 rounded-xl px-3.5 py-2">
+              <Search className="w-4 h-4 text-ink dark:text-ink flex-shrink-0" />
               <input
                 type="text"
                 placeholder="Search model, series, color or SKU (e.g. 17 Pro, Natural, TM-IP16)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent border-none text-xs sm:text-sm text-slate-900 dark:text-white focus:outline-none w-full"
+                className="bg-transparent border-none text-xs sm:text-sm text-ink dark:text-ink focus:outline-none w-full"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery("")} className="text-xs text-slate-400">
+                <button onClick={() => setSearchQuery("")} className="text-xs text-ink">
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -1314,7 +1314,7 @@ export default function AdminProductsPage() {
               <select
                 value={selectedSeries}
                 onChange={(e) => setSelectedSeries(e.target.value)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-zinc-200 focus:outline-none"
+                className="w-full bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-ink dark:text-ink focus:outline-none"
               >
                 <option value="all">All iPhone Series</option>
                 <option value="17">iPhone 17 Series</option>
@@ -1336,7 +1336,7 @@ export default function AdminProductsPage() {
               <select
                 value={selectedCondition}
                 onChange={(e) => setSelectedCondition(e.target.value)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-zinc-200 focus:outline-none"
+                className="w-full bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-ink dark:text-ink focus:outline-none"
               >
                 <option value="all">All Conditions</option>
                 <option value="Brand New">Brand New</option>
@@ -1349,7 +1349,7 @@ export default function AdminProductsPage() {
               <select
                 value={selectedStock}
                 onChange={(e) => setSelectedStock(e.target.value)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-zinc-200 focus:outline-none"
+                className="w-full bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-ink dark:text-ink focus:outline-none"
               >
                 <option value="all">All Stock Statuses</option>
                 <option value="in_stock">In Stock Only</option>
@@ -1359,7 +1359,7 @@ export default function AdminProductsPage() {
 
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-white/5 text-xs text-slate-500 dark:text-zinc-400">
+          <div className="flex items-center justify-between pt-2 border-t border-neutral-200 dark:border-white/5 text-xs text-ink dark:text-ink">
             <span>
               Showing {filteredProducts.length} {selectedCatalog === "iphones" ? "iPhones" : "accessories"}
             </span>
@@ -1368,7 +1368,7 @@ export default function AdminProductsPage() {
                 type="checkbox"
                 checked={onlyFeatured}
                 onChange={(e) => setOnlyFeatured(e.target.checked)}
-                className="rounded accent-blue-600"
+                className="rounded accent-neutral-600"
               />
               <span>Featured Only</span>
             </label>
@@ -1387,10 +1387,10 @@ export default function AdminProductsPage() {
             return (
               <div
                 key={product.id}
-                className="glass-card rounded-2xl border border-slate-200 dark:border-cyan-500/20 overflow-hidden shadow-xs hover:shadow-md transition-shadow"
+                className="glass-card rounded-2xl border border-neutral-200 dark:border-neutral-500/20 overflow-hidden shadow-xs hover:shadow-md transition-shadow"
               >
                 {/* Product Summary Row */}
-                <div className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/50 dark:bg-slate-900/40">
+                <div className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-canvas dark:bg-canvas">
                   
                   {/* Left: Checkbox, Thumbnail & Info */}
                   <div className="flex items-center gap-3 sm:gap-4">
@@ -1398,11 +1398,11 @@ export default function AdminProductsPage() {
                       type="checkbox"
                       checked={selectedProductIds.includes(product.id)}
                       onChange={() => handleToggleSelectProduct(product.id)}
-                      className="w-4 h-4 rounded accent-blue-600 cursor-pointer flex-shrink-0"
+                      className="w-4 h-4 rounded accent-neutral-600 cursor-pointer flex-shrink-0"
                       title="Select for bulk stock update"
                     />
 
-                    <div className="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/10 p-1 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                    <div className="w-16 h-16 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 p-1 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                       {primaryImg ? (
                         <Image
                           src={primaryImg}
@@ -1412,11 +1412,11 @@ export default function AdminProductsPage() {
                           className="max-h-full max-w-full object-contain"
                         />
                       ) : (
-                        <span className="text-[10px] text-slate-400">No Img</span>
+                        <span className="text-[10px] text-ink">No Img</span>
                       )}
                       {imagesList.length > 0 && (
                         <span
-                          className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400"
+                          className="absolute top-1 right-1 w-2 h-2 rounded-full bg-canvas"
                           title="Has uploaded Supabase Storage images"
                         />
                       )}
@@ -1424,43 +1424,43 @@ export default function AdminProductsPage() {
 
                     <div>
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                        <span className="text-sm sm:text-base font-bold text-ink dark:text-ink">
                           {product.name}
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-cyan-400 border border-blue-500/20">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-canvas text-ink dark:text-ink border border-neutral-500/20">
                           Series {product.series}
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-canvas text-ink dark:text-ink border border-neutral-500/20">
                           {getProductConditionLabel(product)}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-zinc-400">
+                      <div className="flex items-center gap-3 text-xs text-ink dark:text-ink">
                         <span>
-                          Starting From: <strong className="text-slate-900 dark:text-cyan-300 font-bold">{formatCurrency(lowestPrice)}</strong>
+                          Starting From: <strong className="text-ink dark:text-ink font-bold">{formatCurrency(lowestPrice)}</strong>
                         </span>
                         <span>•</span>
                         <span>
-                          <strong className="text-blue-600 dark:text-cyan-400">{variants.length}</strong> Variants
+                          <strong className="text-ink dark:text-ink">{variants.length}</strong> Variants
                         </span>
                         <span>•</span>
-                        <span className={product.stock === "In Stock" ? "text-emerald-600 font-semibold" : "text-rose-500 font-semibold"}>
+                        <span className={product.stock === "In Stock" ? "text-ink font-semibold" : "text-ink font-semibold"}>
                           {product.stock}
                         </span>
                       </div>
                       <fieldset className="mt-3" disabled={savingConditions[product.id]} aria-busy={Boolean(savingConditions[product.id])}>
-                        <legend className="text-[10px] uppercase tracking-wide font-bold text-slate-500 dark:text-zinc-400 mb-1.5">Available conditions</legend>
+                        <legend className="text-[10px] uppercase tracking-wide font-bold text-ink dark:text-ink mb-1.5">Available conditions</legend>
                         <div className="flex flex-wrap items-center gap-2">
                           {(["Brand New", "Used"] as const).map(condition => (
-                            <label key={condition} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 text-xs font-semibold cursor-pointer bg-white dark:bg-slate-900">
+                            <label key={condition} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-200 dark:border-white/10 text-xs font-semibold cursor-pointer bg-canvas dark:bg-canvas">
                               <input type="checkbox" checked={getProductConditions(product).includes(condition)}
                                 onChange={event => handleToggleCondition(product, condition, event.target.checked)}
                                 aria-label={`${product.name}: ${condition}`}
-                                className="w-4 h-4 rounded accent-blue-600 disabled:opacity-50" />
+                                className="w-4 h-4 rounded accent-neutral-600 disabled:opacity-50" />
                               {condition}
                             </label>
                           ))}
-                          <span role="status" className="text-[10px] text-slate-500 dark:text-zinc-400">
+                          <span role="status" className="text-[10px] text-ink dark:text-ink">
                             {savingConditions[product.id] ? "Saving…" : "Select both · Saves automatically"}
                           </span>
                         </div>
@@ -1476,17 +1476,17 @@ export default function AdminProductsPage() {
                       disabled={stockTogglingProductId === product.id}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition-all active:scale-95 ${
                         product.stock === "In Stock"
-                          ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25"
-                          : "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30 hover:bg-rose-500/25"
+                          ? "bg-canvas text-ink dark:text-ink border-neutral-500/30 hover:bg-canvas"
+                          : "bg-canvas text-ink dark:text-ink border-neutral-500/30 hover:bg-canvas"
                       }`}
                       title="1-Click Stock Toggle: Updates all variants and syncs to Supabase"
                     >
                       {stockTogglingProductId === product.id ? (
                         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                       ) : product.stock === "In Stock" ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-ink dark:text-ink" />
                       ) : (
-                        <AlertCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                        <AlertCircle className="w-3.5 h-3.5 text-ink dark:text-ink" />
                       )}
                       <span>{product.stock === "In Stock" ? "In Stock" : "Out of Stock"}</span>
                     </button>
@@ -1495,8 +1495,8 @@ export default function AdminProductsPage() {
                       onClick={() => toggleExpandVariants(product.id)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 border transition-colors ${
                         isExpanded
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-white/10 hover:border-blue-500"
+                          ? "bg-action text-on-action border-neutral-600"
+                          : "bg-canvas dark:bg-canvas text-ink dark:text-ink border-neutral-200 dark:border-white/10 hover:border-neutral-500"
                       }`}
                     >
                       <Layers className="w-3.5 h-3.5" />
@@ -1506,7 +1506,7 @@ export default function AdminProductsPage() {
 
                     <button
                       onClick={() => setImageModalProduct(product)}
-                      className="px-3 py-1.5 rounded-xl text-xs font-bold bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 hover:bg-cyan-500/20 flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-xl text-xs font-bold bg-canvas text-ink dark:text-ink border border-neutral-500/20 hover:bg-canvas flex items-center gap-1.5"
                       title="Upload and assign images via Supabase Storage"
                     >
                       <ImageIcon className="w-3.5 h-3.5" />
@@ -1520,16 +1520,16 @@ export default function AdminProductsPage() {
                         setGenColorsText(product.colors?.map((c) => c.name).join(", ") || "");
                         setGenBasePrice(lowestPrice.toString());
                       }}
-                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-white/10 hover:text-blue-600"
+                      className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-200 dark:border-white/10 hover:text-ink"
                       title="Generate storage x color combinations"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      <Sparkles className="w-3.5 h-3.5 text-ink" />
                       <span className="hidden sm:inline">Generator</span>
                     </button>
 
                     <button
                       onClick={() => handleOpenEdit(product)}
-                      className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-white/10 hover:text-blue-600"
+                      className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-200 dark:border-white/10 hover:text-ink"
                       title="Edit Product Info"
                     >
                       <Edit className="w-3.5 h-3.5" />
@@ -1538,7 +1538,7 @@ export default function AdminProductsPage() {
                     <Link
                       href={`/product/${product.slug}`}
                       target="_blank"
-                      className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-white/10 hover:text-cyan-400"
+                      className="p-2 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-200 dark:border-white/10 hover:text-ink"
                       title="View live product page"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -1551,7 +1551,7 @@ export default function AdminProductsPage() {
                           showToast("Product deleted from Supabase", "info");
                         }
                       }}
-                      className="p-2 rounded-xl bg-rose-500/10 text-rose-600 border border-rose-500/20 hover:bg-rose-500/20"
+                      className="p-2 rounded-xl bg-canvas text-ink border border-neutral-500/20 hover:bg-canvas"
                       title="Delete product"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -1562,21 +1562,21 @@ export default function AdminProductsPage() {
 
                 {/* Expanded Variant Table & Quick Add */}
                 {isExpanded && (
-                  <div className="p-4 sm:p-6 border-t border-slate-200 dark:border-cyan-500/20 bg-slate-50/70 dark:bg-slate-950/60 space-y-6 animate-in slide-in-from-top-2 duration-200">
+                  <div className="p-4 sm:p-6 border-t border-neutral-200 dark:border-neutral-500/20 bg-canvas dark:bg-canvas space-y-6 animate-in slide-in-from-top-2 duration-200">
                     
                     <div className="flex items-center justify-between gap-4 flex-wrap">
                       <div>
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                          <Layers className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                        <h4 className="text-sm font-bold text-ink dark:text-ink flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-ink dark:text-ink" />
                           <span>Individual Variants for {product.name} (Supabase public.product_variants)</span>
                         </h4>
-                        <p className="text-xs text-slate-500 dark:text-zinc-400">
+                        <p className="text-xs text-ink dark:text-ink">
                           Edit the exact price, old price, and stock count for each combination. Changes save globally across all devices.
                         </p>
                       </div>
 
                       <div className="flex items-center gap-3 flex-wrap">
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-ink">
                           Total Variants: <strong>{variants.length}</strong>
                         </div>
 
@@ -1591,8 +1591,8 @@ export default function AdminProductsPage() {
                               disabled={dirtyCount === 0 || isBatchSaving}
                               className={`min-h-[38px] sm:min-h-[36px] px-3.5 py-1.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm active:scale-95 ${
                                 dirtyCount > 0 && !isBatchSaving
-                                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-emerald-500/20 cursor-pointer"
-                                  : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed border border-slate-300 dark:border-white/5"
+                                  ? "bg-canvas     text-ink shadow-neutral-500/20 cursor-pointer"
+                                  : "bg-canvas dark:bg-canvas text-ink dark:text-ink cursor-not-allowed border border-neutral-300 dark:border-white/5"
                               }`}
                               title={
                                 dirtyCount > 0
@@ -1602,7 +1602,7 @@ export default function AdminProductsPage() {
                             >
                               {isBatchSaving ? (
                                 <>
-                                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-ink" />
                                   <span>Saving {dirtyCount} Changes...</span>
                                 </>
                               ) : (
@@ -1619,9 +1619,9 @@ export default function AdminProductsPage() {
 
                     {/* Variant View: Desktop Table + Mobile Stacked Cards */}
                     {/* Desktop Table (hidden on mobile) */}
-                    <div className="hidden md:block overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
+                    <div className="hidden md:block overflow-x-auto rounded-xl border border-neutral-200 dark:border-white/10">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-zinc-400 uppercase tracking-wider text-[10px] font-bold">
+                        <thead className="bg-canvas dark:bg-canvas text-ink dark:text-ink uppercase tracking-wider text-[10px] font-bold">
                           <tr>
                             <th className="p-3">Storage</th>
                             <th className="p-3">Color</th>
@@ -1632,7 +1632,7 @@ export default function AdminProductsPage() {
                             <th className="p-3 text-right">Actions</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+                        <tbody className="divide-y divide-neutral-200 dark:divide-white/5">
                           {variants.map((v) => {
                             const edit = inlineVariantEdits[v.id] || {
                               price: v.price.toString(),
@@ -1649,32 +1649,32 @@ export default function AdminProductsPage() {
                                 key={v.id}
                                 className={`transition-colors ${
                                   isDirty
-                                    ? "bg-amber-500/5 hover:bg-amber-500/10 dark:bg-amber-500/5 dark:hover:bg-amber-500/10"
+                                    ? "bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas"
                                     : isRecentlySaved
-                                    ? "bg-emerald-500/5 hover:bg-emerald-500/10 dark:bg-emerald-500/5 dark:hover:bg-emerald-500/10"
-                                    : "hover:bg-slate-100/50 dark:hover:bg-slate-900/50"
+                                    ? "bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas"
+                                    : "hover:bg-canvas dark:hover:bg-canvas"
                                 }`}
                               >
-                                <td className="p-3 font-bold text-slate-900 dark:text-white">
+                                <td className="p-3 font-bold text-ink dark:text-ink">
                                   <div className="flex items-center gap-1.5">
                                     <span>{v.storage}</span>
                                     {isDirty && (
-                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider">
                                         Unsaved
                                       </span>
                                     )}
                                     {isRecentlySaved && (
-                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase tracking-wider flex items-center gap-0.5">
+                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider flex items-center gap-0.5">
                                         <Check className="w-2.5 h-2.5" /> Saved
                                       </span>
                                     )}
                                   </div>
                                 </td>
-                                <td className="p-3 text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
+                                <td className="p-3 text-ink dark:text-ink flex items-center gap-1.5">
                                   <span className="w-2.5 h-2.5 rounded-full border border-black/20" />
                                   <span>{v.color}</span>
                                 </td>
-                                <td className="p-3 font-mono text-[11px] text-slate-400 dark:text-zinc-500">
+                                <td className="p-3 font-mono text-[11px] text-ink dark:text-ink">
                                   {v.sku}
                                 </td>
                                 <td className="p-3">
@@ -1684,10 +1684,10 @@ export default function AdminProductsPage() {
                                     onChange={(e) =>
                                       handleInlineVariantChange(v.id, "price", e.target.value, v.price, v.oldPrice, v.stock)
                                     }
-                                    className={`w-28 px-2 py-1 rounded bg-white dark:bg-slate-900 border font-bold text-slate-900 dark:text-white focus:outline-none ${
+                                    className={`w-28 px-2 py-1 rounded bg-canvas dark:bg-canvas border font-bold text-ink dark:text-ink focus:outline-none ${
                                       isDirty
-                                        ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
-                                        : "border-slate-200 dark:border-white/10 focus:border-blue-500"
+                                        ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
+                                        : "border-neutral-200 dark:border-white/10 focus:border-neutral-500"
                                     }`}
                                   />
                                 </td>
@@ -1699,7 +1699,7 @@ export default function AdminProductsPage() {
                                     onChange={(e) =>
                                       handleInlineVariantChange(v.id, "oldPrice", e.target.value, v.price, v.oldPrice, v.stock)
                                     }
-                                    className="w-28 px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-zinc-300 focus:outline-none focus:border-blue-500"
+                                    className="w-28 px-2 py-1 rounded bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-ink dark:text-ink focus:outline-none focus:border-neutral-500"
                                   />
                                 </td>
                                 <td className="p-3">
@@ -1710,10 +1710,10 @@ export default function AdminProductsPage() {
                                       onChange={(e) =>
                                         handleInlineVariantChange(v.id, "stock", e.target.value, v.price, v.oldPrice, v.stock)
                                       }
-                                      className={`w-16 px-2 py-1 rounded bg-white dark:bg-slate-900 border font-semibold text-slate-900 dark:text-white focus:outline-none ${
+                                      className={`w-16 px-2 py-1 rounded bg-canvas dark:bg-canvas border font-semibold text-ink dark:text-ink focus:outline-none ${
                                         isDirty
-                                          ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
-                                          : "border-slate-200 dark:border-white/10 focus:border-blue-500"
+                                          ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
+                                          : "border-neutral-200 dark:border-white/10 focus:border-neutral-500"
                                       }`}
                                     />
                                     <button
@@ -1722,8 +1722,8 @@ export default function AdminProductsPage() {
                                       disabled={variantStockTogglingId === v.id}
                                       className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
                                         (Number(v.stock) || 0) > 0
-                                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25 hover:bg-rose-500/10 hover:text-rose-600"
-                                          : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25 hover:bg-emerald-500/10 hover:text-emerald-600"
+                                          ? "bg-canvas text-ink dark:text-ink border-neutral-500/25 hover:bg-canvas hover:text-ink"
+                                          : "bg-canvas text-ink dark:text-ink border-neutral-500/25 hover:bg-canvas hover:text-ink"
                                       }`}
                                       title="Toggle Variant In Stock / Out of Stock"
                                     >
@@ -1742,12 +1742,12 @@ export default function AdminProductsPage() {
                                       disabled={!isDirty || isSaving}
                                       className={`px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center gap-1 transition-all ${
                                         isSaving
-                                          ? "bg-blue-600 text-white cursor-wait"
+                                          ? "bg-action text-on-action cursor-wait"
                                           : isRecentlySaved
-                                          ? "bg-emerald-600 text-white shadow-xs"
+                                          ? "bg-action text-on-action shadow-xs"
                                           : isDirty
-                                          ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs"
-                                          : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed"
+                                          ? "bg-action hover:bg-action text-on-action shadow-xs"
+                                          : "bg-canvas dark:bg-canvas text-ink dark:text-ink cursor-not-allowed"
                                       }`}
                                     >
                                       {isSaving ? (
@@ -1784,7 +1784,7 @@ export default function AdminProductsPage() {
                                           }
                                         }
                                       }}
-                                      className="p-1 rounded text-slate-400 hover:text-rose-500 transition-colors"
+                                      className="p-1 rounded text-ink hover:text-ink transition-colors"
                                       title="Delete variant"
                                     >
                                       <Trash2 className="w-3.5 h-3.5" />
@@ -1816,36 +1816,36 @@ export default function AdminProductsPage() {
                             key={v.id}
                             className={`p-3.5 rounded-xl border shadow-xs space-y-2.5 transition-colors ${
                               isDirty
-                                ? "bg-amber-500/5 dark:bg-amber-500/5 border-amber-500/30"
+                                ? "bg-canvas dark:bg-canvas border-neutral-500/30"
                                 : isRecentlySaved
-                                ? "bg-emerald-500/5 dark:bg-emerald-500/5 border-emerald-500/30"
-                                : "bg-white dark:bg-slate-900/90 border-slate-200 dark:border-white/10"
+                                ? "bg-canvas dark:bg-canvas border-neutral-500/30"
+                                : "bg-canvas dark:bg-canvas border-neutral-200 dark:border-white/10"
                             }`}
                           >
                             <div className="flex items-center justify-between gap-2 flex-wrap">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-bold text-xs text-slate-900 dark:text-white">{v.storage}</span>
-                                <span className="text-slate-400">•</span>
-                                <span className="text-xs text-slate-600 dark:text-zinc-300">{v.color}</span>
+                                <span className="font-bold text-xs text-ink dark:text-ink">{v.storage}</span>
+                                <span className="text-ink">•</span>
+                                <span className="text-xs text-ink dark:text-ink">{v.color}</span>
                                 {isDirty && (
-                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase tracking-wider">
+                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider">
                                     Unsaved
                                   </span>
                                 )}
                                 {isRecentlySaved && (
-                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase tracking-wider flex items-center gap-0.5">
+                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider flex items-center gap-0.5">
                                     <Check className="w-2.5 h-2.5" /> Saved
                                   </span>
                                 )}
                               </div>
-                              <span className="font-mono text-[10px] text-slate-400 dark:text-zinc-500 truncate max-w-[120px]">
+                              <span className="font-mono text-[10px] text-ink dark:text-ink truncate max-w-[120px]">
                                 {v.sku}
                               </span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-2">
                               <div>
-                                <label className="text-[10px] font-bold uppercase text-slate-500 dark:text-zinc-400 block mb-1">
+                                <label className="text-[10px] font-bold uppercase text-ink dark:text-ink block mb-1">
                                   Price (LKR)
                                 </label>
                                 <input
@@ -1854,17 +1854,17 @@ export default function AdminProductsPage() {
                                   onChange={(e) =>
                                     handleInlineVariantChange(v.id, "price", e.target.value, v.price, v.oldPrice, v.stock)
                                   }
-                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border font-bold text-xs text-slate-900 dark:text-white focus:outline-none ${
+                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-canvas dark:bg-canvas border font-bold text-xs text-ink dark:text-ink focus:outline-none ${
                                     isDirty
-                                      ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
-                                      : "border-slate-200 dark:border-white/10"
+                                      ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
+                                      : "border-neutral-200 dark:border-white/10"
                                   }`}
                                 />
                               </div>
 
                               <div>
                                 <div className="flex items-center justify-between mb-1">
-                                  <label className="text-[10px] font-bold uppercase text-slate-500 dark:text-zinc-400">
+                                  <label className="text-[10px] font-bold uppercase text-ink dark:text-ink">
                                     Stock Qty
                                   </label>
                                   <button
@@ -1873,8 +1873,8 @@ export default function AdminProductsPage() {
                                     disabled={variantStockTogglingId === v.id}
                                     className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors ${
                                       (Number(v.stock) || 0) > 0
-                                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25"
-                                        : "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25"
+                                        ? "bg-canvas text-ink dark:text-ink border-neutral-500/25"
+                                        : "bg-canvas text-ink dark:text-ink border-neutral-500/25"
                                     }`}
                                   >
                                     {variantStockTogglingId === v.id
@@ -1890,27 +1890,27 @@ export default function AdminProductsPage() {
                                   onChange={(e) =>
                                     handleInlineVariantChange(v.id, "stock", e.target.value, v.price, v.oldPrice, v.stock)
                                   }
-                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border font-bold text-xs text-slate-900 dark:text-white focus:outline-none ${
+                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-canvas dark:bg-canvas border font-bold text-xs text-ink dark:text-ink focus:outline-none ${
                                     isDirty
-                                      ? "border-amber-400 dark:border-amber-500 focus:border-amber-500 ring-1 ring-amber-400/20"
-                                      : "border-slate-200 dark:border-white/10"
+                                      ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
+                                      : "border-neutral-200 dark:border-white/10"
                                   }`}
                                 />
                               </div>
                             </div>
 
-                            <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-100 dark:border-white/5">
+                            <div className="flex items-center justify-between gap-2 pt-1 border-t border-neutral-100 dark:border-white/5">
                               <button
                                 onClick={() => handleSaveVariant(product, v)}
                                 disabled={!isDirty || isSaving}
                                 className={`min-h-[44px] flex-1 py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
                                   isSaving
-                                    ? "bg-blue-600 text-white cursor-wait"
+                                    ? "bg-action text-on-action cursor-wait"
                                     : isRecentlySaved
-                                    ? "bg-emerald-600 text-white shadow-xs"
+                                    ? "bg-action text-on-action shadow-xs"
                                     : isDirty
-                                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs active:scale-95"
-                                    : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-zinc-600 cursor-not-allowed"
+                                    ? "bg-action hover:bg-action text-on-action shadow-xs active:scale-95"
+                                    : "bg-canvas dark:bg-canvas text-ink dark:text-ink cursor-not-allowed"
                                 }`}
                               >
                                 {isSaving ? (
@@ -1947,7 +1947,7 @@ export default function AdminProductsPage() {
                                     }
                                   }
                                 }}
-                                className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 flex items-center justify-center transition-colors active:scale-95"
+                                className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-canvas text-ink hover:bg-canvas flex items-center justify-center transition-colors active:scale-95"
                                 title="Delete variant"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -1959,9 +1959,9 @@ export default function AdminProductsPage() {
                     </div>
 
                     {/* Quick Add Variant Form */}
-                    <div className="p-4 rounded-xl border border-dashed border-slate-300 dark:border-white/10 bg-white/40 dark:bg-slate-900/30 space-y-3">
-                      <span className="text-xs font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
-                        <Plus className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
+                    <div className="p-4 rounded-xl border border-dashed border-neutral-300 dark:border-white/10 bg-canvas dark:bg-canvas space-y-3">
+                      <span className="text-xs font-bold text-ink dark:text-ink flex items-center gap-1.5">
+                        <Plus className="w-3.5 h-3.5 text-ink dark:text-ink" />
                         <span>Add Single Variant to Supabase</span>
                       </span>
 
@@ -1976,7 +1976,7 @@ export default function AdminProductsPage() {
                               [product.id]: { ...(prev[product.id] || { color: "", price: "", oldPrice: "", stock: "0", sku: "" }), storage: e.target.value },
                             }))
                           }
-                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
+                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
                         />
                         <input
                           type="text"
@@ -1988,7 +1988,7 @@ export default function AdminProductsPage() {
                               [product.id]: { ...(prev[product.id] || { storage: "", price: "", oldPrice: "", stock: "0", sku: "" }), color: e.target.value },
                             }))
                           }
-                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
+                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
                         />
                         <input
                           type="number"
@@ -2000,7 +2000,7 @@ export default function AdminProductsPage() {
                               [product.id]: { ...(prev[product.id] || { storage: "", color: "", oldPrice: "", stock: "0", sku: "" }), price: e.target.value },
                             }))
                           }
-                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
+                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
                         />
                         <input
                           type="number"
@@ -2012,7 +2012,7 @@ export default function AdminProductsPage() {
                               [product.id]: { ...(prev[product.id] || { storage: "", color: "", price: "", stock: "0", sku: "" }), oldPrice: e.target.value },
                             }))
                           }
-                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
+                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
                         />
                         <input
                           type="number"
@@ -2024,11 +2024,11 @@ export default function AdminProductsPage() {
                               [product.id]: { ...(prev[product.id] || { storage: "", color: "", price: "", oldPrice: "", sku: "" }), stock: e.target.value },
                             }))
                           }
-                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-xs focus:outline-none"
+                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
                         />
-                        <button
+                        <button data-ui="primary"
                           onClick={() => handleAddSingleVariant(product)}
-                          className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1 shadow-xs transition-colors"
+                          className="px-3 py-1.5 rounded-lg bg-canvas hover:bg-canvas text-ink font-bold text-xs flex items-center justify-center gap-1 shadow-xs transition-colors"
                         >
                           <Plus className="w-3.5 h-3.5" />
                           <span>Add Variant</span>
@@ -2065,30 +2065,30 @@ export default function AdminProductsPage() {
 
             return (
               <div
-                className="relative bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-slate-200 dark:border-cyan-500/30 shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
+                className="relative bg-canvas dark:bg-canvas text-ink dark:text-ink rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-neutral-200 dark:border-neutral-500/30 shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Modal Header */}
-                <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 p-5 sm:p-6 pb-4">
+                <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 p-5 sm:p-6 pb-4">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
-                        <ImageIcon className="w-5 h-5 text-blue-600 dark:text-cyan-400" />
+                      <h3 className="text-lg font-black text-ink dark:text-ink flex items-center gap-2">
+                        <ImageIcon className="w-5 h-5 text-ink dark:text-ink" />
                         <span>Product Images</span>
                       </h3>
-                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-cyan-400 border border-blue-500/20">
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-canvas text-ink dark:text-ink border border-neutral-500/20">
                         {currentModalProduct.name}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
-                      Supabase Storage bucket: <code className="text-cyan-600 dark:text-cyan-400 font-mono font-semibold">{STORAGE_BUCKET}</code>
+                    <p className="text-xs text-ink dark:text-ink mt-1">
+                      Supabase Storage bucket: <code className="text-ink dark:text-ink font-mono font-semibold">{STORAGE_BUCKET}</code>
                     </p>
                   </div>
-                  <button
+                  <button data-ui="primary"
                     onClick={() => !isUploading && setImageModalProduct(null)}
                     disabled={isUploading}
                     aria-label="Close modal"
-                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                    className="p-2 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -2097,8 +2097,8 @@ export default function AdminProductsPage() {
                 {/* Modal Scrollable Body */}
                 <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
                   {/* Current Storefront Image Preview */}
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-white/10">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-1.5 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 p-1.5 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                       {primaryImageUrl ? (
                         <Image
                           src={primaryImageUrl}
@@ -2108,22 +2108,22 @@ export default function AdminProductsPage() {
                           className="max-h-full max-w-full object-contain"
                         />
                       ) : (
-                        <span className="text-[11px] text-slate-400">No Image</span>
+                        <span className="text-[11px] text-ink">No Image</span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+                        <span className="text-xs font-bold uppercase tracking-wider text-ink dark:text-ink">
                           Storefront Display
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-canvas text-ink dark:text-ink border border-neutral-500/20">
                           Active Main Image
                         </span>
                       </div>
-                      <p className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 truncate mt-0.5">
+                      <p className="text-xs sm:text-sm font-semibold text-ink dark:text-ink truncate mt-0.5">
                         {currentModalProduct.name}
                       </p>
-                      <p className="text-[11px] text-slate-500 dark:text-zinc-400">
+                      <p className="text-[11px] text-ink dark:text-ink">
                         This is the photo buyers will see on the storefront catalog and product showcase.
                       </p>
                     </div>
@@ -2132,14 +2132,14 @@ export default function AdminProductsPage() {
                   {/* Upload Actions & Dropzone */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-ink dark:text-ink">
                         Upload New Images
                       </h4>
-                      <button
+                      <button data-ui="primary"
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={isUploading}
-                        className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-500/20 transition-all disabled:opacity-50"
+                        className="px-4 py-2 rounded-xl bg-canvas hover:bg-canvas active:scale-95 text-ink font-bold text-xs flex items-center gap-2 shadow-md shadow-neutral-500/20 transition-all disabled:opacity-50"
                       >
                         <UploadCloud className="w-4 h-4" />
                         <span>{isUploading ? "Uploading..." : "Upload / Add Image"}</span>
@@ -2155,8 +2155,8 @@ export default function AdminProductsPage() {
                       onClick={() => !isUploading && fileInputRef.current?.click()}
                       className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
                         isUploading
-                          ? "border-blue-400 bg-blue-50/50 dark:bg-blue-950/20 cursor-wait opacity-80"
-                          : "border-blue-300 dark:border-cyan-500/40 hover:border-blue-500 dark:hover:border-cyan-400 bg-blue-50/30 dark:bg-slate-950/50 hover:bg-blue-50/60 dark:hover:bg-slate-950/80"
+                          ? "border-neutral-400 bg-canvas dark:bg-canvas cursor-wait opacity-80"
+                          : "border-neutral-300 dark:border-neutral-500/40 hover:border-neutral-500 dark:hover:border-neutral-400 bg-canvas dark:bg-canvas hover:bg-canvas dark:hover:bg-canvas"
                       }`}
                     >
                       <input
@@ -2169,21 +2169,21 @@ export default function AdminProductsPage() {
                       />
                       {isUploading ? (
                         <div className="flex flex-col items-center py-2">
-                          <RefreshCw className="w-8 h-8 text-blue-600 dark:text-cyan-400 animate-spin mb-2" />
-                          <p className="text-sm font-bold text-slate-900 dark:text-white">
+                          <RefreshCw className="w-8 h-8 text-ink dark:text-ink animate-spin mb-2" />
+                          <p className="text-sm font-bold text-ink dark:text-ink">
                             Uploading images to Supabase Storage...
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+                          <p className="text-xs text-ink dark:text-ink mt-1">
                             Saving directly to bucket <code className="font-mono">{STORAGE_BUCKET}</code> and linking to database.
                           </p>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center">
-                          <UploadCloud className="w-10 h-10 text-blue-600 dark:text-cyan-400 mb-2 transition-transform hover:scale-110" />
-                          <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-200">
+                          <UploadCloud className="w-10 h-10 text-ink dark:text-ink mb-2 transition-transform hover:scale-110" />
+                          <p className="text-xs sm:text-sm font-bold text-ink dark:text-ink">
                             Click &quot;Upload / Add Image&quot; or drag &amp; drop photos here
                           </p>
-                          <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">
+                          <p className="text-[11px] text-ink dark:text-ink mt-1">
                             PNG, JPG, WEBP up to 10MB each. Saved globally in Supabase bucket <code className="font-mono">{STORAGE_BUCKET}</code>.
                           </p>
                         </div>
@@ -2194,19 +2194,19 @@ export default function AdminProductsPage() {
                   {/* Gallery of Uploaded Images */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-ink dark:text-ink">
                         Supabase Images ({currentImages.length})
                       </h4>
-                      <span className="text-[11px] text-slate-500 dark:text-zinc-400">
+                      <span className="text-[11px] text-ink dark:text-ink">
                         {currentImages.length === 0 ? "Showing catalog fallback" : "Custom images active"}
                       </span>
                     </div>
 
                     {currentImages.length === 0 ? (
-                      <div className="text-center py-8 px-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-zinc-400">
-                        <ImageIcon className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
+                      <div className="text-center py-8 px-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-ink dark:text-ink">
+                        <ImageIcon className="w-8 h-8 mx-auto text-ink dark:text-ink mb-2" />
                         <p className="text-xs font-semibold">No custom images uploaded yet for {currentModalProduct.name}.</p>
-                        <p className="text-[11px] text-slate-400 dark:text-zinc-500 mt-0.5">
+                        <p className="text-[11px] text-ink dark:text-ink mt-0.5">
                           The storefront currently displays the default catalog photo. Upload an image above to customize it.
                         </p>
                       </div>
@@ -2215,9 +2215,9 @@ export default function AdminProductsPage() {
                         {currentImages.map((img) => (
                           <div
                             key={img.id}
-                            className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950 hover:border-slate-300 dark:hover:border-cyan-500/30 transition-all"
+                            className="flex items-center gap-3 p-3 rounded-2xl border border-neutral-200 dark:border-white/10 bg-canvas dark:bg-canvas hover:border-neutral-300 dark:hover:border-neutral-500/30 transition-all"
                           >
-                            <div className="w-16 h-16 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-1 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                            <div className="w-16 h-16 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 p-1 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                               <Image
                                 src={img.image_url || img.storage_path || "/logo.png"}
                                 alt={img.filename || "Product Image"}
@@ -2226,7 +2226,7 @@ export default function AdminProductsPage() {
                                 className="max-h-full max-w-full object-contain"
                               />
                               {img.is_primary && (
-                                <span className="absolute top-1 left-1 px-1 py-0.2 text-[8px] font-black bg-cyan-500 text-slate-950 rounded uppercase">
+                                <span className="absolute top-1 left-1 px-1 py-0.2 text-[8px] font-black bg-canvas text-ink rounded uppercase">
                                   Main
                                 </span>
                               )}
@@ -2234,11 +2234,11 @@ export default function AdminProductsPage() {
 
                             <div className="flex-1 min-w-0 space-y-1.5">
                               <div className="flex items-center justify-between gap-1">
-                                <span className="text-xs font-semibold text-slate-900 dark:text-white truncate block">
+                                <span className="text-xs font-semibold text-ink dark:text-ink truncate block">
                                   {img.filename || "Image"}
                                 </span>
                                 {img.is_primary && (
-                                  <span className="text-[10px] font-black bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                  <span className="text-[10px] font-black bg-canvas text-ink dark:text-ink border border-neutral-500/30 px-1.5 py-0.5 rounded flex items-center gap-0.5">
                                     <Check className="w-2.5 h-2.5" /> Primary
                                   </span>
                                 )}
@@ -2256,7 +2256,7 @@ export default function AdminProductsPage() {
                                       showToast(`Failed: ${res.error || "Supabase error"}`, "error");
                                     }
                                   }}
-                                  className="text-[11px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 w-full text-slate-700 dark:text-zinc-300 focus:outline-none focus:border-blue-500"
+                                  className="text-[11px] bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 rounded-lg px-2 py-1 w-full text-ink dark:text-ink focus:outline-none focus:border-neutral-500"
                                 >
                                   <option value="">All Colors (General Image)</option>
                                   {currentModalProduct.colors?.map((c) => (
@@ -2279,12 +2279,12 @@ export default function AdminProductsPage() {
                                         showToast(`Failed: ${res.error || "Supabase error"}`, "error");
                                       }
                                     }}
-                                    className="text-blue-600 dark:text-cyan-400 hover:underline font-bold"
+                                    className="text-ink dark:text-ink hover:underline font-bold"
                                   >
                                     Set as Primary
                                   </button>
                                 ) : (
-                                  <span className="text-emerald-500 font-bold flex items-center gap-1 text-[11px]">
+                                  <span className="text-ink font-bold flex items-center gap-1 text-[11px]">
                                     <CheckCircle2 className="w-3 h-3" /> Current Main
                                   </span>
                                 )}
@@ -2299,7 +2299,7 @@ export default function AdminProductsPage() {
                                       showToast(`Failed to delete: ${res.error || "Database error"}`, "error");
                                     }
                                   }}
-                                  className="text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 hover:underline flex items-center gap-1 font-semibold ml-auto"
+                                  className="text-ink hover:text-ink dark:hover:text-ink hover:underline flex items-center gap-1 font-semibold ml-auto"
                                 >
                                   <Trash2 className="w-3 h-3" />
                                   <span>Delete</span>
@@ -2314,16 +2314,16 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Modal Footer */}
-                <div className="flex items-center justify-between p-4 sm:p-5 border-t border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-slate-950/40">
-                  <div className="text-xs text-slate-500 dark:text-zinc-400">
-                    <span className="font-bold text-slate-800 dark:text-zinc-200">{currentImages.length}</span> image(s) in Supabase Storage
+                <div className="flex items-center justify-between p-4 sm:p-5 border-t border-neutral-200 dark:border-white/10 bg-canvas dark:bg-canvas">
+                  <div className="text-xs text-ink dark:text-ink">
+                    <span className="font-bold text-ink dark:text-ink">{currentImages.length}</span> image(s) in Supabase Storage
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
+                    <button data-ui="primary"
                       type="button"
                       onClick={() => setImageModalProduct(null)}
                       disabled={isUploading}
-                      className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all disabled:opacity-50"
+                      className="px-5 py-2.5 rounded-xl bg-canvas hover:bg-canvas active:scale-95 text-ink text-xs font-bold shadow-md shadow-neutral-500/20 transition-all disabled:opacity-50"
                     >
                       Done
                     </button>
@@ -2347,17 +2347,17 @@ export default function AdminProductsPage() {
           }}
         >
           <div
-            className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-slate-900 dark:text-white"
+            className="bg-canvas dark:bg-canvas rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5 border border-neutral-200 dark:border-neutral-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-ink dark:text-ink"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" />
+                <Sparkles className="w-4 h-4 text-ink" />
                 <span>Variant Generator: {variantGenProduct.name}</span>
               </h3>
-              <button
+              <button data-ui="primary"
                 onClick={() => setVariantGenProduct(null)}
-                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                className="p-1.5 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink hover:text-ink dark:hover:text-ink"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2372,8 +2372,8 @@ export default function AdminProductsPage() {
                       key={st}
                       className={`px-3 py-1.5 rounded-lg border cursor-pointer font-bold transition-all ${
                         genStorages.includes(st)
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-white/10 text-slate-600 dark:text-zinc-400"
+                          ? "bg-action text-on-action border-neutral-600"
+                          : "bg-canvas dark:bg-canvas border-neutral-200 dark:border-white/10 text-ink dark:text-ink"
                       }`}
                     >
                       <input
@@ -2398,7 +2398,7 @@ export default function AdminProductsPage() {
                   value={genColorsText}
                   onChange={(e) => setGenColorsText(e.target.value)}
                   placeholder="e.g. Natural Titanium, Black Titanium, White Titanium, Desert Titanium"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
@@ -2409,21 +2409,21 @@ export default function AdminProductsPage() {
                   value={genBasePrice}
                   onChange={(e) => setGenBasePrice(e.target.value)}
                   placeholder="e.g. 295000"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
+            <div className="flex justify-end gap-2 pt-2 border-t border-neutral-200 dark:border-white/10">
               <button
                 onClick={() => setVariantGenProduct(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-xs font-semibold"
               >
                 Cancel
               </button>
-              <button
+              <button data-ui="primary"
                 onClick={handleRunVariantGenerator}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20"
+                className="px-5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold shadow-md shadow-neutral-500/20"
               >
                 Generate Combinations into Supabase
               </button>
@@ -2444,17 +2444,17 @@ export default function AdminProductsPage() {
           }}
         >
           <div
-            className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-slate-900 dark:text-white"
+            className="bg-canvas dark:bg-canvas rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-neutral-200 dark:border-neutral-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-ink dark:text-ink"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
-                <Plus className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                <Plus className="w-4 h-4 text-ink dark:text-ink" />
                 <span>Add New Product to Supabase</span>
               </h3>
-              <button
+              <button data-ui="primary"
                 onClick={() => setShowAddProductModal(false)}
-                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                className="p-1.5 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink hover:text-ink dark:hover:text-ink"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2468,7 +2468,7 @@ export default function AdminProductsPage() {
                   placeholder={newProdCategory === "accessories" ? "e.g. Apple 20W USB-C Power Adapter" : "e.g. Apple iPhone 17 Ultra 5G"}
                   value={newProdName}
                   onChange={(e) => setNewProdName(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
@@ -2484,7 +2484,7 @@ export default function AdminProductsPage() {
                       setNewProdStorages(category === "accessories" ? "Standard" : "128GB, 256GB, 512GB");
                       setNewProdColors(category === "accessories" ? "White" : "Natural Titanium, Black Titanium");
                     }}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                   >
                     <option value="iphones">iPhones</option>
                     <option value="accessories">Accessories</option>
@@ -2496,7 +2496,7 @@ export default function AdminProductsPage() {
                     <select
                       value={newProdSubcategory}
                       onChange={(e) => setNewProdSubcategory(e.target.value as "chargers-cables" | "cases-accessories")}
-                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                      className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                     >
                       <option value="chargers-cables">Chargers &amp; Cables</option>
                       <option value="cases-accessories">Cases &amp; Protection</option>
@@ -2514,7 +2514,7 @@ export default function AdminProductsPage() {
                       placeholder="e.g. iPhone 17 Ultra"
                       value={newProdModel}
                       onChange={(e) => setNewProdModel(e.target.value)}
-                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                      className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                     />
                   </div>
                   <div>
@@ -2522,7 +2522,7 @@ export default function AdminProductsPage() {
                     <select
                       value={newProdSeries}
                       onChange={(e) => setNewProdSeries(e.target.value)}
-                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                      className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                     >
                       <option value="17">iPhone 17</option>
                       <option value="16">iPhone 16</option>
@@ -2542,7 +2542,7 @@ export default function AdminProductsPage() {
                     placeholder="e.g. Apple 20W USB-C Power Adapter"
                     value={newProdModel}
                     onChange={(e) => setNewProdModel(e.target.value)}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                   />
                 </div>
               )}
@@ -2556,11 +2556,11 @@ export default function AdminProductsPage() {
                         <input type="checkbox" checked={newProdConditions.includes(condition)}
                           disabled={newProdConditions.length === 1 && newProdConditions.includes(condition)}
                           onChange={e => setNewProdConditions(previous => e.target.checked ? [...previous, condition] : previous.filter(value => value !== condition))}
-                          className="accent-blue-600" />
+                          className="accent-neutral-600" />
                         {condition}
                       </label>
                     ))}
-                    <p className="text-xs text-slate-500">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
+                    <p className="text-xs text-ink">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
                   </fieldset>
                 </div>
                 <div>
@@ -2570,7 +2570,7 @@ export default function AdminProductsPage() {
                     placeholder="e.g. 350000"
                     value={newProdBasePrice}
                     onChange={(e) => setNewProdBasePrice(e.target.value)}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                   />
                 </div>
               </div>
@@ -2582,7 +2582,7 @@ export default function AdminProductsPage() {
                   placeholder={newProdCategory === "accessories" ? "e.g. iPhone 13, iPhone 14, iPhone 15" : "e.g. 128GB, 256GB, 512GB"}
                   value={newProdStorages}
                   onChange={(e) => setNewProdStorages(e.target.value)}
-                  className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
@@ -2592,27 +2592,27 @@ export default function AdminProductsPage() {
                   type="text"
                   value={newProdColors}
                   onChange={(e) => setNewProdColors(e.target.value)}
-                  className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
               {newProdCategory === "accessories" && (
-                <p className="rounded-xl border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-[11px] leading-relaxed text-slate-600 dark:text-zinc-300">
+                <p className="rounded-xl border border-neutral-500/20 bg-canvas px-3 py-2 text-[11px] leading-relaxed text-ink dark:text-ink">
                   Save the product first, then use its <strong>Images</strong> button in the Accessories section to upload the real product photo.
                 </p>
               )}
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
+            <div className="flex justify-end gap-2 pt-2 border-t border-neutral-200 dark:border-white/10">
               <button
                 onClick={() => setShowAddProductModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-xs font-semibold"
               >
                 Cancel
               </button>
-              <button
+              <button data-ui="primary"
                 onClick={handleCreateProduct}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20"
+                className="px-5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold shadow-md shadow-neutral-500/20"
               >
                 Create Product in Supabase
               </button>
@@ -2635,18 +2635,18 @@ export default function AdminProductsPage() {
           }}
         >
           <div
-            className="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-slate-200 dark:border-cyan-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-slate-900 dark:text-white"
+            className="bg-canvas dark:bg-canvas rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-4 border border-neutral-200 dark:border-neutral-500/30 shadow-2xl animate-in fade-in zoom-in-95 duration-200 my-auto text-ink dark:text-ink"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
-                <Edit className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                <Edit className="w-4 h-4 text-ink dark:text-ink" />
                 <span>Edit Product Details</span>
               </h3>
-              <button
+              <button data-ui="primary"
                 onClick={() => !isSavingProductEdit && setEditingProduct(null)}
                 disabled={isSavingProductEdit}
-                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
+                className="p-1.5 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink hover:text-ink dark:hover:text-ink disabled:opacity-50"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2659,7 +2659,7 @@ export default function AdminProductsPage() {
                   type="text"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
@@ -2669,7 +2669,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value as "iphones" | "accessories")}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                   >
                     <option value="iphones">iPhones</option>
                     <option value="accessories">Accessories</option>
@@ -2681,7 +2681,7 @@ export default function AdminProductsPage() {
                     <select
                       value={formSubcategory}
                       onChange={(e) => setFormSubcategory(e.target.value as "chargers-cables" | "cases-accessories")}
-                      className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                      className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                     >
                       <option value="chargers-cables">Chargers &amp; Cables</option>
                       <option value="cases-accessories">Cases &amp; Protection</option>
@@ -2697,7 +2697,7 @@ export default function AdminProductsPage() {
                     type="text"
                     value={formSeries}
                     onChange={(e) => setFormSeries(e.target.value)}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                    className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -2708,11 +2708,11 @@ export default function AdminProductsPage() {
                         <input type="checkbox" checked={formConditions.includes(condition)}
                           disabled={formConditions.length === 1 && formConditions.includes(condition)}
                           onChange={e => setFormConditions(previous => e.target.checked ? [...previous, condition] : previous.filter(value => value !== condition))}
-                          className="accent-blue-600" />
+                          className="accent-neutral-600" />
                         {condition}
                       </label>
                     ))}
-                    <p className="text-xs text-slate-500">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
+                    <p className="text-xs text-ink">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
                   </fieldset>
                 </div>
               </div>
@@ -2723,7 +2723,7 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={formInStock}
                     onChange={(e) => setFormInStock(e.target.checked)}
-                    className="rounded accent-blue-600"
+                    className="rounded accent-neutral-600"
                   />
                   <span>Overall In Stock</span>
                 </label>
@@ -2732,7 +2732,7 @@ export default function AdminProductsPage() {
                     type="checkbox"
                     checked={formFeatured}
                     onChange={(e) => setFormFeatured(e.target.checked)}
-                    className="rounded accent-blue-600"
+                    className="rounded accent-neutral-600"
                   />
                   <span>Featured Product</span>
                 </label>
@@ -2745,7 +2745,7 @@ export default function AdminProductsPage() {
                   placeholder="e.g. 128GB, 256GB, 512GB, 1TB"
                   value={formStorages}
                   onChange={(e) => setFormStorages(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
@@ -2756,7 +2756,7 @@ export default function AdminProductsPage() {
                   placeholder="e.g. Natural Titanium, Black Titanium, Desert Titanium"
                   value={formColors}
                   onChange={(e) => setFormColors(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
 
@@ -2766,28 +2766,28 @@ export default function AdminProductsPage() {
                   rows={3}
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
+                  className="w-full p-2.5 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="text-[11px] text-slate-500 dark:text-zinc-400 bg-blue-500/5 dark:bg-cyan-500/5 p-2.5 rounded-xl border border-blue-500/10 dark:border-cyan-500/10 flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 flex-shrink-0" />
+            <div className="text-[11px] text-ink dark:text-ink bg-canvas dark:bg-canvas p-2.5 rounded-xl border border-neutral-500/10 dark:border-neutral-500/10 flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-ink dark:text-ink flex-shrink-0" />
               <span>Edits save directly to Supabase and immediately reflect on the live storefront. No catalog sync needed.</span>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
+            <div className="flex justify-end gap-2 pt-2 border-t border-neutral-200 dark:border-white/10">
               <button
                 onClick={() => setEditingProduct(null)}
                 disabled={isSavingProductEdit}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold disabled:opacity-50"
+                className="px-4 py-2 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-xs font-semibold disabled:opacity-50"
               >
                 Cancel
               </button>
-              <button
+              <button data-ui="primary"
                 onClick={handleSaveProductEdit}
                 disabled={isSavingProductEdit}
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 disabled:opacity-50 shadow-md shadow-blue-500/20"
+                className="px-5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 disabled:opacity-50 shadow-md shadow-neutral-500/20"
               >
                 {isSavingProductEdit ? (
                   <>

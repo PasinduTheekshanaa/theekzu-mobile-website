@@ -20,14 +20,14 @@ export default function AccessoriesPage() {
     <div className="container-custom py-6 sm:py-10 space-y-8 sm:space-y-10 transition-colors duration-300">
       
       {/* Header Banner */}
-      <div className="rounded-2xl sm:rounded-[2.5rem] bg-gradient-to-r from-indigo-100 via-sky-50 to-slate-100 dark:from-indigo-950/60 dark:to-zinc-950 p-5 sm:p-8 md:p-12 border border-slate-200 dark:border-indigo-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 border border-indigo-500/20 dark:border-indigo-500/30 text-xs font-bold text-indigo-700 dark:text-indigo-400 tracking-widest uppercase mb-2 shadow-xs">
+      <div className="rounded-2xl sm:rounded-[2.5rem] bg-canvas      p-5 sm:p-8 md:p-12 border border-neutral-200 dark:border-neutral-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold text-ink dark:text-ink tracking-widest uppercase mb-2 shadow-xs">
           <Sparkles className="w-3 h-3" /> Original Apple Ecosystem
         </span>
-        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mt-1">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-ink dark:text-ink mt-1">
           Accessories
         </h1>
-        <p className="text-slate-600 dark:text-zinc-400 text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
+        <p className="text-ink dark:text-ink text-xs sm:text-sm mt-2 max-w-2xl leading-relaxed">
           Complete your setup with genuine chargers, cables, MagSafe essentials, protective cases, and screen protection.
         </p>
 
@@ -37,8 +37,8 @@ export default function AccessoriesPage() {
             onClick={() => setSubcat("all")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
               subcat === "all"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                ? "bg-action text-on-action shadow-sm"
+                : "bg-action dark:bg-action border border-neutral-200 dark:border-white/10 text-on-action dark:text-on-action hover:text-on-action dark:hover:text-on-action"
             }`}
           >
             All Accessories
@@ -48,8 +48,8 @@ export default function AccessoriesPage() {
             onClick={() => setSubcat("chargers-cables")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
               subcat === "chargers-cables"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                ? "bg-action text-on-action shadow-sm"
+                : "bg-action dark:bg-action border border-neutral-200 dark:border-white/10 text-on-action dark:text-on-action hover:text-on-action dark:hover:text-on-action"
             }`}
           >
             Chargers & Cables
@@ -59,8 +59,8 @@ export default function AccessoriesPage() {
             onClick={() => setSubcat("cases-accessories")}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
               subcat === "cases-accessories"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                ? "bg-action text-on-action shadow-sm"
+                : "bg-action dark:bg-action border border-neutral-200 dark:border-white/10 text-on-action dark:text-on-action hover:text-on-action dark:hover:text-on-action"
             }`}
           >
             Cases & Protection

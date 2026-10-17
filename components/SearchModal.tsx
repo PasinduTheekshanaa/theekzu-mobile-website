@@ -62,24 +62,24 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
   return (
     <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start justify-center p-3 sm:p-6 pt-16 sm:pt-20 animate-in fade-in duration-200">
-      <div className="glass-modal rounded-2xl sm:rounded-[2.5rem] w-full max-w-2xl border border-slate-200 dark:border-cyan-500/20 p-4 sm:p-6 space-y-4 shadow-2xl">
+      <div className="glass-modal rounded-2xl sm:rounded-[2.5rem] w-full max-w-2xl border border-neutral-200 dark:border-neutral-500/20 p-4 sm:p-6 space-y-4 shadow-2xl">
         
         {/* Search Input Bar */}
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-cyan-500/15 pb-4">
+        <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-500/15 pb-4">
           <div className="flex items-center gap-3 flex-1">
-            <Search className="w-5 h-5 text-blue-600 dark:text-cyan-400 flex-shrink-0" />
+            <Search className="w-5 h-5 text-ink dark:text-ink flex-shrink-0" />
             <input
               type="text"
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search iPhone 17 Pro, 16, 15, 14, 13, 12, 11, AirPods, SKU, Color..."
-              className="bg-transparent border-none text-slate-900 dark:text-white text-base focus:outline-none w-full placeholder-slate-400 dark:placeholder-zinc-500"
+              className="bg-transparent border-none text-ink dark:text-ink text-base focus:outline-none w-full placeholder-neutral-400 dark:placeholder-neutral-500"
             />
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white p-1 transition-colors"
+            className="text-ink dark:text-ink hover:text-ink dark:hover:text-ink p-1 transition-colors"
             aria-label="Close search"
           >
             <X className="w-5 h-5" />
@@ -89,16 +89,16 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         {/* Results Container */}
         <div className="max-h-96 overflow-y-auto pt-2">
           {query.trim() === "" ? (
-            <div className="text-center py-12 text-slate-400 dark:text-zinc-500 text-xs">
-              <Smartphone className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-zinc-600" />
+            <div className="text-center py-12 text-ink dark:text-ink text-xs">
+              <Smartphone className="w-8 h-8 mx-auto mb-2 text-ink dark:text-ink" />
               <span>Type model name (e.g. "17 Pro Max", "16", "AirPods", "Titanium", "13 Pro")...</span>
             </div>
           ) : results.length === 0 ? (
             <div className="text-center py-10">
-              <p className="text-sm font-medium text-slate-600 dark:text-zinc-400">
+              <p className="text-sm font-medium text-ink dark:text-ink">
                 No products found for "{query}"
               </p>
-              <p className="text-xs text-slate-400 dark:text-zinc-600 mt-1">
+              <p className="text-xs text-ink dark:text-ink mt-1">
                 Try searching for 17, 16, 15, 14, 13, 12, 11, Pro, AirPods or Titanium.
               </p>
             </div>
@@ -114,9 +114,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                     key={p.id}
                     href={`/product/${p.slug}`}
                     onClick={onClose}
-                    className="p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/60 dark:hover:bg-slate-800/80 border border-slate-200/80 dark:border-white/5 flex items-center gap-3.5 transition-colors block"
+                    className="p-3 rounded-2xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200/80 dark:border-white/5 flex items-center gap-3.5 transition-colors block"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-950 p-1 flex-shrink-0 flex items-center justify-center relative overflow-hidden border border-slate-200 dark:border-cyan-500/10">
+                    <div className="w-12 h-12 rounded-xl bg-canvas dark:bg-canvas p-1 flex-shrink-0 flex items-center justify-center relative overflow-hidden border border-neutral-200 dark:border-neutral-500/10">
                       {img ? (
                         <Image
                           src={img}
@@ -126,27 +126,27 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                           className="object-contain max-h-full max-w-full"
                         />
                       ) : (
-                        <span className="text-[9px] text-slate-400">No img</span>
+                        <span className="text-[9px] text-ink">No img</span>
                       )}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{p.name}</h4>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-zinc-400">
+                        <h4 className="text-xs font-bold text-ink dark:text-ink truncate">{p.name}</h4>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-canvas dark:bg-canvas text-ink dark:text-ink">
                           {getProductConditionLabel(p)}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-zinc-400">
+                      <p className="text-xs text-ink dark:text-ink">
                         {p.storageOptions ? p.storageOptions.join(", ") : p.storage}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <div className="text-xs font-extrabold text-blue-600 dark:text-cyan-400">
+                      <div className="text-xs font-extrabold text-ink dark:text-ink">
                         {hasVariants ? "From " : ""}{formatCurrency(minPrice)}
                       </div>
-                      <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">{p.stock}</div>
+                      <div className="text-[10px] text-ink dark:text-ink font-medium">{p.stock}</div>
                     </div>
                   </Link>
                 );

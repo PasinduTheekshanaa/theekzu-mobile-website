@@ -73,21 +73,21 @@ Can you confirm availability and latest variant pricing?`;
 
   return (
     <div
-      className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-slate-200 dark:border-cyan-500/20 hover:border-blue-500/50 dark:hover:border-cyan-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(0,102,255,0.35)]"
+      className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-neutral-200 dark:border-neutral-500/20 hover:border-neutral-500/50 dark:hover:border-neutral-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
     >
       {/* Top badges & Wishlist */}
       <div className="flex items-center justify-between gap-2 mb-3 z-10">
         <span
           className={`text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs ${
             product.condition === "Brand New"
-              ? "bg-blue-500/10 dark:bg-blue-600/20 text-blue-700 dark:text-cyan-300 border border-blue-500/20 dark:border-cyan-500/40"
-              : "bg-purple-500/10 dark:bg-purple-600/20 text-purple-700 dark:text-purple-300 border border-purple-500/20 dark:border-purple-500/40"
+              ? "bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-500/20 dark:border-neutral-500/40"
+              : "bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-500/20 dark:border-neutral-500/40"
           }`}
         >
           {product.condition === "Brand New" ? (
-            <Sparkles className="w-3 h-3 text-blue-600 dark:text-cyan-400" />
+            <Sparkles className="w-3 h-3 text-ink dark:text-ink" />
           ) : (
-            <ShieldCheck className="w-3 h-3 text-purple-600 dark:text-purple-400" />
+            <ShieldCheck className="w-3 h-3 text-ink dark:text-ink" />
           )}
           {product.conditionBadge || product.condition}
         </span>
@@ -97,15 +97,15 @@ Can you confirm availability and latest variant pricing?`;
             e.preventDefault();
             toggleWishlist(product.id);
           }}
-          className={`w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-900/90 border flex items-center justify-center transition-all duration-200 active:scale-90 shadow-xs ${
+          className={`w-9 h-9 rounded-full bg-canvas dark:bg-canvas border flex items-center justify-center transition-all duration-200 active:scale-90 shadow-xs ${
             wishlisted
-              ? "text-rose-500 border-rose-500/50 shadow-xs"
-              : "text-slate-500 dark:text-zinc-400 border-slate-200 dark:border-white/10 hover:text-slate-900 dark:hover:text-white hover:border-blue-400 dark:hover:border-cyan-400/50"
+              ? "text-ink border-neutral-500/50 shadow-xs"
+              : "text-ink dark:text-ink border-neutral-200 dark:border-white/10 hover:text-ink dark:hover:text-ink hover:border-neutral-400 dark:hover:border-neutral-400/50"
           }`}
           title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
           aria-label="Wishlist toggle"
         >
-          <Heart className={`w-4 h-4 transition-transform ${wishlisted ? "fill-rose-500 text-rose-500 scale-110" : ""}`} />
+          <Heart className={`w-4 h-4 transition-transform ${wishlisted ? "fill-neutral-500 text-ink scale-110" : ""}`} />
         </button>
       </div>
 
@@ -115,7 +115,7 @@ Can you confirm availability and latest variant pricing?`;
         prefetch={false}
         onMouseEnter={preloadDetails}
         onClick={openDetails}
-        className="h-56 w-full rounded-2xl bg-slate-50/80 dark:bg-gradient-to-b dark:from-slate-900/50 dark:to-slate-950/80 border border-slate-200/80 dark:border-cyan-500/10 p-4 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-blue-400/40 dark:group-hover:border-cyan-500/30 transition-all"
+        className="h-56 w-full rounded-2xl bg-canvas bg-canvas   border border-neutral-200/80 dark:border-neutral-500/10 p-4 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-neutral-400/40 dark:group-hover:border-neutral-500/30 transition-all"
       >
         {displayImage ? (
           <>
@@ -134,25 +134,25 @@ Can you confirm availability and latest variant pricing?`;
             />
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-mono">
+          <div className="w-full h-full flex items-center justify-center text-ink text-xs font-mono">
             No Image
           </div>
         )}
 
         {product.discount && (
-          <span className="absolute bottom-3 left-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-xs z-20">
+          <span data-ui="offer-badge" className="absolute bottom-3 left-3 bg-canvas   text-ink text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-xs z-20">
             {product.discount}
           </span>
         )}
 
         {/* Stock Status Badge */}
         {isOutOfStock ? (
-          <span className="absolute top-3 right-3 bg-rose-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md z-20 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+          <span className="absolute top-3 right-3 bg-canvas text-ink text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md z-20 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-canvas animate-pulse" />
             Out of Stock
           </span>
         ) : (
-          <span className="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow z-20 flex items-center gap-1">
+          <span className="absolute top-3 right-3 bg-canvas backdrop-blur-md text-ink text-[10px] font-bold px-2 py-0.5 rounded shadow z-20 flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3" />
             In Stock
           </span>
@@ -163,11 +163,11 @@ Can you confirm availability and latest variant pricing?`;
       <div className="flex-1 flex flex-col justify-between">
         <div>
           {/* Storage & Colors Preview */}
-          <div className="flex items-center justify-between gap-2 mb-2 text-xs text-slate-500 dark:text-zinc-400">
-            <span className="text-blue-600 dark:text-cyan-300/90 font-semibold truncate">
+          <div className="flex items-center justify-between gap-2 mb-2 text-xs text-ink dark:text-ink">
+            <span className="text-ink dark:text-ink font-semibold truncate">
               {product.storageOptions ? product.storageOptions.join(" • ") : product.storage}
             </span>
-            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-900/80 px-2 py-1 rounded-full border border-slate-200 dark:border-white/5 shadow-xs flex-shrink-0">
+            <div className="flex items-center gap-1.5 bg-canvas dark:bg-canvas px-2 py-1 rounded-full border border-neutral-200 dark:border-white/5 shadow-xs flex-shrink-0">
               {product.colors &&
                 product.colors.slice(0, 4).map((c) => (
                   <span
@@ -178,63 +178,63 @@ Can you confirm availability and latest variant pricing?`;
                   />
                 ))}
               {product.colors && product.colors.length > 4 && (
-                <span className="text-[9px] text-slate-400 font-bold">+{product.colors.length - 4}</span>
+                <span className="text-[9px] text-ink font-bold">+{product.colors.length - 4}</span>
               )}
             </div>
           </div>
 
           <Link href={productUrl} prefetch={false} onMouseEnter={preloadDetails} onClick={openDetails}>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-cyan-300 transition-colors mb-1.5 line-clamp-1">
+            <h3 className="text-base font-bold text-ink dark:text-ink group-hover:text-ink dark:group-hover:text-ink transition-colors mb-1.5 line-clamp-1">
               {product.name}
             </h3>
           </Link>
 
-          <div className="flex items-center gap-2 mb-3 text-xs text-slate-500 dark:text-zinc-400">
-            <span className={`font-semibold flex items-center gap-1 ${isOutOfStock ? "text-rose-500" : "text-emerald-600 dark:text-emerald-400"}`}>
-              <span className={`w-1.5 h-1.5 rounded-full inline-block ${isOutOfStock ? "bg-rose-500" : "bg-emerald-500 animate-pulse"}`} />
+          <div className="flex items-center gap-2 mb-3 text-xs text-ink dark:text-ink">
+            <span className={`font-semibold flex items-center gap-1 ${isOutOfStock ? "text-ink" : "text-ink dark:text-ink"}`}>
+              <span className={`w-1.5 h-1.5 rounded-full inline-block ${isOutOfStock ? "bg-canvas" : "bg-canvas animate-pulse"}`} />
               {isOutOfStock ? "Out of Stock" : (product.variants?.length ? `${product.variants.length} Options` : product.stock)}
             </span>
-            <span className="text-slate-400 dark:text-zinc-600">•</span>
+            <span className="text-ink dark:text-ink">•</span>
             <span className="truncate">{product.model}</span>
           </div>
         </div>
 
         {/* Pricing & CTA Buttons */}
-        <div className="pt-3 border-t border-slate-200 dark:border-cyan-500/15">
+        <div className="pt-3 border-t border-neutral-200 dark:border-neutral-500/15">
           <div className="flex items-baseline gap-2 mb-3">
-            <span className="text-xs text-slate-400 dark:text-zinc-500 font-medium">
+            <span className="text-xs text-ink dark:text-ink font-medium">
               {hasVariants ? "From" : ""}
             </span>
-            <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-blue-700 dark:from-white dark:via-slate-100 dark:to-cyan-300">
+            <span data-ui={product.oldPrice && product.oldPrice > minPrice ? "sale-price" : undefined} className="text-xl font-black text-ink text-ink text-ink     ">
               {formatCurrency(minPrice)}
             </span>
             {product.oldPrice && (
-              <span className="text-xs text-slate-400 dark:text-zinc-500 line-through">
+              <span className="text-xs text-ink dark:text-ink line-through">
                 {formatCurrency(product.oldPrice)}
               </span>
             )}
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <Link
+            <Link data-ui="primary"
               href={productUrl}
               prefetch={false}
               onMouseEnter={preloadDetails}
               onClick={openDetails}
-              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] btn-press group/btn"
+              className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-white/10 text-xs font-semibold text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] btn-press group/btn"
             >
-              <Eye className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 shrink-0 group-hover/btn:scale-110 transition-transform" />
+              <Eye className="w-3.5 h-3.5 text-ink dark:text-ink shrink-0 group-hover/btn:scale-110 transition-transform" />
               <span>Details</span>
             </Link>
 
-            <a
+            <a data-ui="whatsapp"
               href={waUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={`min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] btn-press ${
                 isOutOfStock
-                  ? "bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-zinc-300 border border-slate-300 dark:border-white/10"
-                  : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-emerald-500/20 group/wa"
+                  ? "bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink border border-neutral-300 dark:border-white/10"
+                  : "bg-canvas     text-ink shadow-neutral-500/20 group/wa"
               }`}
               title={isOutOfStock ? "Inquire about stock availability" : "Inquire or order via WhatsApp"}
             >
@@ -247,7 +247,7 @@ Can you confirm availability and latest variant pricing?`;
       </div>
 
       {isOpeningDetails && (
-        <div className="absolute inset-0 z-30 rounded-[2rem] bg-white/80 dark:bg-slate-950/80 backdrop-blur-[2px] flex items-center justify-center gap-2 text-xs font-bold text-blue-700 dark:text-cyan-300 animate-in fade-in duration-150 pointer-events-none">
+        <div className="absolute inset-0 z-30 rounded-[2rem] bg-canvas dark:bg-canvas backdrop-blur-[2px] flex items-center justify-center gap-2 text-xs font-bold text-ink dark:text-ink animate-in fade-in duration-150 pointer-events-none">
           <span className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
           Opening details…
         </div>

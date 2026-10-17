@@ -16,8 +16,8 @@ export const revalidate = 30;
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#040711" },
+    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -168,7 +168,7 @@ export default async function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('theekzu_theme');
-                  if (stored !== 'light') {
+                  if (stored === 'dark') {
                     document.documentElement.classList.add('dark');
                     document.documentElement.classList.remove('light');
                     document.documentElement.style.colorScheme = 'dark';
@@ -183,7 +183,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body suppressHydrationWarning className="bg-[#f8fafc] text-slate-900 dark:bg-[#040711] dark:text-slate-100 antialiased selection:bg-cyan-500 selection:text-white flex flex-col min-h-screen transition-colors duration-300">
+      <body suppressHydrationWarning className="bg-canvas text-ink antialiased flex flex-col min-h-screen transition-colors duration-300">
         <ThemeProvider>
           <ProductProvider initialProducts={initialProducts} initialImagesMap={initialImagesMap} initialError={initialError}>
             <CartProvider>
