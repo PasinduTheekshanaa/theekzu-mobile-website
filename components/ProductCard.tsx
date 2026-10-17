@@ -73,12 +73,12 @@ Can you confirm availability and latest variant pricing?`;
 
   return (
     <div
-      className="glass-card rounded-[2rem] p-4 sm:p-5 w-full min-w-0 flex flex-col justify-between group relative border border-neutral-200 dark:border-neutral-500/20 hover:border-neutral-500/50 dark:hover:border-neutral-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
+      className="glass-card rounded-[2rem] px-4 py-3 sm:px-5 sm:py-4 w-full min-w-0 flex flex-col justify-between group relative border border-neutral-200 dark:border-neutral-500/20 hover:border-neutral-500/50 dark:hover:border-neutral-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
     >
       {/* Top badges & Wishlist */}
-      <div className="flex items-center justify-between gap-2 mb-3 z-10">
+      <div className="flex min-h-9 items-center justify-between gap-2 mb-2 z-10">
         <span
-          className={`text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs ${
+          className={`min-w-0 text-left text-[11px] leading-4 font-bold px-3 py-1 rounded-full flex items-center gap-1.5 [&>svg]:shrink-0 shadow-xs ${
             product.condition === "Brand New"
               ? "bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-500/20 dark:border-neutral-500/40"
               : "bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-500/20 dark:border-neutral-500/40"
@@ -97,7 +97,7 @@ Can you confirm availability and latest variant pricing?`;
             e.preventDefault();
             toggleWishlist(product.id);
           }}
-          className={`w-9 h-9 rounded-full bg-canvas dark:bg-canvas border flex items-center justify-center transition-all duration-200 active:scale-90 shadow-xs ${
+          className={`w-9 h-9 shrink-0 rounded-full bg-canvas dark:bg-canvas border flex items-center justify-center transition-all duration-200 active:scale-90 shadow-xs ${
             wishlisted
               ? "text-ink border-neutral-500/50 shadow-xs"
               : "text-ink dark:text-ink border-neutral-200 dark:border-white/10 hover:text-ink dark:hover:text-ink hover:border-neutral-400 dark:hover:border-neutral-400/50"
@@ -115,7 +115,7 @@ Can you confirm availability and latest variant pricing?`;
         prefetch={false}
         onMouseEnter={preloadDetails}
         onClick={openDetails}
-        className="h-56 w-full rounded-2xl bg-canvas bg-canvas   border border-neutral-200/80 dark:border-neutral-500/10 p-4 mb-4 flex items-center justify-center relative overflow-hidden group-hover:border-neutral-400/40 dark:group-hover:border-neutral-500/30 transition-all"
+        className="h-56 w-full rounded-2xl bg-canvas bg-canvas   border border-neutral-200/80 dark:border-neutral-500/10 p-4 mb-3 flex items-center justify-center relative overflow-hidden group-hover:border-neutral-400/40 dark:group-hover:border-neutral-500/30 transition-all"
       >
         {displayImage ? (
           <>
@@ -160,11 +160,11 @@ Can you confirm availability and latest variant pricing?`;
       </Link>
 
       {/* Product Meta */}
-      <div className="flex-1 flex flex-col justify-between">
+      <div className="min-w-0 flex-1 flex flex-col justify-between text-left">
         <div>
           {/* Storage & Colors Preview */}
-          <div className="flex items-center justify-between gap-2 mb-2 text-xs text-ink dark:text-ink">
-            <span className="text-ink dark:text-ink font-semibold truncate">
+          <div className="grid min-h-7 grid-cols-[minmax(0,1fr)_auto] items-start gap-2 mb-1.5 text-xs text-ink dark:text-ink">
+            <span className="text-ink dark:text-ink font-semibold leading-5 break-words">
               {product.storageOptions ? product.storageOptions.join(" • ") : product.storage}
             </span>
             <div className="flex items-center gap-1.5 bg-canvas dark:bg-canvas px-2 py-1 rounded-full border border-neutral-200 dark:border-white/5 shadow-xs flex-shrink-0">
@@ -184,35 +184,39 @@ Can you confirm availability and latest variant pricing?`;
           </div>
 
           <Link href={productUrl} prefetch={false} onMouseEnter={preloadDetails} onClick={openDetails}>
-            <h3 className="text-base font-bold text-ink dark:text-ink group-hover:text-ink dark:group-hover:text-ink transition-colors mb-1.5 line-clamp-1">
+            <h3 className="min-h-6 text-base leading-6 font-bold text-ink dark:text-ink group-hover:text-ink dark:group-hover:text-ink transition-colors mb-1 line-clamp-2 break-words">
               {product.name}
             </h3>
           </Link>
 
-          <div className="flex items-center gap-2 mb-3 text-xs text-ink dark:text-ink">
+          <div className="flex min-h-4 min-w-0 items-start gap-2 mb-2 text-xs leading-4 text-ink dark:text-ink">
             <span className={`font-semibold flex items-center gap-1 ${isOutOfStock ? "text-ink" : "text-ink dark:text-ink"}`}>
               <span className={`w-1.5 h-1.5 rounded-full inline-block ${isOutOfStock ? "bg-canvas" : "bg-canvas animate-pulse"}`} />
               {isOutOfStock ? "Out of Stock" : (product.variants?.length ? `${product.variants.length} Options` : product.stock)}
             </span>
             <span className="text-ink dark:text-ink">•</span>
-            <span className="truncate">{product.model}</span>
+            <span className="min-w-0 flex-1 line-clamp-2 break-words">{product.model}</span>
           </div>
         </div>
 
         {/* Pricing & CTA Buttons */}
-        <div className="pt-3 border-t border-neutral-200 dark:border-neutral-500/15">
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="text-xs text-ink dark:text-ink font-medium">
-              {hasVariants ? "From" : ""}
-            </span>
-            <span data-ui={product.oldPrice && product.oldPrice > minPrice ? "sale-price" : undefined} className="text-xl font-black text-ink text-ink text-ink     ">
-              {formatCurrency(minPrice)}
-            </span>
-            {product.oldPrice && (
-              <span className="text-xs text-ink dark:text-ink line-through">
-                {formatCurrency(product.oldPrice)}
+        <div className="pt-2 border-t border-neutral-200 dark:border-neutral-500/15">
+          <div className="flex flex-col gap-0.5 mb-2">
+            <div className="flex flex-wrap items-baseline gap-x-1.5">
+              <span className="text-xs leading-4 text-ink font-medium empty:hidden">
+                {hasVariants ? "From" : ""}
               </span>
-            )}
+              <span data-ui={product.oldPrice && product.oldPrice > minPrice ? "sale-price" : undefined} className="whitespace-nowrap text-xl leading-7 font-black tabular-nums text-ink">
+                {formatCurrency(minPrice)}
+              </span>
+            </div>
+            <div className="text-xs leading-4 empty:hidden">
+              {product.oldPrice && (
+                <span className="whitespace-nowrap tabular-nums text-ink line-through">
+                  {formatCurrency(product.oldPrice)}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">

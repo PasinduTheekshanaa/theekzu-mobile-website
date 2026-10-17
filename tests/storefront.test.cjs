@@ -16,6 +16,46 @@ const service = require('../lib/supabaseService.ts');
 const { reconcileCart } = require('../lib/cartValidation.ts');
 const row = { id: 'product-1', slug: 'test-phone', name: 'Phone', category: 'iphones', active: true };
 const variants = [{ id: 'variant-1', stock: 3, price: 100, storage: '128GB', color: 'Black' }];
+
+test('accessory types normalize names, deduplicate choices and retain built-in labels', () => {
+ const types = require('../lib/accessoryTypes.ts');
+ assert.equal(types.normalizeAccessoryType('  Earbuds   & Headphones '), 'Earbuds & Headphones');
+ assert.equal(types.normalizeAccessoryType('CHARGERS & CABLES'), 'chargers-cables');
+ assert.equal(types.normalizeAccessoryType('all'), '');
+ const options = types.getAccessoryTypes([
+  { category: 'accessories', subcategory: 'Earbuds & Headphones' },
+  { category: 'accessories', subcategory: 'earbuds & headphones' },
+  { category: 'iphones', subcategory: 'used-iphones' },
+ ]);
+ assert.equal(options.filter(o => o.value.toLowerCase() === 'earbuds & headphones').length, 1);
+ assert.ok(options.some(o => o.label === 'Chargers & Cables'));
+ assert.ok(!options.some(o => o.value === 'used-iphones'));
+});
+
+test('custom accessory types survive creation, reload and editing through existing Supabase columns', async () => {
+ calls = []; replies = { products: { data: { id: 'new-product' }, error: null }, product_variants: { data: [], error: null } };
+ const product = { ...service.mapSupabaseToProduct(row, variants), id: '8b4cbe14-0f64-4b50-9274-b542d86c118d', category: 'accessories', series: 'accessories', subcategory: 'Earbuds & Headphones' };
+ assert.equal((await service.addProductToSupabase(product)).success, true);
+ const inserted = calls.find(c => c.table === 'products' && c.method === 'insert').args[0];
+ assert.equal(inserted.series, 'accessory-type:Earbuds & Headphones');
+ const loaded = service.mapSupabaseToProduct({ ...row, ...inserted }, variants);
+ assert.equal(loaded.subcategory, 'Earbuds & Headphones');
+ assert.equal(loaded.series, 'accessories');
+ replies.products = { data: [row], error: null }; calls = [];
+ assert.equal((await service.updateProductInSupabase({ ...product, subcategory: 'Power Banks' })).success, true);
+ const updated = calls.find(c => c.table === 'products' && c.method === 'update').args[0];
+ assert.equal(service.mapSupabaseToProduct({ ...row, ...updated }, variants).subcategory, 'Power Banks');
+ calls = [];
+ assert.equal((await service.updateProductInSupabase({ ...product, category: 'iphones', series: '15' })).success, true);
+ assert.equal(calls.find(c => c.method === 'update').args[0].series, '15');
+});
+
+test('legacy accessory products keep their original type until explicitly changed', () => {
+ const { products } = require('../data/products.ts');
+ for (const product of products.filter(p => p.category === 'accessories')) {
+  assert.equal(service.mapSupabaseToProduct({ ...row, slug: product.slug, category: 'accessories', series: 'accessories' }, variants).subcategory, product.subcategory);
+ }
+});
 test('legacy products retain their condition and dual-condition products survive loading', () => {
  const { getProductConditions } = require('../data/products.ts');
  assert.deepEqual(getProductConditions(service.mapSupabaseToProduct({ ...row, condition: 'Used' }, variants)), ['Used']);

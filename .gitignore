@@ -1,6 +1,7 @@
 node_modules/
 .next/
 .next-performance/
+.next-compact/
 .env.local
 .env*
 !.env.local.example

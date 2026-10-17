@@ -234,7 +234,7 @@ Please confirm availability and islandwide delivery options!`;
         </div>
 
         {/* RIGHT COLUMN: Details & Purchase Actions */}
-        <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
+        <div className="lg:col-span-6 min-w-0 flex flex-col justify-between space-y-6 text-left">
           
           <div>
             {/* Badges & SKU */}
@@ -262,13 +262,13 @@ Please confirm availability and islandwide delivery options!`;
               </span>
 
               {sku && (
-                <span className="text-[11px] font-mono text-ink dark:text-ink bg-canvas dark:bg-canvas px-2.5 py-0.5 rounded-md border border-neutral-200 dark:border-white/5">
+                <span className="min-w-0 max-w-full break-all text-[11px] font-mono text-ink dark:text-ink bg-canvas dark:bg-canvas px-2.5 py-0.5 rounded-md border border-neutral-200 dark:border-white/5">
                   SKU: {sku}
                 </span>
               )}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl leading-tight break-words font-black text-ink dark:text-ink mb-2">
               {liveProduct.name}
             </h1>
 
@@ -279,7 +279,7 @@ Please confirm availability and islandwide delivery options!`;
               <span
                 key={currentPrice}
                 data-ui={discountPercent ? "sale-price" : undefined}
-                className="text-2xl sm:text-3xl md:text-4xl font-black text-ink text-ink text-ink      animate-price-change"
+                className="whitespace-nowrap tabular-nums text-2xl sm:text-3xl md:text-4xl font-black text-ink animate-price-change"
               >
                 {formatCurrency(currentPrice)}
               </span>

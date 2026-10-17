@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { useProducts } from "@/context/ProductContext";
 import { Product, ProductVariant, ProductColor, ProductCondition, getProductConditions, getProductConditionLabel } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { getAccessoryTypes } from "@/lib/accessoryTypes";
+import { AccessoryTypeSelect } from "@/components/AccessoryTypeSelect";
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "@/lib/supabaseClient";
 import { checkIsAdminUser, updateVariantInSupabase } from "@/lib/supabaseService";
 import {
@@ -153,7 +155,7 @@ export default function AdminProductsPage() {
   const [formColors, setFormColors] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formCategory, setFormCategory] = useState<"iphones" | "accessories">("iphones");
-  const [formSubcategory, setFormSubcategory] = useState<"chargers-cables" | "cases-accessories">("chargers-cables");
+  const [formSubcategory, setFormSubcategory] = useState<string>("chargers-cables");
   const [isSavingProductEdit, setIsSavingProductEdit] = useState(false);
 
   // New Product Modal State
@@ -162,7 +164,8 @@ export default function AdminProductsPage() {
   const [newProdModel, setNewProdModel] = useState("");
   const [newProdSeries, setNewProdSeries] = useState("16");
   const [newProdCategory, setNewProdCategory] = useState<"iphones" | "accessories">("iphones");
-  const [newProdSubcategory, setNewProdSubcategory] = useState<"chargers-cables" | "cases-accessories">("chargers-cables");
+  const [newProdSubcategory, setNewProdSubcategory] = useState<string>("chargers-cables");
+  const accessoryTypes = useMemo(() => getAccessoryTypes(products, [formSubcategory, newProdSubcategory]), [products, formSubcategory, newProdSubcategory]);
   const [newProdConditions, setNewProdConditions] = useState<ProductCondition[]>(["Brand New"]);
   const [newProdBasePrice, setNewProdBasePrice] = useState("");
   const [newProdStorages, setNewProdStorages] = useState("128GB, 256GB, 512GB");
@@ -898,7 +901,7 @@ export default function AdminProductsPage() {
     setFormColors(p.colors ? p.colors.map((c) => c.name).join(", ") : "");
     setFormDescription(p.description);
     setFormCategory(p.category === "accessories" ? "accessories" : "iphones");
-    setFormSubcategory(p.subcategory === "chargers-cables" ? "chargers-cables" : "cases-accessories");
+    setFormSubcategory(p.category === "accessories" ? p.subcategory : "chargers-cables");
   };
 
   const handleSaveProductEdit = async () => {
@@ -2491,17 +2494,7 @@ export default function AdminProductsPage() {
                   </select>
                 </div>
                 {newProdCategory === "accessories" && (
-                  <div>
-                    <label className="font-bold block mb-1">Accessory Type:</label>
-                    <select
-                      value={newProdSubcategory}
-                      onChange={(e) => setNewProdSubcategory(e.target.value as "chargers-cables" | "cases-accessories")}
-                      className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
-                    >
-                      <option value="chargers-cables">Chargers &amp; Cables</option>
-                      <option value="cases-accessories">Cases &amp; Protection</option>
-                    </select>
-                  </div>
+                  <AccessoryTypeSelect value={newProdSubcategory} onChange={setNewProdSubcategory} options={accessoryTypes} />
                 )}
               </div>
 
@@ -2676,17 +2669,7 @@ export default function AdminProductsPage() {
                   </select>
                 </div>
                 {formCategory === "accessories" && (
-                  <div>
-                    <label className="font-bold block mb-1">Accessory Type:</label>
-                    <select
-                      value={formSubcategory}
-                      onChange={(e) => setFormSubcategory(e.target.value as "chargers-cables" | "cases-accessories")}
-                      className="w-full p-2 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 focus:outline-none"
-                    >
-                      <option value="chargers-cables">Chargers &amp; Cables</option>
-                      <option value="cases-accessories">Cases &amp; Protection</option>
-                    </select>
-                  </div>
+                  <AccessoryTypeSelect value={formSubcategory} onChange={setFormSubcategory} options={accessoryTypes} />
                 )}
               </div>
 

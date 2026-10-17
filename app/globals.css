@@ -487,7 +487,10 @@ input, select, textarea {
   color: rgb(var(--ui-foreground));
   text-decoration: none;
 }
-:root [data-ui="whatsapp-link"][data-ui] svg,
+:root [data-ui="whatsapp-link"][data-ui] svg:where(.lucide-message-circle) {
+  background: transparent;
+  color: rgb(var(--ui-whatsapp));
+}
 :root [data-ui="whatsapp-icon"][data-ui] {
   background: rgb(var(--ui-whatsapp));
   color: #000000;

@@ -1,19 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
+import { getAccessoryTypes } from "@/lib/accessoryTypes";
 
 export default function AccessoriesPage() {
   const { products } = useProducts();
   const [subcat, setSubcat] = useState<string>("all");
 
+  const accessoryTypes = useMemo(() => getAccessoryTypes(products), [products]);
+  useEffect(() => { setSubcat(new URLSearchParams(window.location.search).get("sub") || "all"); }, []);
+
   const accessories = products.filter((p) => {
     if (p.category !== "accessories") return false;
-    if (p.subcategory !== "chargers-cables" && p.subcategory !== "cases-accessories") return false;
     if (subcat === "all") return true;
-    return p.subcategory === subcat;
+    return p.subcategory.toLowerCase() === subcat.toLowerCase();
   });
 
   return (
@@ -38,33 +41,18 @@ export default function AccessoriesPage() {
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
               subcat === "all"
                 ? "bg-action text-on-action shadow-sm"
-                : "bg-action dark:bg-action border border-neutral-200 dark:border-white/10 text-on-action dark:text-on-action hover:text-on-action dark:hover:text-on-action"
+                : "bg-canvas text-ink border border-line"
             }`}
           >
             All Accessories
           </button>
 
-          <button
-            onClick={() => setSubcat("chargers-cables")}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-              subcat === "chargers-cables"
-                ? "bg-action text-on-action shadow-sm"
-                : "bg-action dark:bg-action border border-neutral-200 dark:border-white/10 text-on-action dark:text-on-action hover:text-on-action dark:hover:text-on-action"
-            }`}
-          >
-            Chargers & Cables
-          </button>
-
-          <button
-            onClick={() => setSubcat("cases-accessories")}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-              subcat === "cases-accessories"
-                ? "bg-action text-on-action shadow-sm"
-                : "bg-action dark:bg-action border border-neutral-200 dark:border-white/10 text-on-action dark:text-on-action hover:text-on-action dark:hover:text-on-action"
-            }`}
-          >
-            Cases & Protection
-          </button>
+          {accessoryTypes.map(type => (
+            <button key={type.value} onClick={() => setSubcat(type.value)} aria-pressed={subcat === type.value}
+              className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${subcat === type.value ? "bg-action text-on-action border-ink" : "bg-canvas text-ink border-line"}`}>
+              {type.label}
+            </button>
+          ))}
         </div>
       </div>
 

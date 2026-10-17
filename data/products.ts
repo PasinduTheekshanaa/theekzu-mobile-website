@@ -50,7 +50,7 @@ export interface Product {
   series: string; // e.g. "11", "12", "13", "14", "15", "16", "17", or "accessories"
   model: string;
   category: "iphones" | "accessories";
-  subcategory: "latest-iphones" | "used-iphones" | "airpods" | "apple-watch" | "chargers-cables" | "cases-accessories";
+  subcategory: string;
   condition: ProductCondition;
   availableConditions?: ProductCondition[];
   conditionBadge: string;

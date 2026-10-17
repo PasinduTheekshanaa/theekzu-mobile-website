@@ -1,5 +1,6 @@
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient";
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
+import { accessoryTypeFromSeries, accessoryTypeSeries } from "./accessoryTypes";
 import { Product, ProductVariant, ProductColor, getProductConditions, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
 
 export interface SupabaseAdminUser {
@@ -180,9 +181,11 @@ export function mapSupabaseToProduct(
     slug: p.slug,
     name: p.name,
     model: p.name || baseMatch?.model || p.slug,
-    series: p.series || baseMatch?.series || "16",
+    series: p.category === "accessories" ? "accessories" : p.series || baseMatch?.series || "16",
     category: p.category || baseMatch?.category || "iphones",
-    subcategory: baseMatch?.subcategory || (p.category === "iphones" ? (p.condition === "Used" ? "used-iphones" : "latest-iphones") : "cases-accessories"),
+    subcategory: p.category === "accessories"
+      ? accessoryTypeFromSeries(p.series, baseMatch?.subcategory || "cases-accessories")
+      : baseMatch?.subcategory || (p.condition === "Used" ? "used-iphones" : "latest-iphones"),
     condition: p.condition || baseMatch?.condition || "Brand New",
     availableConditions: conditions,
     conditionBadge: conditions.length > 1 ? "Brand New & Used" : (p.condition || baseMatch?.condition) === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
@@ -952,7 +955,7 @@ export async function updateProductInSupabase(
 
     const payload: any = {
       name: product.name.trim(),
-      series: product.series,
+      series: product.category === "accessories" ? accessoryTypeSeries(product.subcategory) : product.series,
       category: product.category || "iphones",
       condition: product.condition || "Brand New",
       available_conditions: getProductConditions(product),
@@ -1009,7 +1012,7 @@ export async function addProductToSupabase(product: Product): Promise<{ success:
       .insert({
         slug: product.slug,
         name: product.name,
-        series: product.series,
+        series: product.category === "accessories" ? accessoryTypeSeries(product.subcategory) : product.series,
         category: product.category,
         condition: product.condition,
         available_conditions: getProductConditions(product),

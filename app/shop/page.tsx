@@ -6,6 +6,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Search, Filter, RotateCcw, PackageSearch, Sparkles, ChevronDown } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
+import { getAccessoryTypes } from "@/lib/accessoryTypes";
 import { formatCurrency } from "@/lib/formatCurrency";
 
 type FilterOption = { value: string; label: string };
@@ -74,6 +75,8 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState<"popular" | "newest" | "price-low" | "price-high">("popular");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  const accessoryTypes = useMemo(() => getAccessoryTypes(products), [products]);
+
   // Dynamic available storages
   const availableStorages = useMemo(() => {
     const set = new Set<string>();
@@ -123,6 +126,7 @@ export default function ShopPage() {
     if (selectedCategory !== "all") {
       result = result.filter(
         (p) => p.category === selectedCategory || p.subcategory === selectedCategory ||
+          (p.category === "accessories" && p.subcategory.toLowerCase() === selectedCategory.toLowerCase()) ||
           (selectedCategory === "used-iphones" && p.category === "iphones" && getProductConditions(p).includes("Used"))
       );
     }
@@ -232,7 +236,7 @@ export default function ShopPage() {
           ]} />
 
           <CatalogSelect label="Category" value={selectedCategory} onChange={setSelectedCategory} options={[
-            { value: "all", label: "All Categories" }, { value: "iphones", label: "All iPhones" }, { value: "latest-iphones", label: "Latest Flagships" }, { value: "used-iphones", label: "Used / Pre-Owned" }, { value: "accessories", label: "All Accessories" }, { value: "airpods", label: "AirPods" }, { value: "apple-watch", label: "Apple Watch" }, { value: "chargers-cables", label: "Chargers & Cables" }, { value: "cases-accessories", label: "Cases & Protection" },
+            { value: "all", label: "All Categories" }, { value: "iphones", label: "All iPhones" }, { value: "latest-iphones", label: "Latest Flagships" }, { value: "used-iphones", label: "Used / Pre-Owned" }, { value: "accessories", label: "All Accessories" }, ...accessoryTypes,
           ]} />
 
           <CatalogSelect label="Condition" value={selectedCondition} onChange={setSelectedCondition} options={[
