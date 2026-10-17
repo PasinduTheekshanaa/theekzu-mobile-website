@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, MessageCircle, ShoppingBag, Zap, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Star, MessageCircle, ShoppingBag, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Product, ProductVariant, ProductCondition, getProductConditions } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
@@ -132,12 +132,6 @@ Please confirm availability and islandwide delivery options!`;
   const handleAddToCart = () => {
     if (isOutOfStock) return;
     addItem({ ...liveProduct, condition: selectedCondition }, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
-  };
-
-  const handleBuyNow = () => {
-    if (isOutOfStock) return;
-    addItem({ ...liveProduct, condition: selectedCondition }, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
-    window.open(waUrl, "_blank");
   };
 
   // Combine product gallery images with live database images (primary image first)
@@ -390,7 +384,7 @@ Please confirm availability and islandwide delivery options!`;
               </div>
             )}
 
-            {/* Quantity Selector & Add to Cart / Buy Now / WhatsApp */}
+            {/* Quantity Selector, Add to Cart & WhatsApp */}
             <div className="space-y-3 pt-2">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex items-center justify-between border border-slate-200 dark:border-cyan-500/25 bg-slate-50 dark:bg-slate-900 rounded-2xl p-1.5 w-full sm:w-36 shadow-xs">
@@ -425,19 +419,7 @@ Please confirm availability and islandwide delivery options!`;
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button
-                  onClick={handleBuyNow}
-                  disabled={isOutOfStock}
-                  className={`min-h-[44px] py-3.5 px-4 rounded-full border text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs btn-press ${
-                    isOutOfStock
-                      ? "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-white/5 text-slate-400 dark:text-zinc-600 cursor-not-allowed opacity-60"
-                      : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/90 dark:hover:bg-slate-700 border-slate-200 dark:border-cyan-500/30 text-slate-800 dark:text-white active:scale-[0.98]"
-                  }`}
-                >
-                  <Zap className={`w-4 h-4 shrink-0 ${isOutOfStock ? "text-slate-400 dark:text-zinc-600" : "text-blue-600 dark:text-cyan-400"}`} />
-                  <span>{isOutOfStock ? "Unavailable (Out of Stock)" : "Buy Now (Instant WhatsApp)"}</span>
-                </button>
+              <div className="grid grid-cols-1 gap-3">
 
                 <a
                   href={waUrl}
