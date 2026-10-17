@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Star, MessageCircle, ShoppingBag, Zap, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
-import { Product, ProductVariant } from "@/data/products";
+import { Product, ProductVariant, ProductCondition, getProductConditions } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
 import { useCart } from "@/context/CartContext";
@@ -42,6 +42,9 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
       ? liveProduct.colors[0].name
       : "Standard";
 
+  const availableConditions = getProductConditions(liveProduct);
+  const [conditionChoice, setConditionChoice] = useState<ProductCondition>(liveProduct.condition);
+  const selectedCondition = availableConditions.includes(conditionChoice) ? conditionChoice : availableConditions[0];
   const [selectedStorage, setSelectedStorage] = useState(defaultStorage);
   const [selectedColor, setSelectedColor] = useState(defaultColor);
   const [quantity, setQuantity] = useState(1);
@@ -106,7 +109,7 @@ I noticed that the following item is currently marked as Out of Stock:
 • *Product:* ${liveProduct.name}
 • *Storage:* ${selectedStorage}
 • *Color:* ${selectedColor}
-• *Condition:* ${liveProduct.condition}
+• *Condition:* ${selectedCondition}
 
 Can you please let me know when this model or variant will be restocked, or if there is an alternative available?`
     : `🛒 *THEEKZU MOBILE - PRODUCT ORDER*
@@ -120,7 +123,7 @@ Hello Theekzu Mobile, I would like to place an order for:
 • *Price:* ${formatCurrency(currentPrice)}
 • *Stock Status:* In Stock (${currentVariantStock} available)
 • *Quantity:* ${quantity}
-• *Condition:* ${liveProduct.condition}
+• *Condition:* ${selectedCondition}
 
 Please confirm availability and islandwide delivery options!`;
 
@@ -128,12 +131,12 @@ Please confirm availability and islandwide delivery options!`;
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
-    addItem(liveProduct, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
+    addItem({ ...liveProduct, condition: selectedCondition }, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
   };
 
   const handleBuyNow = () => {
     if (isOutOfStock) return;
-    addItem(liveProduct, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
+    addItem({ ...liveProduct, condition: selectedCondition }, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
     window.open(waUrl, "_blank");
   };
 
@@ -230,7 +233,7 @@ Please confirm availability and islandwide delivery options!`;
             <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
             <div>
               <strong className="text-slate-900 dark:text-white block font-bold">Official Theekzu Guarantee:</strong>
-              <span className="text-slate-500 dark:text-zinc-400">{liveProduct.specifications.warranty || "Official warranty, verified battery health, and reliable after-sales store support."}</span>
+              <span className="text-slate-500 dark:text-zinc-400">{(availableConditions.length > 1 ? (selectedCondition === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty") : liveProduct.specifications.warranty) || "Official warranty, verified battery health, and reliable after-sales store support."}</span>
             </div>
           </div>
         </div>
@@ -242,7 +245,7 @@ Please confirm availability and islandwide delivery options!`;
             {/* Badges & SKU */}
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 dark:bg-cyan-500/15 border border-blue-500/20 dark:border-cyan-500/30 text-blue-700 dark:text-cyan-300">
-                {liveProduct.conditionBadge || liveProduct.condition}
+                {availableConditions.join(" & ")}
               </span>
               
               <span className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${
@@ -293,6 +296,19 @@ Please confirm availability and islandwide delivery options!`;
                 Variant Price (LKR)
               </span>
             </div>
+
+            <fieldset className="mb-6">
+              <legend className="text-xs uppercase tracking-wider font-bold mb-2.5">Condition: {selectedCondition}</legend>
+              <div className="flex flex-wrap gap-2.5">
+                {availableConditions.map(condition => (
+                  <button key={condition} type="button" aria-pressed={condition === selectedCondition}
+                    onClick={() => setConditionChoice(condition)}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${condition === selectedCondition ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-cyan-500/20 dark:text-cyan-200" : "border-slate-200 dark:border-white/10"}`}>
+                    {condition}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
 
             {/* Storage Selector */}
             {liveProduct.storageOptions && liveProduct.storageOptions.length > 0 && (

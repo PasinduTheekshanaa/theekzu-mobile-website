@@ -1,4 +1,6 @@
 "use client";
+import { getProductConditions } from "@/data/products";
+
 
 import React, { useState } from "react";
 import { Sparkles } from "lucide-react";
@@ -11,8 +13,8 @@ export default function IPhonesPage() {
 
   const iphones = products.filter((p) => {
     if (p.category !== "iphones") return false;
-    if (filter === "new") return p.condition === "Brand New";
-    if (filter === "used") return p.condition === "Used";
+    if (filter === "new") return getProductConditions(p).includes("Brand New");
+    if (filter === "used") return getProductConditions(p).includes("Used");
     return true;
   });
 

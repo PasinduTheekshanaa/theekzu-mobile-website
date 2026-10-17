@@ -16,6 +16,41 @@ const service = require('../lib/supabaseService.ts');
 const { reconcileCart } = require('../lib/cartValidation.ts');
 const row = { id: 'product-1', slug: 'test-phone', name: 'Phone', category: 'iphones', active: true };
 const variants = [{ id: 'variant-1', stock: 3, price: 100, storage: '128GB', color: 'Black' }];
+test('legacy products retain their condition and dual-condition products survive loading', () => {
+ const { getProductConditions } = require('../data/products.ts');
+ assert.deepEqual(getProductConditions(service.mapSupabaseToProduct({ ...row, condition: 'Used' }, variants)), ['Used']);
+ const product = service.mapSupabaseToProduct({ ...row, condition: 'Used', available_conditions: ['Used', 'Brand New'] }, variants);
+ assert.deepEqual(getProductConditions(product), ['Brand New', 'Used']);
+ assert.equal(product.conditionBadge, 'Brand New & Used');
+ assert.deepEqual(getProductConditions({ condition: 'Used', availableConditions: [] }), ['Used']);
+});
+
+test('create and edit persist both enabled conditions', async () => {
+ calls = []; replies = { products: { data: { id: 'new-product' }, error: null }, product_variants: { data: [], error: null } };
+ const product = service.mapSupabaseToProduct({ ...row, id: '8b4cbe14-0f64-4b50-9274-b542d86c118d', condition: 'Brand New', available_conditions: ['Brand New', 'Used'] }, variants);
+ assert.equal((await service.addProductToSupabase(product)).success, true);
+ assert.deepEqual(calls.find(c => c.table === 'products' && c.method === 'insert').args[0].available_conditions, ['Brand New', 'Used']);
+ replies.products = { data: [row], error: null };
+ assert.equal((await service.updateProductInSupabase(product)).success, true);
+ assert.deepEqual(calls.find(c => c.table === 'products' && c.method === 'update').args[0].available_conditions, ['Brand New', 'Used']);
+});
+
+test('disabled conditions cannot remain orderable in the cart', () => {
+ const product = service.mapSupabaseToProduct({ ...row, condition: 'Brand New', available_conditions: ['Brand New'] }, variants);
+ const item = { productId: row.id, variantId: 'variant-1', condition: 'Used', quantity: 1, price: 100 };
+ assert.equal(reconcileCart([item], [product])[0].stockStatus, 'Out of Stock');
+ assert.equal(reconcileCart([{ ...item, condition: 'Brand New' }], [product])[0].stockStatus, 'In Stock');
+});
+
+test('cart lines for both conditions cannot exceed shared variant stock', () => {
+ const product = service.mapSupabaseToProduct({ ...row, available_conditions: ['Brand New', 'Used'] }, variants);
+ const item = { productId: row.id, variantId: 'variant-1', quantity: 2, price: 100 };
+ const cart = reconcileCart([{ ...item, condition: 'Brand New' }, { ...item, condition: 'Used' }], [product]);
+ assert.deepEqual(cart.map(item => item.quantity), [2, 1]);
+ assert.equal(cart.every(item => item.stockStatus === 'In Stock'), true);
+ const soldOut = reconcileCart([{ ...item, quantity: 3, condition: 'Brand New' }, { ...item, condition: 'Used' }], [product]);
+ assert.equal(soldOut[1].stockStatus, 'Out of Stock');
+});
 test('missing variants and manual override cannot advertise stock', () => {
  assert.equal(service.mapSupabaseToProduct(row, []).stock, 'Out of Stock');
  assert.equal(service.mapSupabaseToProduct({ ...row, in_stock: false }, variants).stock, 'Out of Stock');

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/context/ProductContext";
-import { Product, ProductVariant, ProductColor } from "@/data/products";
+import { Product, ProductVariant, ProductColor, ProductCondition, getProductConditions, getProductConditionLabel } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "@/lib/supabaseClient";
 import { checkIsAdminUser, updateVariantInSupabase } from "@/lib/supabaseService";
@@ -72,6 +72,29 @@ export default function AdminProductsPage() {
   const [isBulkUpdating, setIsBulkUpdating] = useState(false);
   const [stockTogglingProductId, setStockTogglingProductId] = useState<string | null>(null);
   const [variantStockTogglingId, setVariantStockTogglingId] = useState<string | null>(null);
+  const [savingConditions, setSavingConditions] = useState<Record<string, boolean>>({});
+  const conditionSaveLocks = useRef(new Set<string>());
+
+  const handleToggleCondition = async (product: Product, condition: ProductCondition, enabled: boolean) => {
+    if (conditionSaveLocks.current.has(product.id)) return;
+    const current = getProductConditions(product);
+    const next = enabled ? [...new Set([...current, condition])] : current.filter(value => value !== condition);
+    if (!next.length) {
+      showToast("Keep at least one condition selected", "info");
+      return;
+    }
+    conditionSaveLocks.current.add(product.id);
+    setSavingConditions(previous => ({ ...previous, [product.id]: true }));
+    try {
+      const result = await updateProduct({ ...product, condition: next.includes(product.condition) ? product.condition : next[0], availableConditions: next });
+      showToast(result.success ? `${product.name}: ${next.join(" & ")} saved` : result.error || "Could not save conditions", result.success ? "success" : "error");
+    } catch {
+      showToast("Could not save conditions. Please try again.", "error");
+    } finally {
+      conditionSaveLocks.current.delete(product.id);
+      setSavingConditions(previous => ({ ...previous, [product.id]: false }));
+    }
+  };
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -122,7 +145,7 @@ export default function AdminProductsPage() {
   const [formName, setFormName] = useState("");
   const [formModel, setFormModel] = useState("");
   const [formSeries, setFormSeries] = useState("16");
-  const [formCondition, setFormCondition] = useState<"Brand New" | "Used">("Brand New");
+  const [formConditions, setFormConditions] = useState<ProductCondition[]>(["Brand New"]);
   const [formInStock, setFormInStock] = useState(true);
   const [formFeatured, setFormFeatured] = useState(false);
   const [formStorages, setFormStorages] = useState("");
@@ -139,7 +162,7 @@ export default function AdminProductsPage() {
   const [newProdSeries, setNewProdSeries] = useState("16");
   const [newProdCategory, setNewProdCategory] = useState<"iphones" | "accessories">("iphones");
   const [newProdSubcategory, setNewProdSubcategory] = useState<"chargers-cables" | "cases-accessories">("chargers-cables");
-  const [newProdCondition, setNewProdCondition] = useState<"Brand New" | "Used">("Brand New");
+  const [newProdConditions, setNewProdConditions] = useState<ProductCondition[]>(["Brand New"]);
   const [newProdBasePrice, setNewProdBasePrice] = useState("");
   const [newProdStorages, setNewProdStorages] = useState("128GB, 256GB, 512GB");
   const [newProdColors, setNewProdColors] = useState("Natural Titanium, Black Titanium");
@@ -243,7 +266,7 @@ export default function AdminProductsPage() {
     setNewProdName("");
     setNewProdModel("");
     setNewProdSeries(isAccessory ? "accessories" : "16");
-    setNewProdCondition("Brand New");
+    setNewProdConditions(["Brand New"]);
     setNewProdBasePrice("");
     setNewProdStorages(isAccessory ? "Standard" : "128GB, 256GB, 512GB");
     setNewProdColors(isAccessory ? "White" : "Natural Titanium, Black Titanium");
@@ -269,7 +292,7 @@ export default function AdminProductsPage() {
         (p.variants && p.variants.some((v) => v.sku.toLowerCase().includes(q) || v.color.toLowerCase().includes(q)));
 
       const matchesSeries = selectedSeries === "all" || p.series === selectedSeries;
-      const matchesCondition = selectedCondition === "all" || p.condition === selectedCondition;
+      const matchesCondition = selectedCondition === "all" || getProductConditions(p).some(condition => condition === selectedCondition);
       const isInStock = p.stock.toLowerCase().includes("in stock");
       const matchesStock =
         selectedStock === "all" || (selectedStock === "in_stock" ? isInStock : !isInStock);
@@ -765,9 +788,10 @@ export default function AdminProductsPage() {
       model: productModel,
       series: newProdSeries,
       category: newProdCategory,
-      subcategory: newProdCategory === "iphones" ? "latest-iphones" : newProdSubcategory,
-      condition: newProdCondition,
-      conditionBadge: newProdCondition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
+      subcategory: newProdCategory === "iphones" ? (newProdConditions.includes("Brand New") ? "latest-iphones" : "used-iphones") : newProdSubcategory,
+      condition: newProdConditions[0],
+      availableConditions: newProdConditions,
+      conditionBadge: newProdConditions[0] === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
       price: basePrice,
       oldPrice: Math.round(basePrice * 1.08),
       storage: storages[0] || "128GB",
@@ -776,7 +800,7 @@ export default function AdminProductsPage() {
       images: ["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1000&q=80"],
       description: `Official ${newProdName} available at Theekzu Mobile Sri Lanka.`,
       specifications: {
-        warranty: newProdCondition === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty",
+        warranty: newProdConditions[0] === "Brand New" ? "1 Year Apple Warranty" : "6 Months Store Warranty",
         delivery: "1-2 Days Islandwide Delivery",
       },
       stock: "In Stock",
@@ -786,7 +810,11 @@ export default function AdminProductsPage() {
       variants,
     };
 
-    await addProduct(newProduct);
+    const result = await addProduct(newProduct);
+    if (!result.success) {
+      showToast(result.error || "Could not save product", "error");
+      return;
+    }
     setShowAddProductModal(false);
     showToast(`Product "${newProdName}" added and synced to Supabase!`, "success");
   };
@@ -862,7 +890,7 @@ export default function AdminProductsPage() {
     setFormName(p.name);
     setFormModel(p.model);
     setFormSeries(p.series || "16");
-    setFormCondition(p.condition);
+    setFormConditions(getProductConditions(p));
     setFormInStock(p.stock.toLowerCase().includes("in stock"));
     setFormFeatured(Boolean(p.featured));
     setFormStorages(p.storageOptions ? p.storageOptions.join(", ") : p.storage || "128GB");
@@ -898,9 +926,10 @@ export default function AdminProductsPage() {
         model: formModel.trim() || formName.trim(),
         series: formSeries,
         category: formCategory,
-        subcategory: formCategory === "iphones" ? editingProduct.subcategory : formSubcategory,
-        condition: formCondition,
-        conditionBadge: formCondition === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
+        subcategory: formCategory === "iphones" ? (formConditions.includes("Brand New") ? "latest-iphones" : "used-iphones") : formSubcategory,
+        condition: formConditions[0],
+        availableConditions: formConditions,
+        conditionBadge: formConditions[0] === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
         stock: formInStock ? "In Stock" : "Out of Stock",
         featured: formFeatured,
         storageOptions: storages.length > 0 ? storages : editingProduct.storageOptions,
@@ -1401,7 +1430,7 @@ export default function AdminProductsPage() {
                           Series {product.series}
                         </span>
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
-                          {product.condition}
+                          {getProductConditionLabel(product)}
                         </span>
                       </div>
 
@@ -1418,6 +1447,23 @@ export default function AdminProductsPage() {
                           {product.stock}
                         </span>
                       </div>
+                      <fieldset className="mt-3" disabled={savingConditions[product.id]} aria-busy={Boolean(savingConditions[product.id])}>
+                        <legend className="text-[10px] uppercase tracking-wide font-bold text-slate-500 dark:text-zinc-400 mb-1.5">Available conditions</legend>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {(["Brand New", "Used"] as const).map(condition => (
+                            <label key={condition} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-white/10 text-xs font-semibold cursor-pointer bg-white dark:bg-slate-900">
+                              <input type="checkbox" checked={getProductConditions(product).includes(condition)}
+                                onChange={event => handleToggleCondition(product, condition, event.target.checked)}
+                                aria-label={`${product.name}: ${condition}`}
+                                className="w-4 h-4 rounded accent-blue-600 disabled:opacity-50" />
+                              {condition}
+                            </label>
+                          ))}
+                          <span role="status" className="text-[10px] text-slate-500 dark:text-zinc-400">
+                            {savingConditions[product.id] ? "Saving…" : "Select both · Saves automatically"}
+                          </span>
+                        </div>
+                      </fieldset>
                     </div>
                   </div>
 
@@ -2503,14 +2549,18 @@ export default function AdminProductsPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="font-bold block mb-1">Condition:</label>
-                  <select
-                    value={newProdCondition}
-                    onChange={(e) => setNewProdCondition(e.target.value as any)}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
-                  >
-                    <option value="Brand New">Brand New Sealed</option>
-                    <option value="Used">Certified Pre-Owned</option>
-                  </select>
+                  <fieldset className="space-y-2"><legend className="sr-only">Available conditions</legend>
+                    {(["Brand New", "Used"] as const).map(condition => (
+                      <label key={condition} className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={newProdConditions.includes(condition)}
+                          disabled={newProdConditions.length === 1 && newProdConditions.includes(condition)}
+                          onChange={e => setNewProdConditions(previous => e.target.checked ? [...previous, condition] : previous.filter(value => value !== condition))}
+                          className="accent-blue-600" />
+                        {condition}
+                      </label>
+                    ))}
+                    <p className="text-xs text-slate-500">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
+                  </fieldset>
                 </div>
                 <div>
                   <label className="font-bold block mb-1">Starting Price (LKR):</label>
@@ -2651,14 +2701,18 @@ export default function AdminProductsPage() {
                 </div>
                 <div>
                   <label className="font-bold block mb-1">Condition:</label>
-                  <select
-                    value={formCondition}
-                    onChange={(e) => setFormCondition(e.target.value as any)}
-                    className="w-full p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:outline-none"
-                  >
-                    <option value="Brand New">Brand New</option>
-                    <option value="Used">Certified Pre-Owned</option>
-                  </select>
+                  <fieldset className="space-y-2"><legend className="sr-only">Available conditions</legend>
+                    {(["Brand New", "Used"] as const).map(condition => (
+                      <label key={condition} className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={formConditions.includes(condition)}
+                          disabled={formConditions.length === 1 && formConditions.includes(condition)}
+                          onChange={e => setFormConditions(previous => e.target.checked ? [...previous, condition] : previous.filter(value => value !== condition))}
+                          className="accent-blue-600" />
+                        {condition}
+                      </label>
+                    ))}
+                    <p className="text-xs text-slate-500">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
+                  </fieldset>
                 </div>
               </div>
 

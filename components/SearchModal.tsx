@@ -1,4 +1,5 @@
 "use client";
+import { getProductConditionLabel } from "@/data/products";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -31,7 +32,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         p.model.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
         p.subcategory.toLowerCase().includes(q) ||
-        p.condition.toLowerCase().includes(q) ||
+        getProductConditionLabel(p).toLowerCase().includes(q) ||
         (p.series && p.series.toLowerCase().includes(q)) ||
         (p.storage && p.storage.toLowerCase().includes(q)) ||
         (p.storageOptions && p.storageOptions.some((st) => st.toLowerCase().includes(q))) ||
@@ -133,7 +134,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                       <div className="flex items-center gap-2">
                         <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{p.name}</h4>
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-zinc-400">
-                          {p.condition}
+                          {getProductConditionLabel(p)}
                         </span>
                       </div>
                       <p className="text-xs text-slate-500 dark:text-zinc-400">

@@ -3,6 +3,17 @@
 // VARIANT-BASED ARCHITECTURE
 // ============================================================================
 
+export type ProductCondition = "Brand New" | "Used";
+
+export function getProductConditions(product: { condition: ProductCondition; availableConditions?: ProductCondition[] }): ProductCondition[] {
+  const conditions = (["Brand New", "Used"] as const).filter(condition => product.availableConditions?.includes(condition));
+  return conditions.length ? conditions : [product.condition];
+}
+
+export function getProductConditionLabel(product: { condition: ProductCondition; availableConditions?: ProductCondition[] }): string {
+  return getProductConditions(product).join(" & ");
+}
+
 export interface ProductColor {
   name: string;
   hex: string;
@@ -38,7 +49,8 @@ export interface Product {
   model: string;
   category: "iphones" | "accessories";
   subcategory: "latest-iphones" | "used-iphones" | "airpods" | "apple-watch" | "chargers-cables" | "cases-accessories";
-  condition: "Brand New" | "Used";
+  condition: ProductCondition;
+  availableConditions?: ProductCondition[];
   conditionBadge: string;
   
   // Base / Display price (calculated from lowest available variant if variants present)

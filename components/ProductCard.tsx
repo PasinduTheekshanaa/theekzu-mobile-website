@@ -1,4 +1,5 @@
 "use client";
+import { getProductConditionLabel } from "@/data/products";
 
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
@@ -55,7 +56,7 @@ I noticed that ${product.name} is currently marked as Out of Stock.
 Could you please let me know when this model or specific variants will be back in stock?
 
 Product: ${product.name}
-Condition: ${product.condition}`
+Condition: ${getProductConditionLabel(product)}`
     : `Hello Theekzu Mobile,
 
 I am interested in:
@@ -64,7 +65,7 @@ Product: ${product.name}
 Price: ${hasVariants ? "From " : ""}${formatCurrency(minPrice)}
 Available Storage: ${product.storageOptions ? product.storageOptions.join(", ") : defaultStorage}
 Color: ${defaultColor}
-Condition: ${product.condition}
+Condition: ${getProductConditionLabel(product)}
 
 Can you confirm availability and latest variant pricing?`;
 

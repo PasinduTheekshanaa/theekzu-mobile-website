@@ -1,4 +1,5 @@
 import React from "react";
+import { getProductConditions, getProductConditionLabel } from "@/data/products";
 import { notFound } from "next/navigation";
 import { getServerCatalog } from "@/lib/serverCatalog";
 import { ProductDetailClient } from "./ProductDetailClient";
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       : "";
 
   const pageTitle = `${product.name} Price in Sri Lanka | Theekzu Mobile`;
-  const description = `Buy authentic ${product.name} (${product.condition}) in Sri Lanka starting from ${formattedPrice}.${storageInfo} Genuine warranty, islandwide delivery, and instant WhatsApp ordering at Theekzu Mobile.`;
+  const description = `Buy authentic ${product.name} (${getProductConditionLabel(product)}) in Sri Lanka starting from ${formattedPrice}.${storageInfo} Genuine warranty, islandwide delivery, and instant WhatsApp ordering at Theekzu Mobile.`;
   const canonicalUrl = `https://theekzu.vercel.app/product/${product.slug}`;
 
   return {
@@ -118,7 +119,7 @@ export default async function ProductDetailPage({ params }: Props) {
       price: product.price,
 
       itemCondition:
-        product.condition === "Used"
+        getProductConditions(product).length > 1 ? undefined : product.condition === "Used"
           ? "https://schema.org/UsedCondition"
           : "https://schema.org/NewCondition",
       availability:

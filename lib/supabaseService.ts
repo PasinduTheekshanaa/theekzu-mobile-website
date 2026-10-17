@@ -1,5 +1,5 @@
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient";
-import { Product, ProductVariant, ProductColor, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
+import { Product, ProductVariant, ProductColor, getProductConditions, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
 
 export interface SupabaseAdminUser {
   user_id: string;
@@ -162,6 +162,8 @@ export function mapSupabaseToProduct(
     storageOptions = ["128GB", "256GB", "512GB"];
   }
 
+  const conditions = getProductConditions({ condition: p.condition || baseMatch?.condition || "Brand New", availableConditions: Array.isArray(p.available_conditions) ? p.available_conditions : undefined });
+
   // Stock: In Stock if product-level is not Out of Stock AND any variant has stock > 0
   const isProductLevelOOS =
     (p as any).stock === "Out of Stock" ||
@@ -181,7 +183,8 @@ export function mapSupabaseToProduct(
     category: p.category || baseMatch?.category || "iphones",
     subcategory: baseMatch?.subcategory || (p.category === "iphones" ? (p.condition === "Used" ? "used-iphones" : "latest-iphones") : "cases-accessories"),
     condition: p.condition || baseMatch?.condition || "Brand New",
-    conditionBadge: (p.condition || baseMatch?.condition) === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
+    availableConditions: conditions,
+    conditionBadge: conditions.length > 1 ? "Brand New & Used" : (p.condition || baseMatch?.condition) === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
     price: lowestPrice,
     oldPrice: lowestOldPrice ? Number(lowestOldPrice) : undefined,
     discount,
@@ -464,6 +467,7 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
             series: p.series || "16",
             category: p.category || "iphones",
             condition: p.condition || "Brand New",
+            available_conditions: getProductConditions(p),
             description: p.description || "",
             featured: Boolean(p.featured),
             active: true,
@@ -950,6 +954,7 @@ export async function updateProductInSupabase(
       series: product.series,
       category: product.category || "iphones",
       condition: product.condition || "Brand New",
+      available_conditions: getProductConditions(product),
       description: product.description !== undefined ? product.description : "",
       featured: Boolean(product.featured),
       updated_at: new Date().toISOString(),
@@ -1006,6 +1011,7 @@ export async function addProductToSupabase(product: Product): Promise<{ success:
         series: product.series,
         category: product.category,
         condition: product.condition,
+        available_conditions: getProductConditions(product),
         description: product.description,
         featured: Boolean(product.featured),
         active: true,

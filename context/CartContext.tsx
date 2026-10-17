@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useProducts } from "./ProductContext";
 import { loadProductsFromSupabase } from "@/lib/supabaseService";
 import { reconcileCart } from "@/lib/cartValidation";
-import { Product, ProductVariant } from "@/data/products";
+import { Product, ProductVariant, getProductConditions } from "@/data/products";
 import { storeConfig, formatLKR, getWhatsAppUrl } from "@/config/store";
 
 export interface CartItem {
@@ -115,7 +115,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const isVariantOOS = matchedVariant !== undefined && matchedVariant.stock !== undefined && matchedVariant.stock <= 0;
 
     // Prevent adding out-of-stock items to cart
-    if (isProductOOS || isVariantOOS || !matchedVariant) {
+    if (isProductOOS || isVariantOOS || !matchedVariant || !getProductConditions(product).includes(product.condition)) {
       console.warn("Item is out of stock and cannot be added to cart:", product.name);
       return;
     }
@@ -125,14 +125,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const finalImage = customImage || (product.images && product.images[0]) || "";
-    const cartItemId = `${product.id}-${selectedStorage}-${selectedColor}`;
+    const cartItemId = `${product.id}-${selectedStorage}-${selectedColor}-${product.condition}`;
 
     setCart((prevCart) => {
+      const otherQuantity = prevCart
+        .filter(item => item.productId === product.id && item.variantId === finalVariantId && item.cartItemId !== cartItemId)
+        .reduce((sum, item) => sum + item.quantity, 0);
+      const remainingStock = Math.max(0, matchedVariant!.stock - otherQuantity);
+      if (remainingStock === 0) return prevCart;
       const existing = prevCart.find((item) => item.cartItemId === cartItemId);
       if (existing) {
         return prevCart.map((item) =>
           item.cartItemId === cartItemId
-            ? { ...item, quantity: Math.min(matchedVariant!.stock, item.quantity + Math.max(1, Math.floor(quantity))), price: finalPrice!, image: finalImage || item.image }
+            ? { ...item, quantity: Math.min(remainingStock, item.quantity + Math.max(1, Math.floor(quantity))), price: finalPrice!, image: finalImage || item.image }
             : item
         );
       } else {
@@ -149,7 +154,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             storage: selectedStorage,
             color: selectedColor,
             condition: product.condition,
-            quantity: Math.min(matchedVariant!.stock, Math.max(1, Math.floor(quantity))),
+            quantity: Math.min(remainingStock, Math.max(1, Math.floor(quantity))),
             stockStatus: "In Stock",
           },
         ];

@@ -1,4 +1,5 @@
 "use client";
+import { getProductConditionLabel } from "@/data/products";
 
 import React from "react";
 import Image from "next/image";
@@ -95,7 +96,7 @@ export const WishlistDrawer: React.FC = () => {
 
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">{p.name}</h4>
-                  <p className="text-[11px] text-slate-500 dark:text-zinc-400">{p.condition}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-400">{getProductConditionLabel(p)}</p>
                   <p className="text-xs font-extrabold text-blue-600 dark:text-cyan-300 mt-0.5">
                     {formatCurrency(p.price)}
                   </p>

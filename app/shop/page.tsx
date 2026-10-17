@@ -1,4 +1,6 @@
 "use client";
+import { getProductConditions } from "@/data/products";
+
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Search, Filter, RotateCcw, PackageSearch, Sparkles, ChevronDown } from "lucide-react";
@@ -120,13 +122,14 @@ export default function ShopPage() {
     // Category filter
     if (selectedCategory !== "all") {
       result = result.filter(
-        (p) => p.category === selectedCategory || p.subcategory === selectedCategory
+        (p) => p.category === selectedCategory || p.subcategory === selectedCategory ||
+          (selectedCategory === "used-iphones" && p.category === "iphones" && getProductConditions(p).includes("Used"))
       );
     }
 
     // Condition filter
     if (selectedCondition !== "all") {
-      result = result.filter((p) => p.condition === selectedCondition);
+      result = result.filter((p) => getProductConditions(p).some(condition => condition === selectedCondition));
     }
 
     // Storage filter
