@@ -118,14 +118,13 @@ export const FlagshipShowcase: React.FC = () => {
 
           {/* Right Image */}
           <div className="lg:col-span-6 flex justify-center relative">
-            <div className="w-64 sm:w-80 lg:w-[28rem] h-64 sm:h-80 lg:h-[28rem] rounded-full bg-canvas     blur-3xl absolute animate-pulse-glow" />
             <div className="relative z-10 w-full max-w-xs sm:max-w-md lg:max-w-lg flex items-center justify-center">
               <Image
                 src={flagshipImg}
                 alt={`${flagship.name} - Flagship Apple iPhone at Theekzu Mobile Sri Lanka`}
                 width={500}
                 height={500}
-                className="max-h-[300px] sm:max-h-[400px] lg:max-h-[460px] object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] animate-float"
+                className="max-h-[300px] sm:max-h-[400px] lg:max-h-[460px] object-contain animate-float"
               />
             </div>
           </div>

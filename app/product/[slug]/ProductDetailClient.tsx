@@ -179,7 +179,7 @@ Please confirm availability and islandwide delivery options!`;
         
         {/* LEFT COLUMN: Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-canvas bg-canvas   border border-neutral-200 dark:border-neutral-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden shadow-sm dark:shadow-[0_0_35px_rgba(91,91,91,0.2)]">
+          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-canvas border border-neutral-200 dark:border-neutral-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden">
             {activeImage ? (
               <Image
                 key={activeImage}
@@ -188,7 +188,7 @@ Please confirm availability and islandwide delivery options!`;
                 width={420}
                 height={420}
                 priority
-                className="max-h-full max-w-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)] transition-all duration-300 animate-in fade-in zoom-in-95"
+                className="max-h-full max-w-full object-contain transition-all duration-300 animate-in fade-in zoom-in-95"
               />
             ) : (
               <div className="text-ink font-mono text-sm">No Image Available</div>

@@ -111,7 +111,7 @@ Can you confirm availability and latest variant pricing?`;
         </button>
       </div>
 
-      {/* Product Image Area with Smooth Zoom and Lighting */}
+      {/* Product image blends into the plain page surface. */}
       <Link
         href={productUrl}
         prefetch={false}
@@ -130,7 +130,7 @@ Can you confirm availability and latest variant pricing?`;
               width={280}
               height={280}
               onLoad={() => setImgLoaded(true)}
-              className={`max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] group-hover:drop-shadow-[0_18px_28px_rgba(0,102,255,0.3)] dark:drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)] relative z-10 ${
+              className={`max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 relative z-10 ${
                 imgLoaded ? "opacity-100" : "opacity-0"
               }`}
             />
