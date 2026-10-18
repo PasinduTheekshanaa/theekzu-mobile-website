@@ -53,7 +53,7 @@ export const SocialSection: React.FC = () => {
             Follow Theekzu Mobile
           </h2>
           <p className="text-ink dark:text-ink text-xs sm:text-sm mt-1">
-            Stay connected for new arrivals, unboxings, offers and community drops.
+            Stay connected for new arrivals, unboxings and community updates.
           </p>
         </div>
       </div>

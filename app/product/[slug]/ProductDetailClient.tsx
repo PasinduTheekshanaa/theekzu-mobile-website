@@ -77,7 +77,6 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
 
   // Dynamic pricing & Stock Verification
   const currentPrice = currentVariant ? currentVariant.price : liveProduct.price;
-  const oldPrice = currentVariant ? currentVariant.oldPrice : liveProduct.oldPrice;
 
   // Variant & Product Stock logic
   const currentVariantStock = currentVariant ? (Number(currentVariant.stock) || 0) : 0;
@@ -90,12 +89,6 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   const isOutOfStock = Boolean(catalogError) || !contextProduct || isProductLevelOutOfStock || areAllVariantsOutOfStock || currentVariantStock <= 0;
   React.useEffect(() => { setQuantity(q => Math.max(1, Math.min(q, currentVariantStock))); }, [currentVariantStock]);
   const sku = currentVariant?.sku || `TM-${liveProduct.model}-${selectedStorage}`;
-
-  // Calculated discount
-  const discountPercent =
-    oldPrice && oldPrice > currentPrice
-      ? Math.round(((oldPrice - currentPrice) / oldPrice) * 100)
-      : null;
 
   const wishlisted = isWishlisted(liveProduct.id);
 
@@ -150,7 +143,7 @@ Please confirm availability and islandwide delivery options!`;
   }, [customImages, liveProduct]);
 
   return (
-    <div className="space-y-16 transition-colors duration-300">
+    <div className="space-y-5 sm:space-y-6 transition-colors duration-300">
       
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-ink dark:text-ink">
@@ -183,11 +176,6 @@ Please confirm availability and islandwide delivery options!`;
               <div className="text-ink font-mono text-sm">No Image Available</div>
             )}
 
-            {discountPercent && discountPercent > 0 && (
-              <span data-ui="offer-badge" className="absolute top-4 left-4 bg-canvas   text-ink font-black text-xs px-3.5 py-1 rounded-xl shadow-xs">
-                {discountPercent}% OFF
-              </span>
-            )}
 
             <button
               onClick={() => toggleWishlist(liveProduct.id)}
@@ -278,16 +266,10 @@ Please confirm availability and islandwide delivery options!`;
             <div className="p-3.5 sm:p-4 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/25 mb-6 flex flex-wrap sm:flex-nowrap items-baseline gap-2.5 sm:gap-3 shadow-xs">
               <span
                 key={currentPrice}
-                data-ui={discountPercent ? "sale-price" : undefined}
                 className="whitespace-nowrap tabular-nums text-2xl sm:text-3xl md:text-4xl font-black text-ink animate-price-change"
               >
                 {formatCurrency(currentPrice)}
               </span>
-              {oldPrice && (
-                <span className="text-xs sm:text-sm text-ink dark:text-ink line-through">
-                  {formatCurrency(oldPrice)}
-                </span>
-              )}
               <span className="text-[11px] sm:text-xs text-ink dark:text-ink sm:ml-auto font-medium">
                 Variant Price (LKR)
               </span>

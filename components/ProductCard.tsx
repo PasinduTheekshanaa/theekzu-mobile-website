@@ -139,11 +139,6 @@ Can you confirm availability and latest variant pricing?`;
           </div>
         )}
 
-        {product.discount && (
-          <span data-ui="offer-badge" className="absolute bottom-3 left-3 bg-canvas   text-ink text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-xs z-20">
-            {product.discount}
-          </span>
-        )}
 
         {/* Stock Status Badge */}
         {isOutOfStock ? (
@@ -206,16 +201,9 @@ Can you confirm availability and latest variant pricing?`;
               <span className="text-xs leading-4 text-ink font-medium empty:hidden">
                 {hasVariants ? "From" : ""}
               </span>
-              <span data-ui={product.oldPrice && product.oldPrice > minPrice ? "sale-price" : undefined} className="whitespace-nowrap text-xl leading-7 font-black tabular-nums text-ink">
+              <span className="whitespace-nowrap text-xl leading-7 font-black tabular-nums text-ink">
                 {formatCurrency(minPrice)}
               </span>
-            </div>
-            <div className="text-xs leading-4 empty:hidden">
-              {product.oldPrice && (
-                <span className="whitespace-nowrap tabular-nums text-ink line-through">
-                  {formatCurrency(product.oldPrice)}
-                </span>
-              )}
             </div>
           </div>
 

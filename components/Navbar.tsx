@@ -77,7 +77,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     { name: "iPhones", href: "/iphones" },
     { name: "Showroom", href: "/showroom" },
     { name: "Accessories", href: "/accessories" },
-    { name: "Offers", href: "/offers", badge: "HOT" },
     { name: "Trade-In", href: "/trade-in" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
@@ -142,11 +141,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 }`}
               >
                 <span>{link.name}</span>
-                {link.badge && (
-                  <span data-ui="offer-badge" className="px-1.5 py-0.2 text-[8px] font-black bg-canvas   text-ink rounded-md shadow-xs">
-                    {link.badge}
-                  </span>
-                )}
                 {/* Subtle animated underline with glow */}
                 <span
                   className={`absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-300 ${
@@ -343,11 +337,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                       {link.name}
                     </span>
                     <div className="flex items-center gap-2">
-                      {link.badge && (
-                        <span data-ui="offer-badge" className="text-[9px] bg-canvas text-ink font-black px-1.5 py-0.5 rounded shadow-xs">
-                          {link.badge}
-                        </span>
-                      )}
                       <ArrowRight className={`w-3.5 h-3.5 ${active ? "text-ink dark:text-ink" : "text-ink dark:text-ink"}`} />
                     </div>
                   </Link>

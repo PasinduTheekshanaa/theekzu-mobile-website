@@ -30,7 +30,6 @@ Built with **Next.js 14 (App Router)**, **React**, **Tailwind CSS**, **TypeScrip
    - **Hero** — Headline *“Upgrade Your World with Theekzu Mobile”*, dual CTA buttons, 3D mouse parallax on desktop, floating iPhone 16 Pro Max flagship mockup with glowing gradients, floating spec pills, and 4 trust badges (*Quality Checked, Best Prices, Trusted Service, Fast Support*).
    - **Featured iPhones** — iPhone 16 Pro Max, iPhone 16 Pro, iPhone 15 Pro Max, iPhone 15, iPhone 14 Pro Max (Used), and iPhone 13 (Used).
    - **Shop by Category** — Latest iPhones, Used iPhones, AirPods, Apple Watch, Chargers & Cables, Cases & Accessories.
-   - **Special Offers** — Weekend iPhone Deals, Trade-In Bonus, Accessory Deals, Limited Stock with live countdown timer and subtle card shine animation.
    - **Why Choose Theekzu Mobile** — 6 icon advantage cards covering 32-point inspection, transparent LKR pricing, 1-year warranty, customer care, and islandwide delivery.
    - **Trade-In Center** — Headline *“Trade Your Old iPhone. Upgrade Smarter.”* with interactive form generating pre-filled WhatsApp estimate requests to `94740245749`.
    - **Flagship Showcase** — High-impact showcase for iPhone 16 Pro Max (Titanium, A18 Pro, 48MP Fusion, 33h battery, storage options, starting at Rs. 429,900).
@@ -79,7 +78,7 @@ Theekzu/
 │   ├── shop/page.tsx             # Filterable ecommerce product grid
 │   ├── iphones/page.tsx          # Dedicated iPhones lineup
 │   ├── accessories/page.tsx      # Dedicated Apple accessories lineup
-│   ├── offers/page.tsx           # Special promotions & weekend deals
+│   ├── offers/page.tsx           # Legacy URL redirects to the shop
 │   ├── trade-in/page.tsx         # Trade-in guide & estimation form
 │   ├── about/page.tsx            # Story, mission, vision, stats
 │   ├── contact/page.tsx          # Contact cards & WhatsApp/mailto form
@@ -94,7 +93,6 @@ Theekzu/
 │   ├── FeaturedProducts.tsx      # 6 Featured iPhones
 │   ├── ProductCard.tsx           # Reusable product card with 3D tilt & exact WhatsApp message
 │   ├── CategoryGrid.tsx          # Shop by category cards
-│   ├── SpecialOffers.tsx         # Promotional cards with countdown & subtle shine
 │   ├── WhyChooseUs.tsx           # 6 advantage icon cards
 │   ├── TradeInBanner.tsx         # Trade-in estimation form
 │   ├── FlagshipShowcase.tsx      # iPhone 16 Pro Max deep dive

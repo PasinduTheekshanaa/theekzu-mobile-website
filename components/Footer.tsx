@@ -120,11 +120,6 @@ export const Footer: React.FC = () => {
                   Cases & Protection
                 </Link>
               </li>
-              <li>
-                <Link href="/offers" className="hover:text-ink dark:hover:text-ink transition-colors">
-                  Hot Weekend Offers
-                </Link>
-              </li>
             </ul>
           </div>
 
