@@ -17,6 +17,20 @@ const { reconcileCart } = require('../lib/cartValidation.ts');
 const row = { id: 'product-1', slug: 'test-phone', name: 'Phone', category: 'iphones', active: true };
 const variants = [{ id: 'variant-1', stock: 3, price: 100, storage: '128GB', color: 'Black' }];
 
+test('Mini cutouts replace only existing uploads and keep original URLs for admin deletion', () => {
+ const { originalProductImage } = require('../lib/productImageAssets.ts');
+ const source = 'https://bxkuacptrywwdzacloko.supabase.co/storage/v1/object/public/product-images/fa15f5d0-2e29-4f27-8811-a958272b0fec/1792311150103_ChatGPT_Image_Oct_18__2026__01_42_14_PM-5.png';
+ const cutout = '/products/mini-cutouts/iphone-13-mini-green.webp';
+ assert.equal(service.resolveStorageImageUrl(source), cutout);
+ assert.equal(service.resolveStorageImageUrl(cutout), cutout);
+ assert.equal(originalProductImage(cutout), source);
+ const futureUpload = source.replace('1792311150103_', 'new-upload_');
+ assert.equal(service.resolveStorageImageUrl(futureUpload), futureUpload);
+ assert.equal(originalProductImage(futureUpload), futureUpload);
+ const mapped = service.mapSupabaseToProduct(row, variants, [{ id: 'image-1', storage_path: source, image_url: source, is_primary: true }]);
+ assert.ok(mapped.images.includes(cutout));
+});
+
 test('accessory types normalize names, deduplicate choices and retain built-in labels', () => {
  const types = require('../lib/accessoryTypes.ts');
  assert.equal(types.normalizeAccessoryType('  Earbuds   & Headphones '), 'Earbuds & Headphones');

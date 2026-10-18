@@ -2,6 +2,7 @@ import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { accessoryTypeFromSeries, accessoryTypeSeries } from "./accessoryTypes";
 import { readCatalogQuery } from "./catalogRead";
+import { productImageAsset, originalProductImage } from "./productImageAssets";
 import { Product, ProductVariant, ProductColor, getProductConditions, getVariantCondition, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
 
 export interface SupabaseAdminUser {
@@ -77,11 +78,12 @@ export async function checkIsAdminUser(): Promise<boolean> {
  */
 export function resolveStorageImageUrl(storagePath?: string | null): string {
   if (!storagePath) return "";
+  if (storagePath.startsWith("/")) return storagePath;
   if (storagePath.startsWith("http://") || storagePath.startsWith("https://")) {
-    return storagePath;
+    return productImageAsset(storagePath);
   }
   const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(storagePath);
-  return data?.publicUrl || storagePath;
+  return productImageAsset(data?.publicUrl || storagePath);
 }
 
 /**
@@ -742,8 +744,9 @@ export async function deleteImageFromSupabase(
     }
 
     // If storage path exists in public URL, try to delete from bucket
-    if (imageUrl && imageUrl.includes(STORAGE_BUCKET)) {
-      const parts = imageUrl.split(`${STORAGE_BUCKET}/`);
+    const originalUrl = imageUrl ? originalProductImage(imageUrl) : "";
+    if (originalUrl.includes(STORAGE_BUCKET)) {
+      const parts = originalUrl.split(`${STORAGE_BUCKET}/`);
       if (parts[1]) {
         const storagePath = decodeURIComponent(parts[1]);
         await supabase.storage.from(STORAGE_BUCKET).remove([storagePath]);
