@@ -1,5 +1,5 @@
 "use client";
-import { getProductConditionLabel } from "@/data/products";
+import { getProductConditionLabel, getEnabledVariants, productForCondition, ProductCondition } from "@/data/products";
 
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
@@ -14,9 +14,11 @@ import { useProducts } from "@/context/ProductContext";
 
 interface ProductCardProps {
   product: Product;
+  condition?: ProductCondition;
 }
 
-export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: originalProduct, condition }) => {
+  const product = condition ? productForCondition(originalProduct, condition) : { ...originalProduct, variants: getEnabledVariants(originalProduct) };
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { getProductPrimaryImage, getLowestPrice } = useProducts();
   const router = useRouter();
@@ -35,7 +37,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product }) =>
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [isOpeningDetails, setIsOpeningDetails] = useState(false);
-  const productUrl = `/product/${product.slug}`;
+  const productUrl = `/product/${product.slug}${condition ? `?condition=${encodeURIComponent(condition)}` : ""}`;
 
   const preloadDetails = useCallback(() => {
     router.prefetch(productUrl);
@@ -202,7 +204,7 @@ Can you confirm availability and latest variant pricing?`;
                 {hasVariants ? "From" : ""}
               </span>
               <span className="whitespace-nowrap text-xl leading-7 font-black tabular-nums text-ink">
-                {formatCurrency(minPrice)}
+                {minPrice > 0 ? formatCurrency(minPrice) : "Price not available"}
               </span>
             </div>
           </div>

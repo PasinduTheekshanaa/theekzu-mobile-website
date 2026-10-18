@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-import { products as baseProducts, Product, ProductVariant } from "@/data/products";
+import { products as baseProducts, Product, ProductVariant, ProductCondition, getVariantCondition, getEnabledVariants } from "@/data/products";
 import {
   loadProductsFromSupabase,
   fetchCatalogFromSupabase,
@@ -37,7 +37,7 @@ export interface ProductContextType {
   updateVariant: (productId: string, variant: ProductVariant) => Promise<{ success: boolean; data?: any; error?: string }>;
   addVariant: (productId: string, variant: ProductVariant) => Promise<boolean>;
   deleteVariant: (productId: string, variantId: string) => Promise<{ success: boolean; error?: string }>;
-  generateVariants: (productId: string, storages: string[], colors: string[], basePrice?: number) => Promise<boolean>;
+  generateVariants: (productId: string, storages: string[], colors: string[], basePrice?: number, condition?: ProductCondition) => Promise<boolean>;
   updatePrice: (productId: string, newPrice: number, newOldPrice?: number) => Promise<boolean>;
   updateStock: (productId: string, inStock: boolean) => Promise<boolean>;
   updateProductStock: (productId: string, inStock: boolean) => Promise<{ success: boolean; error?: string }>;
@@ -61,8 +61,9 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export function computeLowestPrice(product: Product): number {
   if (product.variants && product.variants.length > 0) {
-    const available = product.variants.filter(v => v.stock > 0);
-    const prices = (available.length ? available : product.variants).map((v) => v.price).filter((p) => p > 0);
+    const enabled = getEnabledVariants(product);
+    const available = enabled.filter(v => v.stock > 0);
+    const prices = (available.length ? available : enabled).map((v) => v.price).filter((p) => p > 0);
     if (prices.length > 0) {
       return Math.min(...prices);
     }
@@ -72,7 +73,7 @@ export function computeLowestPrice(product: Product): number {
 
 export function computeHighestPrice(product: Product): number {
   if (product.variants && product.variants.length > 0) {
-    const prices = product.variants.map((v) => v.price).filter((p) => p > 0);
+    const prices = getEnabledVariants(product).map((v) => v.price).filter((p) => p > 0);
     if (prices.length > 0) {
       return Math.max(...prices);
     }
@@ -184,7 +185,8 @@ export const ProductProvider: React.FC<{
     productId: string,
     updatedVariant: ProductVariant
   ): Promise<{ success: boolean; data?: any; error?: string }> => {
-    const res = await updateVariantInSupabase(productId, updatedVariant);
+    const parent = products.find(p => p.id === productId);
+    const res = await updateVariantInSupabase(productId, { ...updatedVariant, condition: parent ? getVariantCondition(parent, updatedVariant) : updatedVariant.condition });
     if (res.success) {
       await loadCatalog();
     }
@@ -193,7 +195,8 @@ export const ProductProvider: React.FC<{
 
   // Add a variant
   const addVariant = async (productId: string, variant: ProductVariant): Promise<boolean> => {
-    const res = await updateVariantInSupabase(productId, variant);
+    const parent = products.find(p => p.id === productId);
+    const res = await updateVariantInSupabase(productId, { ...variant, condition: parent ? getVariantCondition(parent, variant) : variant.condition });
     if (res.success) {
       await loadCatalog();
       return true;
@@ -215,13 +218,16 @@ export const ProductProvider: React.FC<{
     productId: string,
     storages: string[],
     colors: string[],
-    basePrice?: number
+    basePrice?: number,
+    requestedCondition?: ProductCondition
   ): Promise<boolean> => {
     const product = products.find((p) => p.id === productId);
     if (!product) return false;
 
-    const initialPrice = basePrice || product.price || 150000;
-    const newVariants: ProductVariant[] = [...(product.variants || [])];
+    const condition = product.category === "accessories" ? "Brand New" : requestedCondition || product.condition;
+    if (!basePrice || !Number.isFinite(basePrice) || basePrice <= 0) return false;
+    const initialPrice = basePrice;
+    const newVariants: ProductVariant[] = [];
 
     storages.forEach((st, stIdx) => {
       const storagePrice = initialPrice + stIdx * 30000;
@@ -229,11 +235,12 @@ export const ProductProvider: React.FC<{
         const variantId = `${productId}-${st.toLowerCase().replace(/\s+/g, "")}-${col.toLowerCase().replace(/\s+/g, "-")}`;
         const colorCode = col.replace(/[^a-zA-Z0-9]/g, "").slice(0, 3).toUpperCase();
         const storageCode = st.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
-        const sku = `TM-${product.model.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${storageCode}-${colorCode}`;
+        const sku = `TM-${product.model.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${storageCode}-${colorCode}-${condition === "Used" ? "USED" : "NEW"}`;
 
-        if (!newVariants.some((v) => v.id === variantId)) {
+        if (!product.variants.some(v => getVariantCondition(product, v) === condition && v.storage === st && v.color === col)) {
           newVariants.push({
             id: variantId,
+            condition,
             storage: st,
             color: col,
             price: storagePrice,
@@ -246,7 +253,8 @@ export const ProductProvider: React.FC<{
     });
 
     for (const v of newVariants) {
-      await updateVariantInSupabase(productId, v);
+      const result = await updateVariantInSupabase(productId, v);
+      if (!result.success) { await loadCatalog(); return false; }
     }
     await loadCatalog();
     return true;

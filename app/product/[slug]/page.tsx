@@ -7,6 +7,7 @@ import { ProductRecovery } from "./ProductRecovery";
 import type { Metadata } from "next";
 
 interface Props {
+  searchParams?: Promise<{ condition?: string }>;
   params: Promise<{
     slug: string;
   }>;
@@ -79,10 +80,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ProductDetailPage({ params }: Props) {
+export default async function ProductDetailPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const preferred = (await searchParams)?.condition;
+  const initialCondition = preferred === "Brand New" || preferred === "Used" ? preferred : undefined;
   const { products, error } = await getServerCatalog();
-  if (error) return <ProductRecovery slug={slug} />;
+  if (error) return <ProductRecovery slug={slug} initialCondition={initialCondition} />;
   const product = products.find((p) => p.slug === slug);
 
   if (!product) {
@@ -173,7 +176,7 @@ export default async function ProductDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c") }}
       />
-      <ProductDetailClient product={product} related={related} />
+      <ProductDetailClient key={`${product.id}:${initialCondition || product.condition}`} product={product} related={related} initialCondition={initialCondition} />
     </div>
   );
 }

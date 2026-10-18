@@ -7,9 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useProducts } from "@/context/ProductContext";
-import { Product, ProductVariant, ProductColor, ProductCondition, getProductConditions, getProductConditionLabel } from "@/data/products";
+import { Product, ProductVariant, ProductColor, ProductCondition, getProductConditions, getProductConditionLabel, getVariantCondition } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { getAccessoryTypes } from "@/lib/accessoryTypes";
+import { ConditionVariantManager } from "@/components/admin/ConditionVariantManager";
 import { AccessoryTypeSelect } from "@/components/AccessoryTypeSelect";
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "@/lib/supabaseClient";
 import { checkIsAdminUser, updateVariantInSupabase } from "@/lib/supabaseService";
@@ -137,6 +138,7 @@ export default function AdminProductsPage() {
   const [genStorages, setGenStorages] = useState<string[]>(["128GB", "256GB", "512GB", "1TB"]);
   const [genColorsText, setGenColorsText] = useState("");
   const [genBasePrice, setGenBasePrice] = useState("");
+  const [genCondition, setGenCondition] = useState<ProductCondition>("Brand New");
 
   // Quick Add Variant State (inside product expansion)
   const [newVariantInputs, setNewVariantInputs] = useState<
@@ -693,8 +695,10 @@ export default function AdminProductsPage() {
       return;
     }
 
-    const basePrice = genBasePrice ? parseInt(genBasePrice, 10) : undefined;
-    await generateVariants(variantGenProduct.id, genStorages, colors, basePrice);
+    const basePrice = Number(genBasePrice);
+    if (!Number.isFinite(basePrice) || basePrice <= 0) { showToast("Enter a positive price for the selected condition.", "error"); return; }
+    const generated = await generateVariants(variantGenProduct.id, genStorages, colors, basePrice, genCondition);
+    if (!generated) { showToast("Could not generate variants. Check the condition-variants migration and try again.", "error"); return; }
     setVariantGenProduct(null);
     showToast(`Generated combinations for ${variantGenProduct.name} and saved to Supabase!`, "success");
   };
@@ -775,6 +779,7 @@ export default function AdminProductsPage() {
       colorNames.forEach((col) => {
         variants.push({
           id: `${id}-${st.toLowerCase().replace(/\s+/g, "")}-${col.toLowerCase().replace(/\s+/g, "-")}`,
+          condition: newProdCategory === "accessories" ? "Brand New" : newProdConditions[0],
           storage: st,
           color: col,
           price: storagePrice,
@@ -793,8 +798,8 @@ export default function AdminProductsPage() {
       series: newProdSeries,
       category: newProdCategory,
       subcategory: newProdCategory === "iphones" ? (newProdConditions.includes("Brand New") ? "latest-iphones" : "used-iphones") : newProdSubcategory,
-      condition: newProdConditions[0],
-      availableConditions: newProdConditions,
+      condition: newProdCategory === "accessories" ? "Brand New" : newProdConditions[0],
+      availableConditions: newProdCategory === "accessories" ? ["Brand New"] : newProdConditions,
       conditionBadge: newProdConditions[0] === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
       price: basePrice,
       oldPrice: Math.round(basePrice * 1.08),
@@ -931,8 +936,8 @@ export default function AdminProductsPage() {
         series: formSeries,
         category: formCategory,
         subcategory: formCategory === "iphones" ? (formConditions.includes("Brand New") ? "latest-iphones" : "used-iphones") : formSubcategory,
-        condition: formConditions[0],
-        availableConditions: formConditions,
+        condition: formCategory === "accessories" ? "Brand New" : formConditions[0],
+        availableConditions: formCategory === "accessories" ? ["Brand New"] : formConditions,
         conditionBadge: formConditions[0] === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
         stock: formInStock ? "In Stock" : "Out of Stock",
         featured: formFeatured,
@@ -944,38 +949,7 @@ export default function AdminProductsPage() {
       const res = await updateProduct(updatedProductData);
 
       if (res.success) {
-        // Synchronize any newly added storages or colors into product_variants
-        const existingVariants = editingProduct.variants || [];
-        const missingVariantsToAdd: ProductVariant[] = [];
-
-        storages.forEach((st) => {
-          colorNames.forEach((col) => {
-            const hasVariant = existingVariants.some(
-              (v) => v.storage.toLowerCase() === st.toLowerCase() && v.color.toLowerCase() === col.toLowerCase()
-            );
-            if (!hasVariant) {
-              const basePrice = editingProduct.price || 150000;
-              const sku = `TM-${(editingProduct.model || editingProduct.name).replace(/[^a-zA-Z0-9]/g, "").toUpperCase()}-${st.toUpperCase()}-${col.slice(0, 3).toUpperCase()}`;
-              missingVariantsToAdd.push({
-                id: `new-${Date.now()}-${st}-${col}`,
-                storage: st,
-                color: col,
-                price: basePrice,
-                oldPrice: Math.round(basePrice * 1.08),
-                stock: 3,
-                sku,
-              });
-            }
-          });
-        });
-
-        if (missingVariantsToAdd.length > 0) {
-          for (const newVar of missingVariantsToAdd) {
-            await updateVariantInSupabase(editingProduct.id, newVar);
-          }
-          await refreshCatalog();
-        }
-
+        // Condition prices are entered explicitly in Manage Variants.
         setEditingProduct(null);
         showToast("Product updated successfully", "success");
         router.refresh();
@@ -1451,7 +1425,7 @@ export default function AdminProductsPage() {
                           {product.stock}
                         </span>
                       </div>
-                      <fieldset className="mt-3" disabled={savingConditions[product.id]} aria-busy={Boolean(savingConditions[product.id])}>
+                      {product.category === "iphones" && (                      <fieldset className="mt-3" disabled={savingConditions[product.id]} aria-busy={Boolean(savingConditions[product.id])}>
                         <legend className="text-[10px] uppercase tracking-wide font-bold text-ink dark:text-ink mb-1.5">Available conditions</legend>
                         <div className="flex flex-wrap items-center gap-2">
                           {(["Brand New", "Used"] as const).map(condition => (
@@ -1467,7 +1441,7 @@ export default function AdminProductsPage() {
                             {savingConditions[product.id] ? "Saving…" : "Select both · Saves automatically"}
                           </span>
                         </div>
-                      </fieldset>
+                      </fieldset>)}
                     </div>
                   </div>
 
@@ -1519,6 +1493,7 @@ export default function AdminProductsPage() {
                     <button
                       onClick={() => {
                         setVariantGenProduct(product);
+                        setGenCondition(product.category === "accessories" ? "Brand New" : product.condition);
                         setGenStorages(product.storageOptions || ["128GB", "256GB", "512GB", "1TB"]);
                         setGenColorsText(product.colors?.map((c) => c.name).join(", ") || "");
                         setGenBasePrice(lowestPrice.toString());
@@ -1563,484 +1538,7 @@ export default function AdminProductsPage() {
 
                 </div>
 
-                {/* Expanded Variant Table & Quick Add */}
-                {isExpanded && (
-                  <div className="p-4 sm:p-6 border-t border-neutral-200 dark:border-neutral-500/20 bg-canvas dark:bg-canvas space-y-6 animate-in slide-in-from-top-2 duration-200">
-                    
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                      <div>
-                        <h4 className="text-sm font-bold text-ink dark:text-ink flex items-center gap-2">
-                          <Layers className="w-4 h-4 text-ink dark:text-ink" />
-                          <span>Individual Variants for {product.name} (Supabase public.product_variants)</span>
-                        </h4>
-                        <p className="text-xs text-ink dark:text-ink">
-                          Edit the exact price, old price, and stock count for each combination. Changes save globally across all devices.
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <div className="text-xs text-ink">
-                          Total Variants: <strong>{variants.length}</strong>
-                        </div>
-
-                        {/* Save All Changes Button */}
-                        {(() => {
-                          const dirtyCount = getDirtyVariantsForProduct(product).length;
-                          const isBatchSaving = Boolean(isSavingProductBatch[product.id]);
-
-                          return (
-                            <button
-                              onClick={() => handleSaveAllVariants(product)}
-                              disabled={dirtyCount === 0 || isBatchSaving}
-                              className={`min-h-[38px] sm:min-h-[36px] px-3.5 py-1.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all shadow-sm active:scale-95 ${
-                                dirtyCount > 0 && !isBatchSaving
-                                  ? "bg-canvas     text-ink shadow-neutral-500/20 cursor-pointer"
-                                  : "bg-canvas dark:bg-canvas text-ink dark:text-ink cursor-not-allowed border border-neutral-300 dark:border-white/5"
-                              }`}
-                              title={
-                                dirtyCount > 0
-                                  ? `Save all ${dirtyCount} modified variants to Supabase`
-                                  : "No unsaved changes in variants"
-                              }
-                            >
-                              {isBatchSaving ? (
-                                <>
-                                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-ink" />
-                                  <span>Saving {dirtyCount} Changes...</span>
-                                </>
-                              ) : (
-                                <>
-                                  <CheckCircle2 className="w-3.5 h-3.5" />
-                                  <span>Save All Changes ({dirtyCount})</span>
-                                </>
-                              )}
-                            </button>
-                          );
-                        })()}
-                      </div>
-                    </div>
-
-                    {/* Variant View: Desktop Table + Mobile Stacked Cards */}
-                    {/* Desktop Table (hidden on mobile) */}
-                    <div className="hidden md:block overflow-x-auto rounded-xl border border-neutral-200 dark:border-white/10">
-                      <table className="w-full text-left text-xs">
-                        <thead className="bg-canvas dark:bg-canvas text-ink dark:text-ink uppercase tracking-wider text-[10px] font-bold">
-                          <tr>
-                            <th className="p-3">Storage</th>
-                            <th className="p-3">Color</th>
-                            <th className="p-3">SKU</th>
-                            <th className="p-3">Price (LKR)</th>
-                            <th className="p-3">Old Price (LKR)</th>
-                            <th className="p-3">Stock Qty</th>
-                            <th className="p-3 text-right">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-neutral-200 dark:divide-white/5">
-                          {variants.map((v) => {
-                            const edit = inlineVariantEdits[v.id] || {
-                              price: v.price.toString(),
-                              oldPrice: v.oldPrice ? v.oldPrice.toString() : "",
-                              stock: v.stock.toString(),
-                            };
-
-                            const isDirty = isVariantDirty(v);
-                            const isSaving = Boolean(savingVariantIds[v.id]);
-                            const isRecentlySaved = Boolean(recentlySavedVariantIds[v.id]);
-
-                            return (
-                              <tr
-                                key={v.id}
-                                className={`transition-colors ${
-                                  isDirty
-                                    ? "bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas"
-                                    : isRecentlySaved
-                                    ? "bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas"
-                                    : "hover:bg-canvas dark:hover:bg-canvas"
-                                }`}
-                              >
-                                <td className="p-3 font-bold text-ink dark:text-ink">
-                                  <div className="flex items-center gap-1.5">
-                                    <span>{v.storage}</span>
-                                    {isDirty && (
-                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider">
-                                        Unsaved
-                                      </span>
-                                    )}
-                                    {isRecentlySaved && (
-                                      <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider flex items-center gap-0.5">
-                                        <Check className="w-2.5 h-2.5" /> Saved
-                                      </span>
-                                    )}
-                                  </div>
-                                </td>
-                                <td className="p-3 text-ink dark:text-ink flex items-center gap-1.5">
-                                  <span className="w-2.5 h-2.5 rounded-full border border-black/20" />
-                                  <span>{v.color}</span>
-                                </td>
-                                <td className="p-3 font-mono text-[11px] text-ink dark:text-ink">
-                                  {v.sku}
-                                </td>
-                                <td className="p-3">
-                                  <input
-                                    type="number"
-                                    value={edit.price}
-                                    onChange={(e) =>
-                                      handleInlineVariantChange(v.id, "price", e.target.value, v.price, v.oldPrice, v.stock)
-                                    }
-                                    className={`w-28 px-2 py-1 rounded bg-canvas dark:bg-canvas border font-bold text-ink dark:text-ink focus:outline-none ${
-                                      isDirty
-                                        ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
-                                        : "border-neutral-200 dark:border-white/10 focus:border-neutral-500"
-                                    }`}
-                                  />
-                                </td>
-                                <td className="p-3">
-                                  <input
-                                    type="number"
-                                    placeholder="Optional"
-                                    value={edit.oldPrice}
-                                    onChange={(e) =>
-                                      handleInlineVariantChange(v.id, "oldPrice", e.target.value, v.price, v.oldPrice, v.stock)
-                                    }
-                                    className="w-28 px-2 py-1 rounded bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-ink dark:text-ink focus:outline-none focus:border-neutral-500"
-                                  />
-                                </td>
-                                <td className="p-3">
-                                  <div className="flex items-center gap-1.5">
-                                    <input
-                                      type="number"
-                                      value={edit.stock}
-                                      onChange={(e) =>
-                                        handleInlineVariantChange(v.id, "stock", e.target.value, v.price, v.oldPrice, v.stock)
-                                      }
-                                      className={`w-16 px-2 py-1 rounded bg-canvas dark:bg-canvas border font-semibold text-ink dark:text-ink focus:outline-none ${
-                                        isDirty
-                                          ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
-                                          : "border-neutral-200 dark:border-white/10 focus:border-neutral-500"
-                                      }`}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => handleToggleVariantStock(v)}
-                                      disabled={variantStockTogglingId === v.id}
-                                      className={`px-2 py-1 rounded text-[10px] font-bold border transition-all ${
-                                        (Number(v.stock) || 0) > 0
-                                          ? "bg-canvas text-ink dark:text-ink border-neutral-500/25 hover:bg-canvas hover:text-ink"
-                                          : "bg-canvas text-ink dark:text-ink border-neutral-500/25 hover:bg-canvas hover:text-ink"
-                                      }`}
-                                      title="Toggle Variant In Stock / Out of Stock"
-                                    >
-                                      {variantStockTogglingId === v.id
-                                        ? "..."
-                                        : (Number(v.stock) || 0) > 0
-                                        ? "In Stock"
-                                        : "Out"}
-                                    </button>
-                                  </div>
-                                </td>
-                                <td className="p-3 text-right">
-                                  <div className="flex items-center justify-end gap-2">
-                                    <button
-                                      onClick={() => handleSaveVariant(product, v)}
-                                      disabled={!isDirty || isSaving}
-                                      className={`px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center gap-1 transition-all ${
-                                        isSaving
-                                          ? "bg-action text-on-action cursor-wait"
-                                          : isRecentlySaved
-                                          ? "bg-action text-on-action shadow-xs"
-                                          : isDirty
-                                          ? "bg-action hover:bg-action text-on-action shadow-xs"
-                                          : "bg-canvas dark:bg-canvas text-ink dark:text-ink cursor-not-allowed"
-                                      }`}
-                                    >
-                                      {isSaving ? (
-                                        <>
-                                          <RefreshCw className="w-3 h-3 animate-spin" />
-                                          <span>Saving...</span>
-                                        </>
-                                      ) : isRecentlySaved ? (
-                                        <>
-                                          <Check className="w-3 h-3" />
-                                          <span>Saved</span>
-                                        </>
-                                      ) : isDirty ? (
-                                        <>
-                                          <Check className="w-3 h-3" />
-                                          <span>Save*</span>
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Check className="w-3 h-3" />
-                                          <span>Save</span>
-                                        </>
-                                      )}
-                                    </button>
-
-                                    <button
-                                      onClick={async () => {
-                                        if (confirm(`Delete variant ${v.storage} - ${v.color} from Supabase?`)) {
-                                          const res = await deleteVariant(product.id, v.id);
-                                          if (res.success) {
-                                            showToast("Variant deleted from Supabase", "info");
-                                          } else {
-                                            showToast(`Failed to delete variant: ${res.error || "Supabase error"}`, "error");
-                                          }
-                                        }
-                                      }}
-                                      className="p-1 rounded text-ink hover:text-ink transition-colors"
-                                      title="Delete variant"
-                                    >
-                                      <Trash2 className="w-3.5 h-3.5" />
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Mobile Cards (visible on md:hidden) */}
-                    <div className="md:hidden space-y-3">
-                      {variants.map((v) => {
-                        const edit = inlineVariantEdits[v.id] || {
-                          price: v.price.toString(),
-                          oldPrice: v.oldPrice ? v.oldPrice.toString() : "",
-                          stock: v.stock.toString(),
-                        };
-
-                        const isDirty = isVariantDirty(v);
-                        const isSaving = Boolean(savingVariantIds[v.id]);
-                        const isRecentlySaved = Boolean(recentlySavedVariantIds[v.id]);
-
-                        return (
-                          <div
-                            key={v.id}
-                            className={`p-3.5 rounded-xl border shadow-xs space-y-2.5 transition-colors ${
-                              isDirty
-                                ? "bg-canvas dark:bg-canvas border-neutral-500/30"
-                                : isRecentlySaved
-                                ? "bg-canvas dark:bg-canvas border-neutral-500/30"
-                                : "bg-canvas dark:bg-canvas border-neutral-200 dark:border-white/10"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between gap-2 flex-wrap">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-bold text-xs text-ink dark:text-ink">{v.storage}</span>
-                                <span className="text-ink">•</span>
-                                <span className="text-xs text-ink dark:text-ink">{v.color}</span>
-                                {isDirty && (
-                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider">
-                                    Unsaved
-                                  </span>
-                                )}
-                                {isRecentlySaved && (
-                                  <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-canvas text-ink dark:text-ink border border-neutral-500/20 uppercase tracking-wider flex items-center gap-0.5">
-                                    <Check className="w-2.5 h-2.5" /> Saved
-                                  </span>
-                                )}
-                              </div>
-                              <span className="font-mono text-[10px] text-ink dark:text-ink truncate max-w-[120px]">
-                                {v.sku}
-                              </span>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2">
-                              <div>
-                                <label className="text-[10px] font-bold uppercase text-ink dark:text-ink block mb-1">
-                                  Price (LKR)
-                                </label>
-                                <input
-                                  type="number"
-                                  value={edit.price}
-                                  onChange={(e) =>
-                                    handleInlineVariantChange(v.id, "price", e.target.value, v.price, v.oldPrice, v.stock)
-                                  }
-                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-canvas dark:bg-canvas border font-bold text-xs text-ink dark:text-ink focus:outline-none ${
-                                    isDirty
-                                      ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
-                                      : "border-neutral-200 dark:border-white/10"
-                                  }`}
-                                />
-                              </div>
-
-                              <div>
-                                <div className="flex items-center justify-between mb-1">
-                                  <label className="text-[10px] font-bold uppercase text-ink dark:text-ink">
-                                    Stock Qty
-                                  </label>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleToggleVariantStock(v)}
-                                    disabled={variantStockTogglingId === v.id}
-                                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors ${
-                                      (Number(v.stock) || 0) > 0
-                                        ? "bg-canvas text-ink dark:text-ink border-neutral-500/25"
-                                        : "bg-canvas text-ink dark:text-ink border-neutral-500/25"
-                                    }`}
-                                  >
-                                    {variantStockTogglingId === v.id
-                                      ? "..."
-                                      : (Number(v.stock) || 0) > 0
-                                      ? "In Stock"
-                                      : "Out"}
-                                  </button>
-                                </div>
-                                <input
-                                  type="number"
-                                  value={edit.stock}
-                                  onChange={(e) =>
-                                    handleInlineVariantChange(v.id, "stock", e.target.value, v.price, v.oldPrice, v.stock)
-                                  }
-                                  className={`w-full px-2.5 py-1.5 rounded-lg bg-canvas dark:bg-canvas border font-bold text-xs text-ink dark:text-ink focus:outline-none ${
-                                    isDirty
-                                      ? "border-neutral-400 dark:border-neutral-500 focus:border-neutral-500 ring-1 ring-neutral-400/20"
-                                      : "border-neutral-200 dark:border-white/10"
-                                  }`}
-                                />
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between gap-2 pt-1 border-t border-neutral-100 dark:border-white/5">
-                              <button
-                                onClick={() => handleSaveVariant(product, v)}
-                                disabled={!isDirty || isSaving}
-                                className={`min-h-[44px] flex-1 py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
-                                  isSaving
-                                    ? "bg-action text-on-action cursor-wait"
-                                    : isRecentlySaved
-                                    ? "bg-action text-on-action shadow-xs"
-                                    : isDirty
-                                    ? "bg-action hover:bg-action text-on-action shadow-xs active:scale-95"
-                                    : "bg-canvas dark:bg-canvas text-ink dark:text-ink cursor-not-allowed"
-                                }`}
-                              >
-                                {isSaving ? (
-                                  <>
-                                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                                    <span>Saving...</span>
-                                  </>
-                                ) : isRecentlySaved ? (
-                                  <>
-                                    <Check className="w-3.5 h-3.5" />
-                                    <span>Saved</span>
-                                  </>
-                                ) : isDirty ? (
-                                  <>
-                                    <Check className="w-3.5 h-3.5" />
-                                    <span>Save Changes*</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Check className="w-3.5 h-3.5" />
-                                    <span>Saved</span>
-                                  </>
-                                )}
-                              </button>
-
-                              <button
-                                onClick={async () => {
-                                  if (confirm(`Delete variant ${v.storage} - ${v.color} from Supabase?`)) {
-                                    const res = await deleteVariant(product.id, v.id);
-                                    if (res.success) {
-                                      showToast("Variant deleted from Supabase", "info");
-                                    } else {
-                                      showToast(`Failed to delete variant: ${res.error || "Supabase error"}`, "error");
-                                    }
-                                  }
-                                }}
-                                className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-canvas text-ink hover:bg-canvas flex items-center justify-center transition-colors active:scale-95"
-                                title="Delete variant"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Quick Add Variant Form */}
-                    <div className="p-4 rounded-xl border border-dashed border-neutral-300 dark:border-white/10 bg-canvas dark:bg-canvas space-y-3">
-                      <span className="text-xs font-bold text-ink dark:text-ink flex items-center gap-1.5">
-                        <Plus className="w-3.5 h-3.5 text-ink dark:text-ink" />
-                        <span>Add Single Variant to Supabase</span>
-                      </span>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5">
-                        <input
-                          type="text"
-                          placeholder="Storage (e.g. 512GB)"
-                          value={newVariantInputs[product.id]?.storage || ""}
-                          onChange={(e) =>
-                            setNewVariantInputs((prev) => ({
-                              ...prev,
-                              [product.id]: { ...(prev[product.id] || { color: "", price: "", oldPrice: "", stock: "0", sku: "" }), storage: e.target.value },
-                            }))
-                          }
-                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Color (e.g. Desert Titanium)"
-                          value={newVariantInputs[product.id]?.color || ""}
-                          onChange={(e) =>
-                            setNewVariantInputs((prev) => ({
-                              ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", price: "", oldPrice: "", stock: "0", sku: "" }), color: e.target.value },
-                            }))
-                          }
-                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
-                        />
-                        <input
-                          type="number"
-                          placeholder="Price (LKR)"
-                          value={newVariantInputs[product.id]?.price || ""}
-                          onChange={(e) =>
-                            setNewVariantInputs((prev) => ({
-                              ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", oldPrice: "", stock: "0", sku: "" }), price: e.target.value },
-                            }))
-                          }
-                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
-                        />
-                        <input
-                          type="number"
-                          placeholder="Old Price (Optional)"
-                          value={newVariantInputs[product.id]?.oldPrice || ""}
-                          onChange={(e) =>
-                            setNewVariantInputs((prev) => ({
-                              ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", price: "", stock: "0", sku: "" }), oldPrice: e.target.value },
-                            }))
-                          }
-                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
-                        />
-                        <input
-                          type="number"
-                          placeholder="Stock (Default: 5)"
-                          value={newVariantInputs[product.id]?.stock || ""}
-                          onChange={(e) =>
-                            setNewVariantInputs((prev) => ({
-                              ...prev,
-                              [product.id]: { ...(prev[product.id] || { storage: "", color: "", price: "", oldPrice: "", sku: "" }), stock: e.target.value },
-                            }))
-                          }
-                          className="px-3 py-1.5 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 text-xs focus:outline-none"
-                        />
-                        <button data-ui="primary"
-                          onClick={() => handleAddSingleVariant(product)}
-                          className="px-3 py-1.5 rounded-lg bg-canvas hover:bg-canvas text-ink font-bold text-xs flex items-center justify-center gap-1 shadow-xs transition-colors"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>Add Variant</span>
-                        </button>
-                      </div>
-                    </div>
-
-                  </div>
-                )}
+                {isExpanded && <ConditionVariantManager product={product} notify={showToast} />}
 
               </div>
             );
@@ -2367,6 +1865,11 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="space-y-4 text-xs">
+              {variantGenProduct.category === "iphones" && <label className="font-bold block">Condition
+                <select value={genCondition} onChange={e => { setGenCondition(e.target.value as ProductCondition); setGenBasePrice(""); }} className="w-full p-2 rounded-xl bg-canvas text-ink border border-neutral-300">
+                  <option>Brand New</option><option>Used</option>
+                </select>
+              </label>}
               <div>
                 <label className="font-bold block mb-1">Select Storage Capacities:</label>
                 <div className="flex flex-wrap gap-2">
@@ -2544,16 +2047,16 @@ export default function AdminProductsPage() {
                 <div>
                   <label className="font-bold block mb-1">Condition:</label>
                   <fieldset className="space-y-2"><legend className="sr-only">Available conditions</legend>
-                    {(["Brand New", "Used"] as const).map(condition => (
+                    {(newProdCategory === "accessories" ? ["Brand New"] as const : ["Brand New", "Used"] as const).map(condition => (
                       <label key={condition} className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={newProdConditions.includes(condition)}
-                          disabled={newProdConditions.length === 1 && newProdConditions.includes(condition)}
+                        <input type="checkbox" checked={newProdCategory === "accessories" || newProdConditions.includes(condition)}
+                          disabled={newProdCategory === "accessories" || (newProdConditions.length === 1 && newProdConditions.includes(condition))}
                           onChange={e => setNewProdConditions(previous => e.target.checked ? [...previous, condition] : previous.filter(value => value !== condition))}
                           className="accent-neutral-600" />
                         {condition}
                       </label>
                     ))}
-                    <p className="text-xs text-ink">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
+                    <p className="text-xs text-ink">iPhones can have separate Brand New and Used prices and stock in Manage Variants. Accessories are Brand New only.</p>
                   </fieldset>
                 </div>
                 <div>
@@ -2686,16 +2189,16 @@ export default function AdminProductsPage() {
                 <div>
                   <label className="font-bold block mb-1">Condition:</label>
                   <fieldset className="space-y-2"><legend className="sr-only">Available conditions</legend>
-                    {(["Brand New", "Used"] as const).map(condition => (
+                    {(formCategory === "accessories" ? ["Brand New"] as const : ["Brand New", "Used"] as const).map(condition => (
                       <label key={condition} className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={formConditions.includes(condition)}
-                          disabled={formConditions.length === 1 && formConditions.includes(condition)}
+                        <input type="checkbox" checked={formCategory === "accessories" || formConditions.includes(condition)}
+                          disabled={formCategory === "accessories" || (formConditions.length === 1 && formConditions.includes(condition))}
                           onChange={e => setFormConditions(previous => e.target.checked ? [...previous, condition] : previous.filter(value => value !== condition))}
                           className="accent-neutral-600" />
                         {condition}
                       </label>
                     ))}
-                    <p className="text-xs text-ink">Select both to offer both conditions. Price and stock are shared. Keep at least one selected.</p>
+                    <p className="text-xs text-ink">iPhones can have separate Brand New and Used prices and stock in Manage Variants. Accessories are Brand New only.</p>
                   </fieldset>
                 </div>
               </div>

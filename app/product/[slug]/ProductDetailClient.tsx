@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Star, MessageCircle, ShoppingBag, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
-import { Product, ProductVariant, ProductCondition, getProductConditions } from "@/data/products";
+import { Product, ProductVariant, ProductCondition, getProductConditions, getConditionVariants } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
@@ -16,11 +16,13 @@ import { ProductCard } from "@/components/ProductCard";
 interface ProductDetailClientProps {
   product: Product;
   related: Product[];
+  initialCondition?: ProductCondition;
 }
 
 export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   product: initialProduct,
   related: initialRelated,
+  initialCondition,
 }) => {
   const { getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages, isLiveDatabase, catalogError } = useProducts();
   const { addItem } = useCart();
@@ -44,10 +46,12 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
       : "Standard";
 
   const availableConditions = getProductConditions(liveProduct);
-  const [conditionChoice, setConditionChoice] = useState<ProductCondition>(liveProduct.condition);
+  const [conditionChoice, setConditionChoice] = useState<ProductCondition>(initialCondition || liveProduct.condition);
   const selectedCondition = availableConditions.includes(conditionChoice) ? conditionChoice : availableConditions[0];
-  const [selectedStorage, setSelectedStorage] = useState(defaultStorage);
-  const [selectedColor, setSelectedColor] = useState(defaultColor);
+  const conditionVariants = getConditionVariants(liveProduct, selectedCondition);
+  const firstVariant = conditionVariants.find(v => v.stock > 0) || conditionVariants[0];
+  const [selectedStorage, setSelectedStorage] = useState(firstVariant?.storage || defaultStorage);
+  const [selectedColor, setSelectedColor] = useState(firstVariant?.color || defaultColor);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState<string>("");
 
@@ -67,28 +71,42 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
 
   // Find exact matching variant
   const currentVariant: ProductVariant | undefined =
-    liveProduct.variants?.find(
+    conditionVariants.find(
       (v) =>
         v.storage.toLowerCase() === selectedStorage.toLowerCase() &&
         v.color.toLowerCase() === selectedColor.toLowerCase()
-    ) ||
-    liveProduct.variants?.find((v) => v.storage.toLowerCase() === selectedStorage.toLowerCase()) ||
-    liveProduct.variants?.[0];
+    );
 
   // Dynamic pricing & Stock Verification
-  const currentPrice = currentVariant ? currentVariant.price : liveProduct.price;
+  const currentPrice = currentVariant?.price;
 
   // Variant & Product Stock logic
   const currentVariantStock = currentVariant ? (Number(currentVariant.stock) || 0) : 0;
   const isProductLevelOutOfStock = liveProduct.stock === "Out of Stock";
   const areAllVariantsOutOfStock = Boolean(
-    liveProduct.variants &&
-      liveProduct.variants.length > 0 &&
-      liveProduct.variants.every((v) => (Number(v.stock) || 0) <= 0)
+    conditionVariants.length === 0 || conditionVariants.every((v) => (Number(v.stock) || 0) <= 0)
   );
-  const isOutOfStock = Boolean(catalogError) || !contextProduct || isProductLevelOutOfStock || areAllVariantsOutOfStock || currentVariantStock <= 0;
+  const isOutOfStock = Boolean(catalogError) || !contextProduct || isProductLevelOutOfStock || areAllVariantsOutOfStock || currentVariantStock <= 0 || !currentPrice;
   React.useEffect(() => { setQuantity(q => Math.max(1, Math.min(q, currentVariantStock))); }, [currentVariantStock]);
-  const sku = currentVariant?.sku || `TM-${liveProduct.model}-${selectedStorage}`;
+  const sku = currentVariant?.sku;
+
+  const chooseCondition = (condition: ProductCondition) => {
+    setConditionChoice(condition);
+    const variants = getConditionVariants(liveProduct, condition);
+    const first = variants.find(v => v.stock > 0) || variants[0];
+    if (first) { setSelectedStorage(first.storage); setSelectedColor(first.color); }
+    setQuantity(1);
+  };
+
+  const chooseStorage = (storage: string) => {
+    setSelectedStorage(storage);
+    const matches = conditionVariants.filter(v => v.storage === storage);
+    if (!matches.some(v => v.color === selectedColor)) {
+      const first = matches.find(v => v.stock > 0) || matches[0];
+      if (first) setSelectedColor(first.color);
+    }
+    setQuantity(1);
+  };
 
   const wishlisted = isWishlisted(liveProduct.id);
 
@@ -114,7 +132,7 @@ Hello Theekzu Mobile, I would like to place an order for:
 • *Storage:* ${selectedStorage}
 • *Color:* ${selectedColor}
 • *SKU:* ${sku}
-• *Price:* ${formatCurrency(currentPrice)}
+• *Price:* ${formatCurrency(currentPrice || 0)}
 • *Stock Status:* In Stock (${currentVariantStock} available)
 • *Quantity:* ${quantity}
 • *Condition:* ${selectedCondition}
@@ -268,25 +286,25 @@ Please confirm availability and islandwide delivery options!`;
                 key={currentPrice}
                 className="whitespace-nowrap tabular-nums text-2xl sm:text-3xl md:text-4xl font-black text-ink animate-price-change"
               >
-                {formatCurrency(currentPrice)}
+                {currentPrice ? formatCurrency(currentPrice) : "Price not available"}
               </span>
               <span className="text-[11px] sm:text-xs text-ink dark:text-ink sm:ml-auto font-medium">
                 Variant Price (LKR)
               </span>
             </div>
 
-            <fieldset className="mb-6">
+            {liveProduct.category === "iphones" && <fieldset className="mb-6">
               <legend className="text-xs uppercase tracking-wider font-bold mb-2.5">Condition: {selectedCondition}</legend>
               <div className="flex flex-wrap gap-2.5">
                 {availableConditions.map(condition => (
                   <button key={condition} type="button" aria-pressed={condition === selectedCondition}
-                    onClick={() => setConditionChoice(condition)}
+                    onClick={() => chooseCondition(condition)}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all ${condition === selectedCondition ? "border-neutral-600 bg-canvas text-ink dark:bg-canvas dark:text-ink" : "border-neutral-200 dark:border-white/10"}`}>
                     {condition}
                   </button>
                 ))}
               </div>
-            </fieldset>
+            </fieldset>}
 
             {/* Storage Selector */}
             {liveProduct.storageOptions && liveProduct.storageOptions.length > 0 && (
@@ -300,14 +318,14 @@ Please confirm availability and islandwide delivery options!`;
                   {liveProduct.storageOptions.map((st) => {
                     const isSelected = st === selectedStorage;
                     // Check if this storage option has any stock in any color
-                    const stStock = liveProduct.variants
+                    const stStock = conditionVariants
                       ?.filter((v) => v.storage.toLowerCase() === st.toLowerCase())
                       .reduce((acc, curr) => acc + curr.stock, 0);
 
                     return (
                       <button
                         key={st}
-                        onClick={() => setSelectedStorage(st)}
+                        onClick={() => chooseStorage(st)}
                         className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 btn-press ${
                           isSelected
                             ? "border-neutral-600 bg-canvas text-ink ring-2 ring-neutral-500/20 dark:border-neutral-400 dark:bg-canvas dark:text-ink dark:ring-neutral-500/40 shadow-xs animate-variant-pop"
@@ -336,7 +354,7 @@ Please confirm availability and islandwide delivery options!`;
                 <div className="flex flex-wrap gap-2.5">
                   {liveProduct.colors.map((col) => {
                     const isSelected = col.name === selectedColor;
-                    const variantForCol = liveProduct.variants?.find(
+                    const variantForCol = conditionVariants.find(
                       (v) =>
                         v.storage.toLowerCase() === selectedStorage.toLowerCase() &&
                         v.color.toLowerCase() === col.name.toLowerCase()

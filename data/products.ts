@@ -7,7 +7,8 @@ import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 
 export type ProductCondition = "Brand New" | "Used";
 
-export function getProductConditions(product: { condition: ProductCondition; availableConditions?: ProductCondition[] }): ProductCondition[] {
+export function getProductConditions(product: { condition: ProductCondition; availableConditions?: ProductCondition[]; category?: string }): ProductCondition[] {
+  if (product.category === "accessories") return ["Brand New"];
   const conditions = (["Brand New", "Used"] as const).filter(condition => product.availableConditions?.includes(condition));
   return conditions.length ? conditions : [product.condition];
 }
@@ -23,6 +24,7 @@ export interface ProductColor {
 
 export interface ProductVariant {
   id: string;
+  condition?: ProductCondition;
   storage: string;
   color: string;
   price: number;
@@ -81,6 +83,29 @@ export interface Product {
 
   // Complete variant list (storage + color + price + stock + sku)
   variants: ProductVariant[];
+}
+
+// Legacy rows belong only to their original product condition, never both.
+export function getVariantCondition(product: Pick<Product, "condition" | "category">, variant: ProductVariant): ProductCondition {
+  return product.category === "accessories" ? "Brand New" : variant.condition || product.condition;
+}
+
+export function getConditionVariants(product: Product, condition: ProductCondition): ProductVariant[] {
+  return product.variants.filter(variant => getVariantCondition(product, variant) === condition);
+}
+
+export function getEnabledVariants(product: Product): ProductVariant[] {
+  return product.variants.filter(variant => getProductConditions(product).includes(getVariantCondition(product, variant)));
+}
+
+export function productForCondition(product: Product, condition: ProductCondition): Product {
+  const variants = getConditionVariants(product, condition);
+  const priced = variants.filter(v => v.price > 0);
+  const available = priced.filter(v => v.stock > 0);
+  const price = Math.min(...(available.length ? available : priced).map(v => v.price));
+  return { ...product, condition, availableConditions: [condition], variants, price: Number.isFinite(price) ? price : 0,
+    conditionBadge: condition === "Used" ? "Grade A+ Pre-Owned" : "Brand New Sealed",
+    stock: product.stock === "In Stock" && available.length > 0 ? "In Stock" : "Out of Stock" };
 }
 
 // Fallback high-tech placeholder when no specific image is available

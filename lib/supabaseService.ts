@@ -2,7 +2,7 @@ import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { accessoryTypeFromSeries, accessoryTypeSeries } from "./accessoryTypes";
 import { readCatalogQuery } from "./catalogRead";
-import { Product, ProductVariant, ProductColor, getProductConditions, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
+import { Product, ProductVariant, ProductColor, getProductConditions, getVariantCondition, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
 
 export interface SupabaseAdminUser {
   user_id: string;
@@ -93,9 +93,13 @@ export function mapSupabaseToProduct(
   images: any[] = []
 ): Product {
   const baseMatch = baseProducts.find((bp) => bp.slug === p.slug);
+  const category = p.category || baseMatch?.category || "iphones";
+  const condition = category === "accessories" ? "Brand New" : p.condition || baseMatch?.condition || "Brand New";
+  const conditions = getProductConditions({ category, condition, availableConditions: Array.isArray(p.available_conditions) ? p.available_conditions : undefined });
 
   const mappedVariants: ProductVariant[] = variants.map((v) => ({
     id: v.id || `${p.id}-${v.storage}-${v.color}`,
+    condition: category === "accessories" ? "Brand New" : v.condition || condition,
     storage: v.storage || "128GB",
     color: v.color || "Standard",
     price: Number(v.price) || 0,
@@ -104,7 +108,8 @@ export function mapSupabaseToProduct(
     sku: v.sku || `TM-${p.slug}-${v.storage}-${v.color}`,
   }));
 
-  const priced = mappedVariants.filter(v => v.price > 0);
+  const enabledVariants = mappedVariants.filter(v => conditions.includes(v.condition!));
+  const priced = enabledVariants.filter(v => v.price > 0);
   const available = priced.filter(v => v.stock > 0);
   const displayVariant = (available.length ? available : priced).reduce<ProductVariant | undefined>((best, v) => !best || v.price < best.price ? v : best, undefined);
   const lowestPrice = displayVariant?.price || 0;
@@ -165,7 +170,6 @@ export function mapSupabaseToProduct(
     storageOptions = ["128GB", "256GB", "512GB"];
   }
 
-  const conditions = getProductConditions({ condition: p.condition || baseMatch?.condition || "Brand New", availableConditions: Array.isArray(p.available_conditions) ? p.available_conditions : undefined });
 
   // Stock: In Stock if product-level is not Out of Stock AND any variant has stock > 0
   const isProductLevelOOS =
@@ -173,7 +177,7 @@ export function mapSupabaseToProduct(
     (p as any).stock_status === "Out of Stock" ||
     (p as any).in_stock === false;
 
-  const hasAnyVariantStock = mappedVariants.length > 0 ? mappedVariants.some((v) => (Number(v.stock) || 0) > 0) : false;
+  const hasAnyVariantStock = enabledVariants.some((v) => (Number(v.stock) || 0) > 0);
   const stock = isProductLevelOOS || !hasAnyVariantStock ? "Out of Stock" : "In Stock";
 
   return {
@@ -187,9 +191,9 @@ export function mapSupabaseToProduct(
     subcategory: p.category === "accessories"
       ? accessoryTypeFromSeries(p.series, baseMatch?.subcategory || "cases-accessories")
       : baseMatch?.subcategory || (p.condition === "Used" ? "used-iphones" : "latest-iphones"),
-    condition: p.condition || baseMatch?.condition || "Brand New",
+    condition,
     availableConditions: conditions,
-    conditionBadge: conditions.length > 1 ? "Brand New & Used" : (p.condition || baseMatch?.condition) === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
+    conditionBadge: conditions.length > 1 ? "Brand New & Used" : conditions[0] === "Brand New" ? "Brand New Sealed" : "Grade A+ Pre-Owned",
     price: lowestPrice,
     oldPrice: lowestOldPrice ? Number(lowestOldPrice) : undefined,
     discount,
@@ -262,7 +266,7 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
     if (!dbProducts?.length) return { products: [], imagesMap: {}, source: "Supabase" };
 
     const [variantResult, imageResult] = await Promise.all([
-      readCatalogQuery(signal => supabase.from("product_variants").select("id, product_id, storage, color, price, old_price, stock, sku, active").eq("active", true).in("product_id", dbProducts.map(p => p.id)).abortSignal(signal).retry(false)),
+      readCatalogQuery(signal => supabase.from("product_variants").select("*").eq("active", true).in("product_id", dbProducts.map(p => p.id)).abortSignal(signal).retry(false)),
       readCatalogQuery(signal => supabase.from("product_images").select("id, product_id, storage_path, color, is_primary, created_at").in("product_id", dbProducts.map(p => p.id)).order("is_primary", { ascending: false }).abortSignal(signal).retry(false)),
     ]);
     if (variantResult.error || imageResult.error) {
@@ -446,17 +450,17 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
     // Query existing variants including stock to preserve inventory
     const { data: existingVars, error: existingVarsErr } = await supabase
       .from("product_variants")
-      .select("id, product_id, storage, color, stock");
+      .select("id, product_id, condition, storage, color, stock");
 
     if (existingVarsErr) {
       throw new Error("Cannot safely seed catalog without reading existing inventory: " + existingVarsErr.message);
     }
 
     const existingVarMap = new Map(
-      (existingVars || []).map((v) => [`${v.product_id}_${v.storage}_${v.color}`, v])
+      (existingVars || []).map((v) => [`${v.product_id}_${v.condition}_${v.storage}_${v.color}`, v])
     );
     const existingVarKeySet = new Set(
-      (existingVars || []).map((v) => `${v.product_id}_${v.storage}_${v.color}`)
+      (existingVars || []).map((v) => `${v.product_id}_${v.condition}_${v.storage}_${v.color}`)
     );
 
     // 3. Upsert products one-by-one.
@@ -519,7 +523,7 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
       // 4. Upsert variants for this product with product_id = productUuid
       if (p.variants && p.variants.length > 0) {
         for (const v of p.variants) {
-          const varKey = `${productUuid}_${v.storage}_${v.color}`;
+          const varKey = `${productUuid}_${getVariantCondition(p, v)}_${v.storage}_${v.color}`;
           const isVarExisting = existingVarKeySet.has(varKey);
           const existingVar = existingVarMap.get(varKey);
 
@@ -534,6 +538,7 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
             .upsert(
               {
                 product_id: productUuid,
+                condition: getVariantCondition(p, v),
                 storage: v.storage,
                 color: v.color,
                 price: Number(v.price) || 0,
@@ -542,7 +547,7 @@ export async function migrateCatalogToSupabase(): Promise<MigrationResult> {
                 sku: v.sku || `TM-${p.model || p.slug}-${v.storage}-${v.color}`,
                 active: true,
               },
-              { onConflict: "product_id,storage,color" }
+              { onConflict: "product_id,condition,storage,color" }
             );
 
           if (variantError) {
@@ -849,6 +854,7 @@ export async function updateVariantInSupabase(
         stock,
         updated_at: new Date().toISOString(),
       };
+      if (variant.condition) payload.condition = variant.condition;
       if (variant.storage) payload.storage = variant.storage;
       if (variant.color) payload.color = variant.color;
       if (variant.sku) payload.sku = variant.sku;
@@ -866,7 +872,8 @@ export async function updateVariantInSupabase(
         .from("product_variants")
         .update(payload)
         .eq("id", variant.id)
-        .select("id, product_id, storage, color, price, old_price, stock, sku, active");
+        .eq("product_id", targetProductId)
+        .select("*");
 
       if (error) {
         if (process.env.NODE_ENV !== "production") {
@@ -879,6 +886,7 @@ export async function updateVariantInSupabase(
     } else {
       const insertPayload: any = {
         product_id: targetProductId,
+        ...(variant.condition ? { condition: variant.condition } : {}),
         storage: variant.storage,
         color: variant.color,
         price,
@@ -963,7 +971,7 @@ export async function updateProductInSupabase(
       name: product.name.trim(),
       series: product.category === "accessories" ? accessoryTypeSeries(product.subcategory) : product.series,
       category: product.category || "iphones",
-      condition: product.condition || "Brand New",
+      condition: product.category === "accessories" ? "Brand New" : product.condition || "Brand New",
       available_conditions: getProductConditions(product),
       description: product.description !== undefined ? product.description : "",
       featured: Boolean(product.featured),
@@ -1020,7 +1028,7 @@ export async function addProductToSupabase(product: Product): Promise<{ success:
         name: product.name,
         series: product.category === "accessories" ? accessoryTypeSeries(product.subcategory) : product.series,
         category: product.category,
-        condition: product.condition,
+        condition: product.category === "accessories" ? "Brand New" : product.condition,
         available_conditions: getProductConditions(product),
         description: product.description,
         featured: Boolean(product.featured),
@@ -1037,6 +1045,7 @@ export async function addProductToSupabase(product: Product): Promise<{ success:
     if (product.variants && product.variants.length > 0) {
       const varRows = product.variants.map((v) => ({
         product_id: newProd.id,
+        condition: getVariantCondition(product, v),
         storage: v.storage,
         color: v.color,
         price: Number(v.price) || 0,

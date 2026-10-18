@@ -82,14 +82,69 @@ test('disabled conditions cannot remain orderable in the cart', () => {
  assert.equal(reconcileCart([{ ...item, condition: 'Brand New' }], [product])[0].stockStatus, 'In Stock');
 });
 
-test('cart lines for both conditions cannot exceed shared variant stock', () => {
- const product = service.mapSupabaseToProduct({ ...row, available_conditions: ['Brand New', 'Used'] }, variants);
+test('cart lines use separate prices and stock for each condition', () => {
+ const product = service.mapSupabaseToProduct({ ...row, available_conditions: ['Brand New', 'Used'] }, [
+  { ...variants[0], condition: 'Brand New' },
+  { ...variants[0], id: 'used-variant', condition: 'Used', price: 60, stock: 1 },
+ ]);
  const item = { productId: row.id, variantId: 'variant-1', quantity: 2, price: 100 };
- const cart = reconcileCart([{ ...item, condition: 'Brand New' }, { ...item, condition: 'Used' }], [product]);
+ const cart = reconcileCart([{ ...item, condition: 'Brand New' }, { ...item, variantId: 'used-variant', condition: 'Used' }], [product]);
  assert.deepEqual(cart.map(item => item.quantity), [2, 1]);
  assert.equal(cart.every(item => item.stockStatus === 'In Stock'), true);
+ assert.deepEqual(cart.map(item => item.price), [100, 60]);
  const soldOut = reconcileCart([{ ...item, quantity: 3, condition: 'Brand New' }, { ...item, condition: 'Used' }], [product]);
  assert.equal(soldOut[1].stockStatus, 'Out of Stock');
+});
+
+test('legacy prices remain tied to the original condition and cannot be used for the other condition', () => {
+ const { getConditionVariants } = require('../data/products.ts');
+ const product = service.mapSupabaseToProduct({ ...row, condition: 'Used', available_conditions: ['Brand New', 'Used'] }, variants);
+ assert.equal(product.variants[0].condition, 'Used');
+ assert.equal(getConditionVariants(product, 'Brand New').length, 0);
+ assert.equal(getConditionVariants(product, 'Used')[0].price, 100);
+ const wrong = reconcileCart([{ productId: row.id, variantId: 'variant-1', condition: 'Brand New', price: 100, quantity: 1 }], [product]);
+ assert.equal(wrong[0].stockStatus, 'Out of Stock');
+});
+
+test('accessories always normalize to Brand New even with legacy Used product settings', () => {
+ const { getProductConditions, getConditionVariants } = require('../data/products.ts');
+ const product = service.mapSupabaseToProduct({ ...row, category: 'accessories', condition: 'Used', available_conditions: ['Used'] }, variants);
+ assert.deepEqual(getProductConditions(product), ['Brand New']);
+ assert.equal(product.condition, 'Brand New');
+ assert.equal(getConditionVariants(product, 'Used').length, 0);
+ assert.equal(product.variants[0].condition, 'Brand New');
+});
+
+test('disabled-condition stock and prices do not affect displayed availability', () => {
+ const product = service.mapSupabaseToProduct({ ...row, available_conditions: ['Brand New'] }, [
+  { ...variants[0], condition: 'Brand New', price: 200, stock: 0 },
+  { ...variants[0], id: 'used-variant', condition: 'Used', price: 70, stock: 5 },
+ ]);
+ assert.equal(product.stock, 'Out of Stock');
+ assert.equal(product.price, 200);
+});
+
+test('filtered condition cards retain that condition price rather than the cheapest other condition', () => {
+ const { productForCondition } = require('../data/products.ts');
+ const product = service.mapSupabaseToProduct({ ...row, available_conditions: ['Brand New', 'Used'] }, [
+  { ...variants[0], condition: 'Brand New', price: 200 },
+  { ...variants[0], id: 'used-variant', condition: 'Used', price: 70 },
+ ]);
+ assert.equal(productForCondition(product, 'Brand New').price, 200);
+ assert.equal(productForCondition(product, 'Used').price, 70);
+ assert.equal(productForCondition({ ...product, variants: product.variants.slice(1) }, 'Brand New').price, 0);
+});
+
+test('variant writes persist condition and scope updates to the parent product', async () => {
+ calls = []; replies = { product_variants: { data: [{ id: 'saved' }], error: null } };
+ const productId = '8b4cbe14-0f64-4b50-9274-b542d86c118d';
+ const variant = { ...variants[0], id: 'a0ba879f-e4bc-40df-b9f7-1de883267da1', condition: 'Used' };
+ assert.equal((await service.updateVariantInSupabase(productId, variant)).success, true);
+ assert.equal(calls.find(c => c.method === 'update').args[0].condition, 'Used');
+ assert.ok(calls.some(c => c.method === 'eq' && c.args[0] === 'product_id' && c.args[1] === productId));
+ calls = [];
+ assert.equal((await service.updateVariantInSupabase(productId, { ...variant, id: 'new-variant', condition: 'Brand New' })).success, true);
+ assert.equal(calls.find(c => c.method === 'insert').args[0].condition, 'Brand New');
 });
 test('missing variants and manual override cannot advertise stock', () => {
  assert.equal(service.mapSupabaseToProduct(row, []).stock, 'Out of Stock');

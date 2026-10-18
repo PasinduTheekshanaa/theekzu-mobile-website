@@ -1,5 +1,5 @@
 "use client";
-import { getProductConditions } from "@/data/products";
+import { getProductConditions, productForCondition } from "@/data/products";
 
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
@@ -134,6 +134,7 @@ export default function ShopPage() {
     // Condition filter
     if (selectedCondition !== "all") {
       result = result.filter((p) => getProductConditions(p).some(condition => condition === selectedCondition));
+      if (selectedCondition === "Brand New" || selectedCondition === "Used") result = result.map(p => productForCondition(p, selectedCondition));
     }
 
     // Storage filter
@@ -341,7 +342,7 @@ export default function ShopPage() {
               }}
               className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
             >
-              <ProductCard product={p} />
+              <ProductCard product={p} condition={selectedCondition === "Brand New" || selectedCondition === "Used" ? selectedCondition : undefined} />
             </div>
           ))}
         </div>

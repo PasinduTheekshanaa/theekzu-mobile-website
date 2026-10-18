@@ -83,7 +83,7 @@ export default function IPhonesPage() {
             }}
             className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
           >
-            <ProductCard product={product} />
+            <ProductCard product={product} condition={filter === "all" ? undefined : filter === "new" ? "Brand New" : "Used"} />
           </div>
         ))}
       </div>

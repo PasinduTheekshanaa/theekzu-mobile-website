@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useProducts } from "./ProductContext";
 import { loadProductsFromSupabase } from "@/lib/supabaseService";
 import { reconcileCart } from "@/lib/cartValidation";
-import { Product, ProductVariant, getProductConditions } from "@/data/products";
+import { Product, ProductVariant, getProductConditions, getVariantCondition } from "@/data/products";
 import { storeConfig, formatLKR, getWhatsAppUrl } from "@/config/store";
 
 export interface CartItem {
@@ -102,12 +102,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (product.variants && product.variants.length > 0) {
       matchedVariant = product.variants.find(
         (v) =>
-          (finalVariantId && v.id === finalVariantId) ||
+          getVariantCondition(product, v) === product.condition &&
+          (finalVariantId ? v.id === finalVariantId :
           (v.storage.toLowerCase() === selectedStorage.toLowerCase() &&
-           v.color.toLowerCase() === selectedColor.toLowerCase())
+           v.color.toLowerCase() === selectedColor.toLowerCase()))
       );
       if (matchedVariant) {
-        if (finalPrice === undefined) finalPrice = matchedVariant.price;
+        finalPrice = matchedVariant.price;
         if (!finalVariantId) finalVariantId = matchedVariant.id;
       }
     }
