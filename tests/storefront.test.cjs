@@ -9,7 +9,7 @@ const resolve = Module._resolveFilename;
 Module._resolveFilename = function(name, ...args) { return resolve.call(this, name.startsWith('@/') ? path.join(root, name.slice(2)) : name, ...args); };
 require.extensions['.ts'] = (module, file) => module._compile(ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true } }).outputText, file);
 let replies = {}; let calls = [];
-const db = { from(table) { const q = { then(ok, fail) { return Promise.resolve(replies[table] || { data: [], error: null }).then(ok, fail); } }; for (const method of ['select','eq','in','order','update','insert','single','maybeSingle','range']) q[method] = (...args) => { calls.push({ table, method, args }); return q; }; return q; }, storage: { from() { return { getPublicUrl(p) { return { data: { publicUrl: p } }; } }; } } };
+const db = { from(table) { const q = { then(ok, fail) { const reply = replies[table]; return Promise.resolve((typeof reply === 'function' ? reply() : reply) || { data: [], error: null }).then(ok, fail); } }; for (const method of ['select','eq','in','order','update','insert','single','maybeSingle','range','abortSignal','retry']) q[method] = (...args) => { calls.push({ table, method, args }); return q; }; return q; }, storage: { from() { return { getPublicUrl(p) { return { data: { publicUrl: p } }; } }; } } };
 const clientFile = path.join(root, 'lib/supabaseClient.ts');
 require.cache[clientFile] = { id: clientFile, filename: clientFile, loaded: true, exports: { supabase: db, isSupabaseConfigured: () => true, STORAGE_BUCKET: 'product-images' } };
 const service = require('../lib/supabaseService.ts');
@@ -106,6 +106,25 @@ test('variant query failure fails closed instead of fabricating stock', async ()
  const result = await service.loadProductsFromSupabase();
  assert.equal(result.source, 'error'); assert.deepEqual(result.products, []);
 });
+
+test('a transient catalog read retries and returns actual database products', async () => {
+ let attempts = 0;
+ replies = { products: () => ++attempts === 1 ? { data: null, status: 503, error: { message: 'temporary' } } : { data: [row], status: 200, error: null }, product_variants: { data: [{ ...variants[0], product_id: row.id }], error: null } };
+ const result = await service.loadProductsFromSupabase();
+ assert.equal(attempts, 2);
+ assert.equal(result.source, 'Supabase');
+ assert.equal(result.products[0].id, row.id);
+ assert.equal(result.products[0].price, 100);
+});
+
+test('exhausted inventory reads fail closed after two attempts', async () => {
+ let attempts = 0;
+ replies = { products: { data: [row], error: null }, product_variants: () => { attempts++; return { data: null, status: 504, error: { message: 'timeout' } }; } };
+ const result = await service.loadProductsFromSupabase();
+ assert.equal(attempts, 2);
+ assert.equal(result.source, 'error');
+ assert.deepEqual(result.products, []);
+});
 test('stock toggle does not overwrite any variant quantities', async () => {
  calls = []; replies = { products: { data: { id: '1' }, error: null } };
  const result = await service.updateProductStockInSupabase('8b4cbe14-0f64-4b50-9274-b542d86c118d', false);
@@ -158,7 +177,7 @@ test('review endpoint rejects cross-origin requests and missing server configura
 });
 
 
-test('explicit localhost testing supports production without trusting forwarded headers', async () => {
+test('review validation works without IP headers or a cooldown secret', async () => {
  const { POST } = require('../app/api/reviews/route.ts');
  const { NextRequest } = require('next/server');
  const names = ['NODE_ENV','VERCEL','SUPABASE_SERVICE_ROLE_KEY','NEXT_PUBLIC_SUPABASE_URL','REVIEW_RATE_LIMIT_SECRET','REVIEW_LOCAL_TESTING'];
@@ -167,9 +186,10 @@ test('explicit localhost testing supports production without trusting forwarded 
  try {
   const request = origin => new NextRequest(origin+'/api/reviews',{method:'POST',headers:{origin,'x-forwarded-for':'127.0.0.1'},body:'{}'});
   assert.equal((await POST(request('http://localhost:3100'))).status,400);
-  assert.equal((await POST(request('https://store.example'))).status,503);
+  assert.equal((await POST(request('https://store.example'))).status,400);
   delete process.env.REVIEW_LOCAL_TESTING;
-  assert.equal((await POST(request('http://localhost:3100'))).status,503);
+  delete process.env.REVIEW_RATE_LIMIT_SECRET;
+  assert.equal((await POST(request('http://localhost:3100'))).status,400);
  } finally { for (const n of names) { if(previous[n] === undefined) delete process.env[n]; else process.env[n]=previous[n]; } }
 });
 

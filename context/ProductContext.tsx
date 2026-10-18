@@ -107,12 +107,15 @@ export const ProductProvider: React.FC<{
       const result = await loadProductsFromSupabase();
       if (id !== requestId.current) return;
       setCatalogError(result.error);
-      {
+      if (result.source === "Supabase") {
         setProducts(result.products);
         setImagesMap(result.imagesMap);
-        setIsLiveDatabase(result.source === "Supabase");
       }
+      setIsLiveDatabase(result.source === "Supabase");
     } catch (err) {
+      if (id !== requestId.current) return;
+      setCatalogError("The catalog is temporarily unavailable. Please try again.");
+      setIsLiveDatabase(false);
       if (process.env.NODE_ENV !== "production") {
         console.error("Failed to load catalog from Supabase:", err);
       }
@@ -122,7 +125,7 @@ export const ProductProvider: React.FC<{
   }, []);
 
   useEffect(() => {
-    if (initialProducts === undefined) {
+    if (initialProducts === undefined || initialError) {
       loadCatalog();
     }
 
@@ -130,6 +133,7 @@ export const ProductProvider: React.FC<{
     const scheduleRefresh = () => { clearTimeout(refreshTimer); refreshTimer = setTimeout(loadCatalog, 300); };
     const onVisible = () => { if (document.visibilityState === "visible") scheduleRefresh(); };
     document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("online", scheduleRefresh);
     // Supabase Realtime channel for instant cross-device updates
     if (isSupabaseConfigured()) {
       const channel = supabase
@@ -159,12 +163,21 @@ export const ProductProvider: React.FC<{
 
       return () => {
         clearTimeout(refreshTimer);
+        window.removeEventListener("online", scheduleRefresh);
         document.removeEventListener("visibilitychange", onVisible);
         supabase.removeChannel(channel);
       };
     }
-    return () => { clearTimeout(refreshTimer); document.removeEventListener("visibilitychange", onVisible); };
+    return () => { clearTimeout(refreshTimer); window.removeEventListener("online", scheduleRefresh); document.removeEventListener("visibilitychange", onVisible); };
   }, [loadCatalog]);
+
+  useEffect(() => {
+    if (!catalogError) return;
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") void loadCatalog();
+    }, 30000);
+    return () => clearInterval(timer);
+  }, [catalogError, loadCatalog]);
 
   // Update a variant
   const updateVariant = async (

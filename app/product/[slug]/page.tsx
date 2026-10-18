@@ -3,6 +3,7 @@ import { getProductConditions, getProductConditionLabel } from "@/data/products"
 import { notFound } from "next/navigation";
 import { getServerCatalog } from "@/lib/serverCatalog";
 import { ProductDetailClient } from "./ProductDetailClient";
+import { ProductRecovery } from "./ProductRecovery";
 import type { Metadata } from "next";
 
 interface Props {
@@ -16,7 +17,7 @@ export const revalidate = 30;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { products, error } = await getServerCatalog();
-  if (error) throw new Error("Product information is temporarily unavailable.");
+  if (error) return { title: "iPhones | Theekzu Mobile" };
   const product = products.find((p) => p.slug === slug);
   if (!product) {
     return {
@@ -81,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
   const { products, error } = await getServerCatalog();
-  if (error) throw new Error("Product information is temporarily unavailable.");
+  if (error) return <ProductRecovery slug={slug} />;
   const product = products.find((p) => p.slug === slug);
 
   if (!product) {

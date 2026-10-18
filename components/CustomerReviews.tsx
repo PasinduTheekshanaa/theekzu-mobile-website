@@ -247,6 +247,7 @@ export const CustomerReviews: React.FC = () => {
         setFormReview("");
         setFormRating(5);
         setFormImage(null);
+        if (imageInput.current) imageInput.current.value = "";
         // Refresh reviews in background
         loadApprovedReviews();
       } else {
@@ -355,6 +356,16 @@ export const CustomerReviews: React.FC = () => {
                 <p className="text-xs sm:text-sm text-ink dark:text-ink max-w-md mx-auto leading-relaxed">
                   Your review has been submitted successfully. To maintain genuine feedback standards, our team verifies all submissions before they appear live on the storefront.
                 </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                <button data-ui="primary"
+                  onClick={() => {
+                    setFormSuccess(false);
+                    setFormError(null);
+                  }}
+                  className="mt-2 px-5 py-2 rounded-xl text-xs font-bold"
+                >
+                  Submit another review
+                </button>
                 <button data-ui="primary"
                   onClick={() => {
                     setFormSuccess(false);
@@ -364,6 +375,7 @@ export const CustomerReviews: React.FC = () => {
                 >
                   Done
                 </button>
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmitReview} className="space-y-4">

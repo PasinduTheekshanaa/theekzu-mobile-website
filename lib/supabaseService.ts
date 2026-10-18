@@ -1,6 +1,7 @@
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient";
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { accessoryTypeFromSeries, accessoryTypeSeries } from "./accessoryTypes";
+import { readCatalogQuery } from "./catalogRead";
 import { Product, ProductVariant, ProductColor, getProductConditions, products as baseProducts, PLACEHOLDER_IMAGE } from "@/data/products";
 
 export interface SupabaseAdminUser {
@@ -239,11 +240,12 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
 
   try {
     // 1. Query active products from public.products
-    const { data: dbProducts, error: prodErr } = await supabase
+    const { data: dbProducts, error: prodErr } = await readCatalogQuery(signal => supabase
       .from("products")
       .select("*")
       .eq("active", true)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .abortSignal(signal).retry(false));
 
     if (prodErr) {
       if (process.env.NODE_ENV !== "production") {
@@ -260,10 +262,14 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
     if (!dbProducts?.length) return { products: [], imagesMap: {}, source: "Supabase" };
 
     const [variantResult, imageResult] = await Promise.all([
-      supabase.from("product_variants").select("id, product_id, storage, color, price, old_price, stock, sku, active").eq("active", true).in("product_id", dbProducts.map(p => p.id)),
-      supabase.from("product_images").select("id, product_id, storage_path, color, is_primary, created_at").in("product_id", dbProducts.map(p => p.id)).order("is_primary", { ascending: false }),
+      readCatalogQuery(signal => supabase.from("product_variants").select("id, product_id, storage, color, price, old_price, stock, sku, active").eq("active", true).in("product_id", dbProducts.map(p => p.id)).abortSignal(signal).retry(false)),
+      readCatalogQuery(signal => supabase.from("product_images").select("id, product_id, storage_path, color, is_primary, created_at").in("product_id", dbProducts.map(p => p.id)).order("is_primary", { ascending: false }).abortSignal(signal).retry(false)),
     ]);
     if (variantResult.error || imageResult.error) {
+      console.error("[Storefront Data] Catalog read failed", {
+        variants: variantResult.error?.code,
+        images: imageResult.error?.code,
+      });
       return { products: [], imagesMap: {}, source: "error", error: "The catalog is temporarily unavailable." };
     }
     const dbVariants = variantResult.data;
