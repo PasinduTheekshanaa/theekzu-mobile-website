@@ -1,3 +1,4 @@
+import { HOME_SEO_TITLE, HOME_SEO_DESCRIPTION } from "@/config/seo";
 import React from "react";
 import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
@@ -17,24 +18,24 @@ export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Theekzu Mobile | iPhone Store Sri Lanka",
+    absolute: HOME_SEO_TITLE,
   },
   description:
-    "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
+    HOME_SEO_DESCRIPTION,
   alternates: {
     canonical: "https://theekzu.vercel.app/",
   },
   openGraph: {
-    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    title: HOME_SEO_TITLE,
     description:
-      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
+      HOME_SEO_DESCRIPTION,
     url: "https://theekzu.vercel.app/",
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Theekzu Mobile - iPhone Store Sri Lanka",
       },
     ],
@@ -43,11 +44,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    title: HOME_SEO_TITLE,
     description:
-      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty in Sri Lanka.",
+      HOME_SEO_DESCRIPTION,
     images: ["/logo.png"],
-    creator: "@theekzumobile",
   },
 };
 

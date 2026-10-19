@@ -18,11 +18,15 @@ export const revalidate = 30;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { products, error } = await getServerCatalog();
-  if (error) return { title: "iPhones | Theekzu Mobile" };
+  if (error) return {
+    title: { absolute: "Product | Theekzu Mobile" },
+    alternates: { canonical: `https://theekzu.vercel.app/product/${encodeURIComponent(slug)}` },
+    openGraph: { title: "Product | Theekzu Mobile", url: `https://theekzu.vercel.app/product/${encodeURIComponent(slug)}`, siteName: "Theekzu Mobile" },
+  };
   const product = products.find((p) => p.slug === slug);
   if (!product) {
     return {
-      title: "Product Not Found | Theekzu Mobile",
+      title: { absolute: "Product Not Found | Theekzu Mobile" },
       robots: { index: false, follow: false },
     };
   }
@@ -35,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       : "";
 
   const pageTitle = `${product.name} Price in Sri Lanka | Theekzu Mobile`;
-  const description = `Buy authentic ${product.name} (${getProductConditionLabel(product)}) in Sri Lanka starting from ${formattedPrice}.${storageInfo} Genuine warranty, islandwide delivery, and instant WhatsApp ordering at Theekzu Mobile.`;
+  const description = `Explore ${product.name} (${getProductConditionLabel(product)}) at Theekzu Mobile in Sri Lanka${product.price > 0 ? ` from ${formattedPrice}` : ""}.${storageInfo} 6-month Theekzu Mobile warranty, islandwide delivery and WhatsApp ordering.`;
   const canonicalUrl = `https://theekzu.vercel.app/product/${product.slug}`;
 
   return {
@@ -62,8 +66,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [
         {
           url: primaryImage,
-          width: 800,
-          height: 800,
           alt: `${product.name} - Theekzu Mobile Sri Lanka`,
         },
       ],
@@ -75,7 +77,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: pageTitle,
       description,
       images: [primaryImage],
-      creator: "@theekzumobile",
     },
   };
 }
@@ -111,10 +112,10 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         : [fullImageUrl],
     description: product.description || `Buy ${product.name} in Sri Lanka with a 6-month warranty from Theekzu Mobile.`,
     sku: product.variants?.[0]?.sku || `TM-${product.slug}`,
-    brand: {
+    brand: product.category === "iphones" ? {
       "@type": "Brand",
       name: "Apple",
-    },
+    } : undefined,
     category: product.category === "accessories" ? "Mobile Accessories" : "Smartphones",
     offers: {
       "@type": "Offer",

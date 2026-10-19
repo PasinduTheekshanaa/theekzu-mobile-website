@@ -1,3 +1,4 @@
+import { HOME_SEO_TITLE, HOME_SEO_DESCRIPTION } from "@/config/seo";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -27,11 +28,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://theekzu.vercel.app"),
   title: {
-    default: "Theekzu Mobile | iPhone Store Sri Lanka",
+    default: HOME_SEO_TITLE,
     template: "%s | Theekzu Mobile",
   },
   description:
-    "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
+    HOME_SEO_DESCRIPTION,
   keywords: [
     "Theekzu Mobile",
     "Theekzu",
@@ -72,16 +73,16 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    title: HOME_SEO_TITLE,
     description:
-      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp support in Sri Lanka.",
+      HOME_SEO_DESCRIPTION,
     url: "https://theekzu.vercel.app/",
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Theekzu Mobile Official Brand Logo",
       },
     ],
@@ -90,11 +91,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Theekzu Mobile | iPhone Store Sri Lanka",
+    title: HOME_SEO_TITLE,
     description:
-      "Welcome to Theekzu Mobile, your premier iPhone Store Sri Lanka. Buy 100% genuine brand new and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and instant WhatsApp ordering.",
+      HOME_SEO_DESCRIPTION,
     images: ["/logo.png"],
-    creator: "@theekzumobile",
   },
   robots: {
     index: true,
@@ -118,10 +118,9 @@ const organizationJsonLd = {
   logo: "https://theekzu.vercel.app/logo.png",
   image: "https://theekzu.vercel.app/logo.png",
   description:
-    "Theekzu Mobile is Sri Lanka's trusted online iPhone store offering 100% genuine brand new sealed and certified pre-owned Apple devices and iPhones with official warranty, islandwide delivery, and fast customer support.",
+    HOME_SEO_DESCRIPTION,
   telephone: "+94740245749",
   email: "pasindutheekshana21@gmail.com",
-  priceRange: "LKR 50,000 - LKR 700,000",
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
