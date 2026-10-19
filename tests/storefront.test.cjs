@@ -275,3 +275,17 @@ test('review photo processing bounds dimensions and strips metadata', async () =
  const meta = await sharp(output).metadata();
  assert.equal(meta.format,'webp'); assert.equal(meta.width,1200); assert.equal(meta.height,600); assert.equal(meta.exif,undefined);
 });
+
+test('accessory models remain separate cart lines while sharing real variant stock', () => {
+ const {needsIphoneModel,getIphoneModels}=require('../lib/accessoryModels.ts');
+ const phones=[{...row,id:'p12',category:'iphones',name:'iPhone 12',stock:'Out of Stock'},{...row,id:'p13',category:'iphones',name:'iPhone 13'}];
+ const accessory={...service.mapSupabaseToProduct(row,variants),id:'case',slug:'magsafe-clear-case',name:'MagSafe Clear Case',category:'accessories',stock:'In Stock'};
+ assert.ok(needsIphoneModel(accessory));
+ assert.deepEqual(getIphoneModels(phones),['iPhone 12','iPhone 13']);
+ const base={productId:'case',variantId:accessory.variants[0].id,condition:'Brand New',price:100,quantity:2,storage:'128GB',color:'Black'};
+ const checked=reconcileCart([{...base,cartItemId:'case-12',iphoneModel:'iPhone 12'},{...base,cartItemId:'case-13',iphoneModel:'iPhone 13'}],[accessory,...phones]);
+ assert.deepEqual(checked.map(i=>[i.iphoneModel,i.quantity]),[['iPhone 12',2],['iPhone 13',1]]);
+ for(const iphoneModel of [undefined,'not-a-listed-model']) {
+  assert.equal(reconcileCart([{...base,iphoneModel}],[accessory,...phones])[0].stockStatus,'Out of Stock');
+ }
+});

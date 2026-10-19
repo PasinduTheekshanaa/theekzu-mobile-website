@@ -12,6 +12,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
+import { getIphoneModels, needsIphoneModel } from "@/lib/accessoryModels";
 
 interface ProductDetailClientProps {
   product: Product;
@@ -24,7 +25,7 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   related: initialRelated,
   initialCondition,
 }) => {
-  const { getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages, isLiveDatabase, catalogError } = useProducts();
+  const { products, getProductBySlug, getRelatedProducts, getProductPrimaryImage, getProductColorImage, customImages, isLiveDatabase, catalogError } = useProducts();
   const { addItem } = useCart();
   const { isWishlisted, toggleWishlist } = useWishlist();
 
@@ -54,6 +55,11 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   const [selectedColor, setSelectedColor] = useState(firstVariant?.color || defaultColor);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState<string>("");
+  const [iphoneModel, setIphoneModel] = useState("");
+  const requiresModel = needsIphoneModel(liveProduct);
+  const iphoneModels = getIphoneModels(products || []);
+  const modelMissing = requiresModel && !iphoneModels.includes(iphoneModel);
+  useEffect(() => setIphoneModel(""), [liveProduct.slug]);
 
   // Primary image fallback
   useEffect(() => {
@@ -139,11 +145,11 @@ Hello Theekzu Mobile, I would like to place an order for:
 
 Please confirm availability and islandwide delivery options!`;
 
-  const waUrl = getWhatsAppUrl(waMessage);
+  const waUrl = getWhatsAppUrl(waMessage + (requiresModel ? `\n\n• *iPhone Model:* ${iphoneModel}` : ""));
 
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
-    addItem({ ...liveProduct, condition: selectedCondition }, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id);
+    if (isOutOfStock || modelMissing) return;
+    addItem({ ...liveProduct, condition: selectedCondition }, selectedStorage, selectedColor, quantity, currentPrice, activeImage, currentVariant?.id, requiresModel ? iphoneModel : undefined);
   };
 
   // Combine product gallery images with live database images (primary image first)
@@ -306,12 +312,30 @@ Please confirm availability and islandwide delivery options!`;
               </div>
             </fieldset>}
 
+            {requiresModel && (
+              <fieldset className="mb-6">
+                <legend className="text-xs uppercase tracking-wider font-bold mb-2.5">Select your iPhone model *</legend>
+                <p id="iphone-model-help" className="text-xs mb-3">Choose one model for this accessory.</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto rounded-2xl border border-neutral-200 dark:border-neutral-500/25 p-3">
+                  {iphoneModels.map(model => (
+                    <label key={model} className="flex items-center gap-2 rounded-lg border border-neutral-200 dark:border-neutral-500/25 px-3 py-2.5 text-xs cursor-pointer">
+                      <input type="checkbox" name="iphone-model" value={model} checked={iphoneModel === model}
+                        aria-describedby="iphone-model-help" className="h-4 w-4 shrink-0 accent-black dark:accent-white"
+                        onChange={e => setIphoneModel(e.target.checked ? model : "")} />
+                      <span>{model}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs mt-2" aria-live="polite">{modelMissing ? "Select an iPhone model before ordering." : `Selected model: ${iphoneModel}`}</p>
+              </fieldset>
+            )}
+
             {/* Storage Selector */}
             {liveProduct.storageOptions && liveProduct.storageOptions.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2.5">
                   <label className="text-xs uppercase tracking-wider text-ink dark:text-ink font-bold">
-                    Storage Capacity: <span className="text-ink dark:text-ink">{selectedStorage}</span>
+                    {liveProduct.category === "iphones" ? "Storage Capacity" : "Option"}: <span className="text-ink dark:text-ink">{selectedStorage}</span>
                   </label>
                 </div>
                 <div className="flex flex-wrap gap-2.5">
@@ -410,7 +434,7 @@ Please confirm availability and islandwide delivery options!`;
                 <button
                   onClick={handleAddToCart}
                   data-ui="primary"
-                  disabled={isOutOfStock}
+                  disabled={isOutOfStock || modelMissing}
                   className={`flex-1 min-h-[44px] py-3.5 px-6 rounded-full text-ink text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
                     isOutOfStock
                       ? "bg-canvas dark:bg-canvas cursor-not-allowed opacity-60"
@@ -425,10 +449,12 @@ Please confirm availability and islandwide delivery options!`;
               <div className="grid grid-cols-1 gap-3">
 
                 <a data-ui="whatsapp"
-                  href={waUrl}
+                  href={modelMissing ? undefined : waUrl}
+                  aria-disabled={modelMissing}
+                  onClick={event => { if (modelMissing) event.preventDefault(); }}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`min-h-[44px] py-3.5 px-4 rounded-full text-ink text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${
+                  className={`min-h-[44px] py-3.5 px-4 rounded-full text-ink text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] btn-press ${modelMissing ? "opacity-50 cursor-not-allowed" : ""} ${
                     isOutOfStock
                       ? "bg-canvas     shadow-neutral-500/20"
                       : "bg-canvas     shadow-neutral-500/20 dark:shadow-[0_0_20px_rgba(145,145,145,0.35)]"

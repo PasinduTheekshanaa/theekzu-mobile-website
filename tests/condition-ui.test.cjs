@@ -12,7 +12,7 @@ Module._resolveFilename = function(name, ...args) { return resolve.call(this, na
 for (const extension of ['.ts', '.tsx']) require.extensions[extension] = (module, file) => module._compile(ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true, jsx: ts.JsxEmit.ReactJSX } }).outputText, file);
 let product;
 const context = () => ({
- getProductBySlug: () => product, getRelatedProducts: () => [], getProductPrimaryImage: () => '/logo.png', getProductColorImage: () => '', customImages: {}, isLiveDatabase: true,
+ products, getProductBySlug: () => product, getRelatedProducts: () => [], getProductPrimaryImage: () => '/logo.png', getProductColorImage: () => '', customImages: {}, isLiveDatabase: true,
  updateVariant: async () => ({ success: true }), addVariant: async () => true, deleteVariant: async () => ({ success: true }),
 });
 const load = Module._load;
@@ -61,3 +61,17 @@ test('admin manager separates phone conditions and keeps accessories in one Bran
  assert.ok(!html.includes('aria-label="Used variants"'));
  assert.ok(html.includes('Accessories are always Brand New.'));
 });
+
+ test('model-specific accessories list every catalog iPhone and require a choice before ordering', () => {
+  for (const slug of ['magsafe-clear-case','anker-ultra-protect-tempered-glass-for-iphone-screen-protector']) {
+   product = {...makePhone(), category:'accessories', slug, name:slug, model:'Standard'};
+   const html=renderToStaticMarkup(React.createElement(ProductDetailClient,{product,related:[]}));
+   assert.ok(html.includes('Select your iPhone model'));
+   assert.equal((html.match(/name="iphone-model"/g)||[]).length,new Set(products.filter(p=>p.category==='iphones').map(p=>p.name)).size);
+   assert.ok(html.includes('aria-disabled="true"'));
+   assert.ok(html.includes('Select an iPhone model before ordering.'));
+  }
+  product={...product,slug:'usb-c-charger',name:'USB-C Charger',model:'20W'};
+  const html=renderToStaticMarkup(React.createElement(ProductDetailClient,{product,related:[]}));
+  assert.ok(!html.includes('name="iphone-model"'));
+ });

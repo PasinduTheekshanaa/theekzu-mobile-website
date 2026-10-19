@@ -1,6 +1,7 @@
 import type { Product } from "@/data/products";
 import { getProductConditions, getVariantCondition } from "@/data/products";
 import type { CartItem } from "@/context/CartContext";
+import { validAccessoryModel } from "./accessoryModels";
 export function reconcileCart(cart: CartItem[], products: Product[]): CartItem[] {
   const allocated = new Map<string, number>();
   return cart.map(item => {
@@ -10,7 +11,7 @@ export function reconcileCart(cart: CartItem[], products: Product[]): CartItem[]
     const key = `${product?.id}:${variant?.id}`;
     const remaining = Math.max(0, (variant?.stock || 0) - (allocated.get(key) || 0));
     const conditionAvailable = product && (!item.condition || getProductConditions(product).some(condition => condition === item.condition));
-    const available = product?.stock === "In Stock" && variant && remaining > 0 && conditionAvailable;
+    const available = product?.stock === "In Stock" && variant && remaining > 0 && conditionAvailable && validAccessoryModel(product, item.iphoneModel, products);
     const quantity = available ? Math.max(1, Math.min(item.quantity, remaining)) : item.quantity;
     if (available) allocated.set(key, (allocated.get(key) || 0) + quantity);
     return { ...item, price: variant?.price ?? item.price, quantity, stockStatus: available ? "In Stock" : "Out of Stock" };

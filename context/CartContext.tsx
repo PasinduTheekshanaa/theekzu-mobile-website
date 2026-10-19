@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useProducts } from "./ProductContext";
 import { loadProductsFromSupabase } from "@/lib/supabaseService";
 import { reconcileCart } from "@/lib/cartValidation";
+import { needsIphoneModel, validAccessoryModel } from "@/lib/accessoryModels";
 import { Product, ProductVariant, getProductConditions, getVariantCondition } from "@/data/products";
 import { storeConfig, formatLKR, getWhatsAppUrl } from "@/config/store";
 
@@ -11,6 +12,7 @@ export interface CartItem {
   cartItemId: string;
   productId: string;
   variantId?: string;
+  iphoneModel?: string;
   slug: string;
   name: string;
   price: number;
@@ -31,7 +33,8 @@ interface CartContextType {
     quantity?: number,
     customPrice?: number,
     customImage?: string,
-    variantId?: string
+    variantId?: string,
+    iphoneModel?: string
   ) => void;
   removeItem: (cartItemId: string) => void;
   updateQuantity: (cartItemId: string, delta: number) => void;
@@ -86,8 +89,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     quantity: number = 1,
     customPrice?: number,
     customImage?: string,
-    variantId?: string
+    variantId?: string,
+    iphoneModel?: string
   ) => {
+    if (!validAccessoryModel(product, iphoneModel, products)) return;
+    const selectedIphoneModel = needsIphoneModel(product) ? iphoneModel : undefined;
     // Validate product-level stock status
     const isProductOOS = (product as any).stock === "Out of Stock";
 
@@ -126,7 +132,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const finalImage = customImage || (product.images && product.images[0]) || "";
-    const cartItemId = `${product.id}-${selectedStorage}-${selectedColor}-${product.condition}`;
+    const cartItemId = `${product.id}-${selectedStorage}-${selectedColor}-${product.condition}${selectedIphoneModel ? `-${encodeURIComponent(selectedIphoneModel)}` : ""}`;
 
     setCart((prevCart) => {
       const otherQuantity = prevCart
@@ -148,6 +154,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
             cartItemId,
             productId: product.id,
             variantId: finalVariantId,
+            iphoneModel: selectedIphoneModel,
             slug: product.slug,
             name: product.name,
             price: finalPrice!,
@@ -194,6 +201,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const getWhatsAppCheckoutUrl = async (): Promise<string> => {
     const result = await loadProductsFromSupabase();
     if (result.source !== "Supabase") throw new Error("Could not verify current prices and stock. Please try again.");
+    for (const item of cart) {
+      const product = result.products.find(p => p.id === item.productId);
+      if (product && !validAccessoryModel(product, item.iphoneModel, result.products)) {
+        throw new Error(`Open ${item.name} and select your iPhone model before adding it to the cart again.`);
+      }
+    }
     const checkedCart = reconcileCart(cart, result.products);
     if (JSON.stringify(cart) !== JSON.stringify(checkedCart)) {
       setCart(checkedCart);
@@ -221,6 +234,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       inStockItems.forEach((item, index) => {
         lines.push(`*${index + 1}. ${item.name}*`);
+        if (item.iphoneModel) lines.push(`   • iPhone Model: ${item.iphoneModel}`);
         if (item.storage && item.storage !== "Standard") {
           lines.push(`   • Storage: ${item.storage}`);
         }
@@ -242,6 +256,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       lines.push("*Inquiry Items (Availability/Restock Check):*");
       outOfStockItems.forEach((item) => {
         lines.push(`• *${item.name}* (${item.storage} / ${item.color}) - Qty: ${item.quantity}`);
+        if (item.iphoneModel) lines.push(`   • iPhone Model: ${item.iphoneModel}`);
       });
       lines.push("");
     }

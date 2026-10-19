@@ -114,6 +114,7 @@ export const CartDrawer: React.FC = () => {
                     {item.storage} • {item.color} •{" "}
                     <span className="text-ink dark:text-ink font-medium">{item.condition}</span>
                   </p>
+                  {item.iphoneModel && <p className="text-[11px] mt-1">iPhone Model: {item.iphoneModel}</p>}
                   <p className="text-xs font-extrabold text-ink text-ink text-ink     mt-1">
                     {formatCurrency(item.price)}
                   </p>
