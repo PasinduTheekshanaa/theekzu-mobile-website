@@ -1,11 +1,11 @@
 "use client";
-import { getProductConditionLabel, getEnabledVariants, productForCondition, ProductCondition } from "@/data/products";
+import { getEnabledVariants, productForCondition, ProductCondition } from "@/data/products";
 
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Heart, MessageCircle, Eye, ShieldCheck, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Heart, Eye, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
 import { Product } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig } from "@/config/store";
@@ -24,8 +24,6 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
   const router = useRouter();
   const wishlisted = isWishlisted(product.id);
 
-  const defaultColor = product.colors && product.colors[0] ? product.colors[0].name : "Standard";
-  const defaultStorage = product.storage || (product.storageOptions && product.storageOptions[0]) || "Standard";
   const displayImage = getProductPrimaryImage(product) || (product.images && product.images[0]) || "";
   const minPrice = getLowestPrice(product);
   const hasVariants = product.variants && product.variants.length > 1;
@@ -50,28 +48,6 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
     preloadDetails();
     router.push(productUrl);
   }, [preloadDetails, productUrl, router]);
-
-  const waMessage = isOutOfStock
-    ? `Hello Theekzu Mobile,
-
-I noticed that ${product.name} is currently marked as Out of Stock.
-Could you please let me know when this model or specific variants will be back in stock?
-
-Product: ${product.name}
-Condition: ${getProductConditionLabel(product)}`
-    : `Hello Theekzu Mobile,
-
-I am interested in:
-
-Product: ${product.name}
-Price: ${hasVariants ? "From " : ""}${formatCurrency(minPrice)}
-Available Storage: ${product.storageOptions ? product.storageOptions.join(", ") : defaultStorage}
-Color: ${defaultColor}
-Condition: ${getProductConditionLabel(product)}
-
-Can you confirm availability and latest variant pricing?`;
-
-  const waUrl = `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
 
   return (
     <div
@@ -209,7 +185,7 @@ Can you confirm availability and latest variant pricing?`;
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1">
             <Link data-ui="primary"
               href={productUrl}
               prefetch={false}
@@ -221,20 +197,6 @@ Can you confirm availability and latest variant pricing?`;
               <span>Details</span>
             </Link>
 
-            <a data-ui="whatsapp"
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] btn-press ${
-                isOutOfStock
-                  ? "bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink border border-neutral-300 dark:border-white/10"
-                  : "bg-canvas     text-ink shadow-neutral-500/20 group/wa"
-              }`}
-              title={isOutOfStock ? "Inquire about stock availability" : "Inquire or order via WhatsApp"}
-            >
-              <MessageCircle className="w-3.5 h-3.5 shrink-0 group-hover/wa:scale-110 transition-transform" />
-              <span>{isOutOfStock ? "Inquire Stock" : "WhatsApp"}</span>
-            </a>
           </div>
         </div>
 
