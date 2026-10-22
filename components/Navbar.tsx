@@ -4,10 +4,9 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Heart, ShoppingBag, Menu, X, Sun, Moon, ArrowRight, ShieldCheck } from "lucide-react";
+import { Search, Heart, ShoppingBag, Menu, X, ArrowRight, ShieldCheck } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { useTheme } from "@/context/ThemeContext";
 import { storeConfig } from "@/config/store";
 
 interface NavbarProps {
@@ -18,7 +17,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const pathname = usePathname();
   const { totalCount: cartCount, setIsCartOpen } = useCart();
   const { totalCount: wishlistCount, setIsWishlistOpen } = useWishlist();
-  const { theme, toggleTheme, mounted } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileMenuMounted, setMobileMenuMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -164,24 +162,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               aria-label="Search Products"
             >
               <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
-            </button>
-
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 flex items-center justify-center text-ink dark:text-ink transition-all duration-300 relative overflow-hidden group shadow-xs active:scale-95 btn-press"
-              title={mounted && theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              aria-label="Toggle Dark and Light Mode"
-            >
-              {mounted ? (
-                theme === "dark" ? (
-                  <Sun className="w-4 h-4 text-ink animate-in spin-in-180 duration-300 transition-transform group-hover:rotate-45" />
-                ) : (
-                  <Moon className="w-4 h-4 text-ink animate-in spin-in-180 duration-300 transition-transform group-hover:-rotate-12" />
-                )
-              ) : (
-                <span className="w-4 h-4" />
-              )}
             </button>
 
             {/* Desktop Wishlist Trigger (Visible >= 1024px) */}

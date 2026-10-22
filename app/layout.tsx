@@ -16,10 +16,7 @@ import { getServerCatalog } from "@/lib/serverCatalog";
 export const revalidate = 30;
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
-  ],
+  themeColor: "#FFFFFF",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -151,7 +148,7 @@ export default async function RootLayout({
   const { products: initialProducts, imagesMap: initialImagesMap, error: initialError } = await getServerCatalog();
 
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -166,16 +163,7 @@ export default async function RootLayout({
             __html: `
               (function() {
                 try {
-                  var stored = localStorage.getItem('theekzu_theme');
-                  if (stored === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.classList.remove('light');
-                    document.documentElement.style.colorScheme = 'dark';
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
-                    document.documentElement.style.colorScheme = 'light';
-                  }
+                  localStorage.setItem('theekzu_theme', 'light');
                 } catch (e) {}
               })();
             `,

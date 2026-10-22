@@ -1,91 +1,20 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-type Theme = "light" | "dark";
-
-interface ThemeContextType {
-  theme: Theme;
-  resolvedTheme: Theme;
-  toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
-  mounted: boolean;
-}
-
-const ThemeContext = createContext<ThemeContextType>({
-  theme: "light",
-  resolvedTheme: "light",
-  toggleTheme: () => {},
-  setTheme: () => {},
-  mounted: false,
-});
-
-const STORAGE_KEY = "theekzu_theme";
+import React, { useEffect } from "react";
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    // Determine initial theme on mount
+    const root = document.documentElement;
+    root.classList.remove("dark");
+    root.classList.add("light");
+    root.style.colorScheme = "light";
     try {
-      const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-      if (stored === "light" || stored === "dark") {
-        setThemeState(stored);
-        applyTheme(stored);
-      } else {
-        setThemeState("light");
-        applyTheme("light");
-      }
+      // Migrate previously saved dark preferences to the light-only design.
+      localStorage.setItem("theekzu_theme", "light");
     } catch {
-      // Fallback if localStorage is inaccessible
-      setThemeState("light");
-      applyTheme("light");
+      // Light mode still works when browser storage is unavailable.
     }
-    setMounted(true);
   }, []);
 
-  const applyTheme = (newTheme: Theme) => {
-    const root = document.documentElement;
-    if (newTheme === "dark") {
-      root.classList.add("dark");
-      root.classList.remove("light");
-      root.style.colorScheme = "dark";
-    } else {
-      root.classList.remove("dark");
-      root.classList.add("light");
-      root.style.colorScheme = "light";
-    }
-  };
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    try {
-      localStorage.setItem(STORAGE_KEY, newTheme);
-    } catch {
-      // ignore
-    }
-    applyTheme(newTheme);
-  };
-
-  const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-  };
-
-  return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        resolvedTheme: theme,
-        toggleTheme,
-        setTheme,
-        mounted,
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <>{children}</>;
 };
-
-export const useTheme = () => useContext(ThemeContext);
