@@ -11,6 +11,7 @@ import { storeConfig, getWhatsAppUrl } from "@/config/store";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useProducts } from "@/context/ProductContext";
+import { ProductGalleryImage } from "@/components/ProductGalleryImage";
 import { ProductCard } from "@/components/ProductCard";
 import { getIphoneModels, needsIphoneModel } from "@/lib/accessoryModels";
 
@@ -54,26 +55,18 @@ export const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   const [selectedStorage, setSelectedStorage] = useState(firstVariant?.storage || defaultStorage);
   const [selectedColor, setSelectedColor] = useState(firstVariant?.color || defaultColor);
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState<string>("");
+  const [galleryChoice, setGalleryChoice] = useState<{ color: string; url: string } | null>(null);
+  const activeImage = galleryChoice?.color === selectedColor
+    ? galleryChoice.url
+    : getProductColorImage(liveProduct, selectedColor) || getProductPrimaryImage(liveProduct) || liveProduct.images?.[0] || "";
+  const colorImages = React.useMemo(() => [...new Set((liveProduct.colors || [])
+    .map(color => getProductColorImage(liveProduct, color.name))
+    .filter((url): url is string => Boolean(url)))], [liveProduct, getProductColorImage]);
   const [iphoneModel, setIphoneModel] = useState("");
   const requiresModel = needsIphoneModel(liveProduct);
   const iphoneModels = getIphoneModels(products || []);
   const modelMissing = requiresModel && !iphoneModels.includes(iphoneModel);
   useEffect(() => setIphoneModel(""), [liveProduct.slug]);
-
-  // Primary image fallback
-  useEffect(() => {
-    const primary = getProductPrimaryImage(liveProduct);
-    setActiveImage(primary || (liveProduct.images && liveProduct.images[0]) || "");
-  }, [liveProduct, getProductPrimaryImage]);
-
-  // When color changes, check if there is an image mapped to that color in IndexedDB
-  useEffect(() => {
-    const colorImg = getProductColorImage(liveProduct, selectedColor);
-    if (colorImg) {
-      setActiveImage(colorImg);
-    }
-  }, [selectedColor, liveProduct, getProductColorImage]);
 
   // Find exact matching variant
   const currentVariant: ProductVariant | undefined =
@@ -187,14 +180,10 @@ Please confirm availability and islandwide delivery options!`;
         <div className="lg:col-span-6 space-y-4">
           <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-canvas border border-neutral-200 dark:border-neutral-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden">
             {activeImage ? (
-              <Image
-                key={activeImage}
+              <ProductGalleryImage
                 src={activeImage}
                 alt={liveProduct.name}
-                width={420}
-                height={420}
-                priority
-                className="max-h-full max-w-full object-contain transition-all duration-300 animate-in fade-in zoom-in-95"
+                colorImages={colorImages}
               />
             ) : (
               <div className="text-ink font-mono text-sm">No Image Available</div>
@@ -216,7 +205,7 @@ Please confirm availability and islandwide delivery options!`;
               {allImages.map((img, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setActiveImage(img)}
+                  onClick={() => setGalleryChoice({ color: selectedColor, url: img })}
                   className={`w-20 h-20 rounded-2xl overflow-hidden border p-1 bg-canvas dark:bg-canvas flex-shrink-0 transition-all ${
                     activeImage === img
                       ? "border-neutral-600 ring-2 ring-neutral-500/30 dark:border-neutral-400 dark:ring-neutral-500/30"

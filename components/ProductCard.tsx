@@ -105,6 +105,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
               alt={`${product.name} - Theekzu Mobile Sri Lanka`}
               width={280}
               height={280}
+              sizes="(max-width: 360px) calc(100vw - 96px), 280px"
               onLoad={() => setImgLoaded(true)}
               className={`max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 relative z-10 ${
                 imgLoaded ? "opacity-100" : "opacity-0"
