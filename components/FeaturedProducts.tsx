@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -24,9 +24,6 @@ export const FeaturedProducts: React.FC = () => {
       <ScrollReveal direction="up">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 md:mb-10 gap-3 sm:gap-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase mb-2 shadow-xs">
-              <Sparkles className="w-3 h-3" /> Top Tier Devices
-            </span>
             <h2 
               className="font-black text-ink dark:text-ink mt-1 leading-[1.1]"
               style={{ fontSize: "clamp(2rem, 8vw, 3rem)" }}
