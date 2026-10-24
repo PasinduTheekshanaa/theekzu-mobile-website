@@ -15,9 +15,10 @@ import { useProducts } from "@/context/ProductContext";
 interface ProductCardProps {
   product: Product;
   condition?: ProductCondition;
+  priorityImage?: boolean;
 }
 
-export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: originalProduct, condition }) => {
+export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: originalProduct, condition, priorityImage = false }) => {
   const product = condition ? productForCondition(originalProduct, condition) : { ...originalProduct, variants: getEnabledVariants(originalProduct) };
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { getProductPrimaryImage, getLowestPrice } = useProducts();
@@ -106,10 +107,9 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
               width={280}
               height={280}
               sizes="(max-width: 360px) calc(100vw - 96px), 280px"
+              priority={priorityImage}
               onLoad={() => setImgLoaded(true)}
-              className={`max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 relative z-10 ${
-                imgLoaded ? "opacity-100" : "opacity-0"
-              }`}
+              className="max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 relative z-10"
             />
           </>
         ) : (

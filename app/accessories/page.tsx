@@ -69,7 +69,7 @@ export default function AccessoriesPage() {
             }}
             className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
           >
-            <ProductCard product={product} />
+            <ProductCard product={product} priorityImage={idx < 3} />
           </div>
         ))}
       </div>

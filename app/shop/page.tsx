@@ -342,7 +342,7 @@ export default function ShopPage() {
               }}
               className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
             >
-              <ProductCard product={p} condition={selectedCondition === "Brand New" || selectedCondition === "Used" ? selectedCondition : undefined} />
+              <ProductCard product={p} condition={selectedCondition === "Brand New" || selectedCondition === "Used" ? selectedCondition : undefined} priorityImage={idx < 3} />
             </div>
           ))}
         </div>
