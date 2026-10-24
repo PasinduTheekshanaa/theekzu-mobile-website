@@ -178,7 +178,7 @@ Please confirm availability and islandwide delivery options!`;
         
         {/* LEFT COLUMN: Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-canvas border border-neutral-200 dark:border-neutral-500/25 p-4 sm:p-6 flex items-center justify-center relative overflow-hidden">
+          <div className="w-full h-72 sm:h-96 md:h-[480px] rounded-2xl sm:rounded-[2.5rem] bg-canvas p-4 sm:p-6 flex items-center justify-center relative overflow-hidden">
             {activeImage ? (
               <ProductGalleryImage
                 src={activeImage}
@@ -206,10 +206,10 @@ Please confirm availability and islandwide delivery options!`;
                 <button
                   key={idx}
                   onClick={() => setGalleryChoice({ color: selectedColor, url: img })}
-                  className={`w-20 h-20 rounded-2xl overflow-hidden border p-1 bg-canvas dark:bg-canvas flex-shrink-0 transition-all ${
+                  className={`w-20 h-20 rounded-2xl overflow-hidden p-1 bg-canvas dark:bg-canvas flex-shrink-0 transition-all ${
                     activeImage === img
-                      ? "border-neutral-600 ring-2 ring-neutral-500/30 dark:border-neutral-400 dark:ring-neutral-500/30"
-                      : "border-neutral-200 dark:border-neutral-500/20"
+                      ? "opacity-100"
+                      : "opacity-70 hover:opacity-100"
                   }`}
                 >
                   <Image
