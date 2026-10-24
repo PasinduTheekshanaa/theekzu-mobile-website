@@ -9,10 +9,10 @@ export const TradeInBanner: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    model: "iPhone 13",
-    storage: "128GB",
-    condition: "Good",
-    batteryHealth: "88%",
+    model: "",
+    storage: "",
+    condition: "",
+    batteryHealth: "",
     notes: "",
     wantedModel: "",
     wantedStorage: "",
@@ -27,10 +27,10 @@ export const TradeInBanner: React.FC = () => {
       "I would like to get a trade-in estimate for my iPhone.",
       `Name: ${formData.name || "Customer"}`,
       `Phone: ${formData.phone || "Not provided"}`,
-      `Current Model: ${formData.model}`,
-      `Storage: ${formData.storage}`,
-      `Condition: ${formData.condition}`,
-      `Battery Health: ${formData.batteryHealth}`,
+      `Current Model: ${formData.model || "Not specified"}`,
+      `Storage: ${formData.storage || "Not specified"}`,
+      `Condition: ${formData.condition || "Not specified"}`,
+      `Battery Health: ${formData.batteryHealth || "Not specified"}`,
       `Notes: ${formData.notes || "None"}`,
       "",
       "Preferred Upgrade:",
@@ -91,7 +91,7 @@ export const TradeInBanner: React.FC = () => {
               <span>Get Your Instant Trade-In Estimate</span>
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4">
               <div className="pt-1 border-t border-neutral-200 dark:border-white/10">
                 <div className="flex items-center justify-between gap-3 pt-4 mb-3">
                   <label className="text-xs font-bold uppercase tracking-wider text-ink dark:text-ink">
@@ -158,7 +158,6 @@ export const TradeInBanner: React.FC = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Kasun Fernando"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-4 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
@@ -172,7 +171,6 @@ export const TradeInBanner: React.FC = () => {
                   <input
                     type="tel"
                     required
-                    placeholder="0740245749"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-4 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
@@ -190,6 +188,7 @@ export const TradeInBanner: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, model: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-3 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
                   >
+                    <option value=""></option>
                     <option value="iPhone 15 Pro Max">iPhone 15 Pro Max</option>
                     <option value="iPhone 15 Pro">iPhone 15 Pro</option>
                     <option value="iPhone 15">iPhone 15</option>
@@ -214,6 +213,7 @@ export const TradeInBanner: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, storage: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-3 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
                   >
+                    <option value=""></option>
                     <option value="64GB">64GB</option>
                     <option value="128GB">128GB</option>
                     <option value="256GB">256GB</option>
@@ -231,6 +231,7 @@ export const TradeInBanner: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-3 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
                   >
+                    <option value=""></option>
                     <option value="Excellent">Excellent (No scratches)</option>
                     <option value="Good">Good (Minor micro-scratches)</option>
                     <option value="Fair">Fair (Noticeable marks)</option>
@@ -246,7 +247,6 @@ export const TradeInBanner: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. 88% or Service"
                     value={formData.batteryHealth}
                     onChange={(e) => setFormData({ ...formData, batteryHealth: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-4 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
@@ -259,7 +259,6 @@ export const TradeInBanner: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Box included, original cable"
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     className="w-full bg-canvas dark:bg-canvas border border-neutral-300 dark:border-neutral-500/20 rounded-xl px-4 py-2.5 text-sm text-ink dark:text-ink focus:border-neutral-600 dark:focus:border-neutral-400 focus:outline-none"
