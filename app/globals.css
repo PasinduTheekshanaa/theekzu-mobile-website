@@ -168,6 +168,10 @@ select {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgb(0 0 0 / 0.14);
 }
+.product-card,
+.product-card:hover {
+  border-color: transparent;
+}
 @media (hover: none), (pointer: coarse) {
   .glass-card:hover { transform: none; }
 }

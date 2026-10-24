@@ -51,7 +51,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
 
   return (
     <div
-      className="glass-card rounded-[2rem] px-4 py-3 sm:px-5 sm:py-4 w-full min-w-0 flex flex-col justify-between group relative border border-neutral-200 dark:border-neutral-500/20 hover:border-neutral-500/50 dark:hover:border-neutral-400/60 shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
+      className="glass-card product-card rounded-[2rem] px-4 py-3 sm:px-5 sm:py-4 w-full min-w-0 flex flex-col justify-between group relative shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
     >
       {/* Top badges & Wishlist */}
       <div className="flex min-h-9 items-center justify-between gap-2 mb-2 z-10">
@@ -93,7 +93,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
         prefetch={false}
         onMouseEnter={preloadDetails}
         onClick={openDetails}
-        className="h-56 w-full rounded-2xl bg-canvas bg-canvas   border border-neutral-200/80 dark:border-neutral-500/10 p-4 mb-3 flex items-center justify-center relative overflow-hidden group-hover:border-neutral-400/40 dark:group-hover:border-neutral-500/30 transition-all"
+        className="h-56 w-full rounded-2xl bg-canvas p-4 mb-3 flex items-center justify-center relative overflow-hidden transition-all"
       >
         {displayImage ? (
           <>
