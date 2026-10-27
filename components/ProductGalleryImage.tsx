@@ -1,7 +1,8 @@
 "use client";
 
-import Image, { getImageProps } from "next/image";
+import { getImageProps } from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ResilientProductImage } from "@/components/ResilientProductImage";
 
 const imageSize = { width: 420, height: 420, sizes: "(max-width: 480px) calc(100vw - 64px), 420px" };
 
@@ -14,15 +15,25 @@ export function ProductGalleryImage({ src, alt, colorImages }: { src: string; al
   const prepare = useCallback((url: string) => {
     const existing = requests.current.get(url);
     if (existing) return existing;
-    // Use the same responsive optimizer URLs as the visible image so the
-    // browser reuses its cache instead of downloading the full-size upload.
-    const { props } = getImageProps({ src: url, alt: "", ...imageSize });
     const image = new window.Image();
     image.decoding = "async";
-    image.sizes = props.sizes || "";
-    image.srcset = props.srcSet || "";
-    image.src = props.src;
-    const request = image.decode().catch((error) => {
+    try {
+      const { props } = getImageProps({ src: url, alt: "", ...imageSize });
+      image.sizes = props.sizes || "";
+      image.srcset = props.srcSet || "";
+      image.src = props.src;
+    } catch {
+      image.src = url;
+    }
+    const request = image.decode().catch(async (error) => {
+      if (url.startsWith("http") && image.src !== url) {
+        image.srcset = "";
+        image.src = url;
+        await image.decode();
+        return;
+      }
+      throw error;
+    }).catch((error) => {
       requests.current.delete(url);
       throw error;
     });
@@ -60,7 +71,7 @@ export function ProductGalleryImage({ src, alt, colorImages }: { src: string; al
   }, [loaded, colorImages, prepare]);
 
   return <>
-    <Image src={displayed} alt={alt} {...imageSize} priority
+    <ResilientProductImage src={displayed} alt={alt} {...imageSize} priority
       onLoad={() => setLoaded(true)}
       onError={() => setFailed(true)}
       className="max-h-full max-w-full object-contain" />

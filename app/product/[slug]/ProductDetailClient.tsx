@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import { ResilientProductImage } from "@/components/ResilientProductImage";
 import Link from "next/link";
 import { Star, MessageCircle, ShoppingBag, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Product, ProductVariant, ProductCondition, getProductConditions, getConditionVariants } from "@/data/products";
@@ -212,7 +212,7 @@ Please confirm availability and islandwide delivery options!`;
                       : "opacity-70 hover:opacity-100"
                   }`}
                 >
-                  <Image
+                  <ResilientProductImage
                     src={img}
                     alt={`${liveProduct.name} thumbnail ${idx + 1}`}
                     width={70}

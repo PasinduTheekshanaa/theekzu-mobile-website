@@ -3,7 +3,7 @@ import { getEnabledVariants, productForCondition, ProductCondition } from "@/dat
 
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ResilientProductImage } from "@/components/ResilientProductImage";
 import { useRouter } from "next/navigation";
 import { Heart, Eye, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
 import { Product } from "@/data/products";
@@ -93,6 +93,8 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
         href={productUrl}
         prefetch={false}
         onMouseEnter={preloadDetails}
+        onTouchStart={preloadDetails}
+        onFocus={preloadDetails}
         onClick={openDetails}
         className="h-56 w-full rounded-2xl bg-canvas p-4 mb-3 flex items-center justify-center relative overflow-hidden transition-all"
       >
@@ -101,7 +103,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
             {!imgLoaded && (
               <div className="absolute inset-4 rounded-xl skeleton z-0" />
             )}
-            <Image
+            <ResilientProductImage
               src={displayImage}
               alt={`${product.name} - Theekzu Mobile Sri Lanka`}
               width={280}
@@ -109,6 +111,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
               sizes="(max-width: 360px) calc(100vw - 96px), 280px"
               priority={priorityImage}
               onLoad={() => setImgLoaded(true)}
+              onError={() => setImgLoaded(true)}
               className="max-h-full max-w-full object-contain transition-transform duration-500 ease-out group-hover:-translate-y-3 group-hover:scale-105 relative z-10"
             />
           </>
@@ -157,7 +160,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
             </div>
           </div>
 
-          <Link href={productUrl} prefetch={false} onMouseEnter={preloadDetails} onClick={openDetails}>
+          <Link href={productUrl} prefetch={false} onMouseEnter={preloadDetails} onTouchStart={preloadDetails} onFocus={preloadDetails} onClick={openDetails}>
             <h3 className="min-h-6 text-base leading-6 font-bold text-ink dark:text-ink group-hover:text-ink dark:group-hover:text-ink transition-colors mb-1 line-clamp-2 break-words">
               {product.name}
             </h3>
@@ -191,6 +194,8 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
               href={productUrl}
               prefetch={false}
               onMouseEnter={preloadDetails}
+              onTouchStart={preloadDetails}
+              onFocus={preloadDetails}
               onClick={openDetails}
               className="min-h-[44px] py-2.5 px-2.5 sm:px-3 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-white/10 text-xs font-semibold text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-all text-center flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] btn-press group/btn"
             >

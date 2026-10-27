@@ -3,7 +3,7 @@ import { getProductConditionLabel } from "@/data/products";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ResilientProductImage } from "@/components/ResilientProductImage";
 import { Search, X, Smartphone } from "lucide-react";
 import { Product } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -118,7 +118,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
                   >
                     <div className="w-12 h-12 rounded-xl bg-canvas dark:bg-canvas p-1 flex-shrink-0 flex items-center justify-center relative overflow-hidden border border-neutral-200 dark:border-neutral-500/10">
                       {img ? (
-                        <Image
+                        <ResilientProductImage
                           src={img}
                           alt={p.name}
                           width={48}

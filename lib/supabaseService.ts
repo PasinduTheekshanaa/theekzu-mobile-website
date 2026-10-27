@@ -245,13 +245,23 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
   }
 
   try {
-    // 1. Query active products from public.products
-    const { data: dbProducts, error: prodErr } = await readCatalogQuery(signal => supabase
-      .from("products")
-      .select("*")
-      .eq("active", true)
-      .order("created_at", { ascending: false })
-      .abortSignal(signal).retry(false));
+    // These public reads are independent. Start them together so a cold
+    // storefront load waits for one network round trip instead of two.
+    const [productResult, variantResult, imageResult] = await Promise.all([
+      readCatalogQuery(signal => supabase.from("products")
+        .select("*").eq("active", true).order("created_at", { ascending: false }).order("id")
+        .range(0, 999)
+        .abortSignal(signal).retry(false)),
+      readCatalogQuery(signal => supabase.from("product_variants")
+        .select("id,product_id,condition,storage,color,price,old_price,stock,sku")
+        .eq("active", true).order("id").range(0, 999)
+        .abortSignal(signal).retry(false)),
+      readCatalogQuery(signal => supabase.from("product_images")
+        .select("id,product_id,storage_path,color,is_primary,created_at")
+        .order("is_primary", { ascending: false }).order("id").range(0, 999)
+        .abortSignal(signal).retry(false)),
+    ]);
+    const { data: dbProducts, error: prodErr } = productResult;
 
     if (prodErr) {
       if (process.env.NODE_ENV !== "production") {
@@ -265,12 +275,6 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
       };
     }
 
-    if (!dbProducts?.length) return { products: [], imagesMap: {}, source: "Supabase" };
-
-    const [variantResult, imageResult] = await Promise.all([
-      readCatalogQuery(signal => supabase.from("product_variants").select("*").eq("active", true).in("product_id", dbProducts.map(p => p.id)).abortSignal(signal).retry(false)),
-      readCatalogQuery(signal => supabase.from("product_images").select("id, product_id, storage_path, color, is_primary, created_at").in("product_id", dbProducts.map(p => p.id)).order("is_primary", { ascending: false }).abortSignal(signal).retry(false)),
-    ]);
     if (variantResult.error || imageResult.error) {
       console.error("[Storefront Data] Catalog read failed", {
         variants: variantResult.error?.code,
@@ -278,19 +282,51 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
       });
       return { products: [], imagesMap: {}, source: "error", error: "The catalog is temporarily unavailable." };
     }
-    const dbVariants = variantResult.data;
-    const dbImages = imageResult.data;
+    if (!dbProducts?.length) return { products: [], imagesMap: {}, source: "Supabase" };
+
+    // Supabase caps each response at 1,000 rows. The normal catalog fits in
+    // the first parallel requests; larger catalogs fetch only the extra pages.
+    const products = [...dbProducts];
+    const variants = [...(variantResult.data || [])];
+    const images = [...(imageResult.data || [])];
+    for (let from = 1000; products.length === from; from += 1000) {
+      const page = await readCatalogQuery(signal => supabase.from("products")
+        .select("*").eq("active", true).order("created_at", { ascending: false }).order("id")
+        .range(from, from + 999).abortSignal(signal).retry(false));
+      if (page.error) throw page.error;
+      products.push(...(page.data || []));
+    }
+    for (let from = 1000; variants.length === from; from += 1000) {
+      const page = await readCatalogQuery(signal => supabase.from("product_variants")
+        .select("id,product_id,condition,storage,color,price,old_price,stock,sku")
+        .eq("active", true).order("id").range(from, from + 999)
+        .abortSignal(signal).retry(false));
+      if (page.error) throw page.error;
+      variants.push(...(page.data || []));
+    }
+    for (let from = 1000; images.length === from; from += 1000) {
+      const page = await readCatalogQuery(signal => supabase.from("product_images")
+        .select("id,product_id,storage_path,color,is_primary,created_at")
+        .order("is_primary", { ascending: false }).order("id").range(from, from + 999)
+        .abortSignal(signal).retry(false));
+      if (page.error) throw page.error;
+      images.push(...(page.data || []));
+    }
+
+    const activeProductIds = new Set(products.map(p => p.id));
+    const dbVariants = variants.filter(v => activeProductIds.has(v.product_id));
+    const dbImages = images.filter(img => activeProductIds.has(img.product_id));
 
     // 4. Group variants and images by product_id
     const variantsByProduct: Record<string, any[]> = {};
-    (dbVariants || []).forEach((v) => {
+    dbVariants.forEach((v) => {
       const pid = v.product_id;
       if (!variantsByProduct[pid]) variantsByProduct[pid] = [];
       variantsByProduct[pid].push(v);
     });
 
     const imagesByProduct: Record<string, SupabaseProductImageRecord[]> = {};
-    (dbImages || []).forEach((img) => {
+    dbImages.forEach((img) => {
       const pid = img.product_id;
       if (!imagesByProduct[pid]) imagesByProduct[pid] = [];
       const publicUrl = resolveStorageImageUrl(img.storage_path);
@@ -306,7 +342,7 @@ export async function loadProductsFromSupabase(): Promise<StorefrontCatalogResul
     });
 
     // 5. Map and normalize each product
-    const mapped = dbProducts.map((p) =>
+    const mapped = products.map((p) =>
       mapSupabaseToProduct(p, variantsByProduct[p.id] || [], imagesByProduct[p.id] || [])
     );
 

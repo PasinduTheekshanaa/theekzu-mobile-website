@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ResilientProductImage } from "@/components/ResilientProductImage";
 import { ArrowRight, Cpu, Eye, Camera, BatteryCharging, Sparkles, MessageCircle } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig } from "@/config/store";
@@ -119,7 +119,7 @@ export const FlagshipShowcase: React.FC = () => {
           {/* Right Image */}
           <div className="lg:col-span-6 flex justify-center relative">
             <div className="relative z-10 w-full max-w-xs sm:max-w-md lg:max-w-lg flex items-center justify-center">
-              <Image
+              <ResilientProductImage
                 src={flagshipImg}
                 alt={`${flagship.name} - Flagship Apple iPhone at Theekzu Mobile Sri Lanka`}
                 width={500}

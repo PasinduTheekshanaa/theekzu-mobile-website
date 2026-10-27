@@ -13,7 +13,7 @@ const getCachedCatalog = unstable_cache(
     if (result.source !== "Supabase") throw new Error("Catalog read failed");
     return result;
   },
-  ["theekzu-server-catalog-v3-mini-cutouts"],
+  ["theekzu-server-catalog-v4-parallel-reads"],
   { revalidate: 30 }
 );
 

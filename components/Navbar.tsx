@@ -89,10 +89,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   return (
     <>
       <header
-        className={`sticky top-0 left-0 right-0 z-40 w-full transition-all duration-300 h-[64px] flex items-center px-[14px] sm:px-6 ${
+        className={`site-navbar sticky top-0 left-0 right-0 z-40 w-full h-[64px] flex items-center px-[14px] sm:px-6 border-b backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ${
           isScrolled
-            ? "glass-nav shadow-md dark:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
-            : "bg-canvas dark:bg-canvas backdrop-blur-md border-b border-neutral-200/70 dark:border-neutral-500/10"
+            ? "bg-neutral-200/95 border-neutral-300 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+            : "bg-neutral-100/95 border-neutral-200 shadow-[0_3px_16px_rgba(0,0,0,0.08)]"
         }`}
       >
         <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between gap-2">

@@ -2,7 +2,7 @@
 import { getProductConditionLabel } from "@/data/products";
 
 import React from "react";
-import Image from "next/image";
+import { ResilientProductImage } from "@/components/ResilientProductImage";
 import Link from "next/link";
 import { Heart, X, Trash2, ShoppingBag } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
@@ -85,7 +85,7 @@ export const WishlistDrawer: React.FC = () => {
                 className="p-3.5 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/15 flex gap-3 items-center shadow-xs"
               >
                 <div className="w-16 h-16 rounded-xl bg-canvas dark:bg-canvas p-1 flex-shrink-0 flex items-center justify-center relative overflow-hidden border border-neutral-200 dark:border-neutral-500/10">
-                  <Image
+                  <ResilientProductImage
                     src={p.images[0]}
                     alt={p.name}
                     width={60}
