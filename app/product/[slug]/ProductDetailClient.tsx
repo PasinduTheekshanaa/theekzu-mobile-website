@@ -284,7 +284,7 @@ Please confirm availability and islandwide delivery options!`;
                 {currentPrice ? formatCurrency(currentPrice) : "Price not available"}
               </span>
               <span className="text-[11px] sm:text-xs text-ink dark:text-ink sm:ml-auto font-medium">
-                Variant Price (LKR)
+                {liveProduct.category === "iphones" ? "Device only Price" : "Variant Price (LKR)"}
               </span>
             </div>
 
