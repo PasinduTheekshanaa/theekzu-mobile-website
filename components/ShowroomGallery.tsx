@@ -1,4 +1,5 @@
 "use client";
+import { useScrollLock } from "@/hooks/useScrollLock";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
@@ -58,12 +59,12 @@ export const ShowroomGallery: React.FC = () => {
     setActivePhotoIndex(null);
   }, []);
 
-  // Keyboard navigation & body scroll lock
+  useScrollLock(activePhotoIndex !== null);
+
+  // Keyboard navigation
   useEffect(() => {
     if (activePhotoIndex === null) return;
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") handleClose();
@@ -73,7 +74,6 @@ export const ShowroomGallery: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activePhotoIndex, handleClose, handlePrev, handleNext]);

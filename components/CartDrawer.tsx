@@ -1,4 +1,5 @@
 "use client";
+import { useScrollLock } from "@/hooks/useScrollLock";
 
 import React from "react";
 import { ResilientProductImage } from "@/components/ResilientProductImage";
@@ -27,19 +28,17 @@ export const CartDrawer: React.FC = () => {
     finally { setChecking(false); }
   };
 
+  useScrollLock(isCartOpen);
+
   React.useEffect(() => {
     if (isCartOpen) {
-      document.body.style.overflow = "hidden";
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") setIsCartOpen(false);
       };
       window.addEventListener("keydown", handleKeyDown);
       return () => {
-        document.body.style.overflow = "";
         window.removeEventListener("keydown", handleKeyDown);
       };
-    } else {
-      document.body.style.overflow = "";
     }
   }, [isCartOpen, setIsCartOpen]);
 

@@ -23,11 +23,9 @@ export function SiteScrollReveal() {
     if (!main || !window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
 
     const seen = new Set<HTMLElement>();
-    const pending = new Set<HTMLElement>();
     const reveal = (element: HTMLElement) => {
       element.classList.remove("site-reveal-pending");
       element.classList.add("site-reveal-visible");
-      pending.delete(element);
       observer?.unobserve(element);
     };
     const observer = "IntersectionObserver" in window
@@ -61,31 +59,22 @@ export function SiteScrollReveal() {
         const bounds = element.getBoundingClientRect();
         if (bounds.top < window.innerHeight + 80) continue;
         element.classList.add("site-reveal", "site-reveal-pending");
-        pending.add(element);
         observer.observe(element);
-      }
-    };
-    const revealPassed = () => {
-      for (const element of pending) {
-        if (element.getBoundingClientRect().bottom <= 0) reveal(element);
       }
     };
     const scheduleScan = () => {
       if (!frame) frame = window.requestAnimationFrame(() => {
         scan();
-        revealPassed();
       });
     };
 
     scan();
     const mutations = new MutationObserver(scheduleScan);
     mutations.observe(main, { childList: true, subtree: true });
-    window.addEventListener("scroll", scheduleScan, { passive: true });
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
       mutations.disconnect();
-      window.removeEventListener("scroll", scheduleScan);
       observer?.disconnect();
       seen.forEach((element) => element.classList.remove("site-reveal-pending"));
     };

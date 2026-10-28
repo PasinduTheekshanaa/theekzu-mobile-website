@@ -1,4 +1,5 @@
 "use client";
+import { useScrollLock } from "@/hooks/useScrollLock";
 import { getProductConditionLabel } from "@/data/products";
 
 import React, { useState, useEffect } from "react";
@@ -42,19 +43,17 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
     setResults(matches);
   }, [query, products]);
 
+  useScrollLock(isOpen);
+
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") onClose();
       };
       window.addEventListener("keydown", handleKeyDown);
       return () => {
-        document.body.style.overflow = "";
         window.removeEventListener("keydown", handleKeyDown);
       };
-    } else {
-      document.body.style.overflow = "";
     }
   }, [isOpen, onClose]);
 

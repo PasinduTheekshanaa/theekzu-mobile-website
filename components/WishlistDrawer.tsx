@@ -1,4 +1,5 @@
 "use client";
+import { useScrollLock } from "@/hooks/useScrollLock";
 import { getProductConditionLabel } from "@/data/products";
 
 import React from "react";
@@ -13,19 +14,17 @@ export const WishlistDrawer: React.FC = () => {
   const { wishlistProducts, isWishlistOpen, setIsWishlistOpen, removeFromWishlist } = useWishlist();
   const { addItem } = useCart();
 
+  useScrollLock(isWishlistOpen);
+
   React.useEffect(() => {
     if (isWishlistOpen) {
-      document.body.style.overflow = "hidden";
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") setIsWishlistOpen(false);
       };
       window.addEventListener("keydown", handleKeyDown);
       return () => {
-        document.body.style.overflow = "";
         window.removeEventListener("keydown", handleKeyDown);
       };
-    } else {
-      document.body.style.overflow = "";
     }
   }, [isWishlistOpen, setIsWishlistOpen]);
 
