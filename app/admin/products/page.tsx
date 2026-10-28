@@ -1716,7 +1716,7 @@ export default function AdminProductsPage() {
                           >
                             <div className="w-16 h-16 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 p-1 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                               <Image
-                                src={img.image_url || img.storage_path || "/logo.png"}
+                                src={img.image_url || img.storage_path || "/brand-logo.png"}
                                 alt={img.filename || "Product Image"}
                                 width={60}
                                 height={60}

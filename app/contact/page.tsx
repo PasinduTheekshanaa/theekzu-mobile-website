@@ -229,7 +229,7 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
               <div className="w-12 h-12 rounded-2xl p-[1px] bg-canvas    shadow-sm dark:shadow-[0_0_15px_rgba(169,169,169,0.4)]">
                 <div className="w-full h-full bg-canvas rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
                   <Image
-                    src="/logo.png"
+                    src="/brand-logo.png"
                     alt="Theekzu Mobile Logo"
                     width={48}
                     height={48}

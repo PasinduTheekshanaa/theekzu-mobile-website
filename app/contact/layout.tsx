@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 800,
         height: 800,
         alt: "Contact Theekzu Mobile Sri Lanka",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "Contact Theekzu Mobile | iPhone Store Customer Support Sri Lanka",
     description:
       "Contact Theekzu Mobile for Apple iPhone orders, customer service, and trade-in valuations in Sri Lanka.",
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
 };
 

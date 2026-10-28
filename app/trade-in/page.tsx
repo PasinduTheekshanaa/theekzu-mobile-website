@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 800,
         height: 800,
         alt: "iPhone Trade-In Sri Lanka - Theekzu Mobile",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "iPhone Trade-In Sri Lanka | Exchange & Upgrade | Theekzu Mobile",
     description:
       "Trade in your phone and upgrade to a brand new or certified pre-owned Apple iPhone in Sri Lanka.",
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
 };
 

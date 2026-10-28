@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 1024,
         height: 1024,
         alt: "Theekzu Mobile - iPhone Store Sri Lanka",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: HOME_SEO_TITLE,
     description:
       HOME_SEO_DESCRIPTION,
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
 };
 

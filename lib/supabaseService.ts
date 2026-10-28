@@ -1,3 +1,4 @@
+import { sortStorages } from "./storageOrder";
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient";
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
 import { accessoryTypeFromSeries, accessoryTypeSeries } from "./accessoryTypes";
@@ -199,8 +200,8 @@ export function mapSupabaseToProduct(
     price: lowestPrice,
     oldPrice: lowestOldPrice ? Number(lowestOldPrice) : undefined,
     discount,
-    storage: storageOptions[0] || "128GB",
-    storageOptions,
+    storage: sortStorages(storageOptions)[0] || "128GB",
+    storageOptions: sortStorages(storageOptions),
     colors,
     images: imageList.length > 0 ? imageList : [PLACEHOLDER_IMAGE],
     description: (p.description !== null && p.description !== undefined && p.description.trim() !== "")

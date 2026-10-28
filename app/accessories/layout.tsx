@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 800,
         height: 800,
         alt: "Original Apple Accessories - Theekzu Mobile Sri Lanka",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
     description:
       "Shop genuine chargers, cables, MagSafe cases and screen protection in Sri Lanka.",
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
 };
 

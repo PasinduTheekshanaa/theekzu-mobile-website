@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const primaryImage = product.images?.[0] || "/logo.png";
+  const primaryImage = product.images?.[0] || "/brand-logo.png";
   const formattedPrice = `Rs. ${product.price.toLocaleString("en-LK")}`;
   const storageInfo =
     product.storageOptions && product.storageOptions.length > 0
@@ -97,7 +97,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
     .filter((p) => p.id !== product.id && p.category === product.category)
     .slice(0, 3);
 
-  const primaryImage = product.images?.[0] || "https://theekzu.vercel.app/logo.png";
+  const primaryImage = product.images?.[0] || "https://theekzu.vercel.app/brand-logo.png";
   const fullImageUrl = primaryImage.startsWith("http")
     ? primaryImage
     : `https://theekzu.vercel.app${primaryImage}`;

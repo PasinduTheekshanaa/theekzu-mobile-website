@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 800,
         height: 800,
         alt: "Apple iPhones in Sri Lanka - Theekzu Mobile",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Buy Apple iPhones in Sri Lanka | Theekzu Mobile",
     description:
       "Explore the complete Apple iPhone lineup in Sri Lanka. Brand new sealed & certified pre-owned with genuine warranty.",
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
 };
 

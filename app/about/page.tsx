@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 800,
         height: 800,
         alt: "About Theekzu Mobile Sri Lanka",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "About Theekzu Mobile | Trusted iPhone Store Sri Lanka",
     description:
       "Sri Lanka's trusted online store for genuine Apple iPhones and accessories.",
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
 };
 
@@ -106,7 +106,7 @@ export default function AboutPage() {
         </div>
         <div className="lg:col-span-5 min-w-0 rounded-[2rem] sm:rounded-[3rem] border border-neutral-200 p-6 sm:p-9 text-center bg-white shadow-[0_12px_32px_rgba(0,0,0,0.07)]">
           <div className="w-44 h-44 sm:w-60 sm:h-60 mx-auto rounded-3xl p-2 bg-white shadow-md mb-7">
-            <Image src="/logo.png" alt="Theekzu Mobile Official Brand" width={240} height={240} priority className="w-full h-full object-cover rounded-2xl" />
+            <Image src="/brand-logo.png" alt="Theekzu Mobile Official Brand" width={240} height={240} priority className="w-full h-full object-cover rounded-2xl" />
           </div>
           <h2 className="text-xl font-black">THEEKZU MOBILE</h2>
           <p className="mt-2 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.12em]">{storeConfig.tagline}</p>
@@ -138,14 +138,13 @@ export default function AboutPage() {
         <figure className="lg:col-span-5 min-w-0 w-full max-w-lg mx-auto lg:ml-auto">
           <div className="relative aspect-[4/5] rounded-[1.75rem] sm:rounded-[2rem] overflow-hidden bg-neutral-200">
             <Image src="/team/pasindu-theekshana.webp" alt="Pasindu Theekshana, Founder and Owner of Theekzu Mobile" fill sizes="(min-width: 1280px) 440px, (min-width: 1024px) 40vw, (min-width: 640px) 512px, 100vw" className="object-cover object-[50%_35%]" />
-            <div className="absolute top-4 left-4 rounded-full bg-white/95 px-3.5 py-2 text-[10px] font-bold tracking-[0.16em] uppercase">Meet the founder</div>
           </div>
           <figcaption className="flex justify-between items-center gap-4 pt-5 px-1">
             <div>
               <h2 className="font-bold text-xl sm:text-2xl tracking-tight">Pasindu Theekshana</h2>
               <p className="mt-1 text-xs sm:text-sm text-neutral-500">Founder &amp; Owner · Theekzu Mobile</p>
             </div>
-            <Image src="/logo-small.webp" alt="Theekzu Mobile" width={44} height={44} className="rounded-xl shrink-0" />
+            <Image src="/brand-logo-small.webp" alt="Theekzu Mobile" width={44} height={44} className="rounded-xl shrink-0" />
           </figcaption>
           <a
             href={`mailto:${storeConfig.email}`}

@@ -78,7 +78,7 @@ export const metadata: Metadata = {
     siteName: "Theekzu Mobile",
     images: [
       {
-        url: "/logo.png",
+        url: "/brand-logo.png",
         width: 1024,
         height: 1024,
         alt: "Theekzu Mobile Official Brand Logo",
@@ -92,7 +92,7 @@ export const metadata: Metadata = {
     title: HOME_SEO_TITLE,
     description:
       HOME_SEO_DESCRIPTION,
-    images: ["/logo.png"],
+    images: ["/brand-logo.png"],
   },
   robots: {
     index: true,
@@ -113,8 +113,8 @@ const organizationJsonLd = {
   name: "Theekzu Mobile",
   alternateName: "Theekzu",
   url: "https://theekzu.vercel.app/",
-  logo: "https://theekzu.vercel.app/logo.png",
-  image: "https://theekzu.vercel.app/logo.png",
+  logo: "https://theekzu.vercel.app/brand-logo.png",
+  image: "https://theekzu.vercel.app/brand-logo.png",
   description:
     HOME_SEO_DESCRIPTION,
   telephone: "+94740245749",

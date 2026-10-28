@@ -135,7 +135,7 @@ export default function ResetPasswordPage() {
         <div className="relative w-16 h-16 mx-auto rounded-2xl p-[1.5px] bg-canvas    shadow-md dark:shadow-[0_0_20px_rgba(147,147,147,0.4)] mb-4">
           <div className="w-full h-full bg-canvas rounded-[14px] p-1 flex items-center justify-center overflow-hidden">
             <Image
-              src="/logo.png"
+              src="/brand-logo.png"
               alt="Theekzu Mobile"
               width={56}
               height={56}

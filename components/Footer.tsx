@@ -22,7 +22,7 @@ export const Footer: React.FC = () => {
               <div className="relative w-14 h-14 rounded-2xl p-[1px] bg-canvas    shadow-md dark:shadow-[0_0_25px_rgba(147,147,147,0.4)] group-hover:scale-105 transition-all">
                 <div className="w-full h-full bg-canvas rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
                   <Image
-                    src="/logo-small.webp"
+                    src="/brand-logo-small.webp"
                     alt="Theekzu Mobile Official Logo"
                     width={56}
                     height={56}

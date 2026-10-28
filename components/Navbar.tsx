@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             <div className="relative w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-xl sm:rounded-2xl p-[1px] bg-canvas    shadow-[0_0_15px_rgba(91,91,91,0.2)] dark:shadow-[0_0_20px_rgba(147,147,147,0.35)] group-hover:scale-105 transition-all flex-shrink-0">
               <div className="w-full h-full bg-canvas rounded-[11px] sm:rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
                 <Image
-                  src="/logo-small.webp"
+                  src="/brand-logo-small.webp"
                   alt="Theekzu Mobile Logo"
                   width={38}
                   height={38}
@@ -230,7 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl p-[1px] bg-canvas   flex items-center justify-center overflow-hidden">
                   <Image
-                    src="/logo.png"
+                    src="/brand-logo.png"
                     alt="Logo"
                     width={32}
                     height={32}

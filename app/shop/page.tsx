@@ -1,4 +1,5 @@
 "use client";
+import { sortStorages } from "@/lib/storageOrder";
 import { getProductConditions, productForCondition } from "@/data/products";
 
 
@@ -85,14 +86,7 @@ export default function ShopPage() {
       if (p.storage) set.add(p.storage);
       (p.variants || []).forEach((v) => set.add(v.storage));
     });
-    // Order storage logically
-    const order = ["64GB", "128GB", "256GB", "512GB", "1TB", "2TB"];
-    return Array.from(set).sort((a, b) => {
-      const idxA = order.indexOf(a);
-      const idxB = order.indexOf(b);
-      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-      return a.localeCompare(b);
-    });
+    return sortStorages(Array.from(set));
   }, [products]);
 
   // Filter & Sort logic
