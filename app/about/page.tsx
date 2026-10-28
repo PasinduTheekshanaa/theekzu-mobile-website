@@ -2,7 +2,7 @@ import Image from "next/image";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowUpRight, Target, Eye, ShieldCheck, MessageCircle, Users, Smartphone, Zap, Truck } from "lucide-react";
+import { ArrowUpRight, Target, Eye, ShieldCheck, MessageCircle, Users, Smartphone, Zap, Truck, Mail, Phone } from "lucide-react";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
 
 export const metadata: Metadata = {
@@ -147,6 +147,20 @@ export default function AboutPage() {
             </div>
             <Image src="/logo-small.webp" alt="Theekzu Mobile" width={44} height={44} className="rounded-xl shrink-0" />
           </figcaption>
+          <a
+            href={`mailto:${storeConfig.email}`}
+            className="mt-5 flex w-full min-h-12 items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white px-3 py-3.5 text-xs sm:text-sm font-semibold shadow-sm transition-colors hover:bg-neutral-100 focus-visible:outline-offset-4"
+          >
+            <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="min-w-0 break-all">{storeConfig.email}</span>
+          </a>
+          <a
+            href={`tel:${storeConfig.phoneRaw}`}
+            className="mt-3 flex w-full min-h-12 items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white px-3 py-3.5 text-xs sm:text-sm font-semibold shadow-sm transition-colors hover:bg-neutral-100 focus-visible:outline-offset-4"
+          >
+            <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>{storeConfig.phone}</span>
+          </a>
         </figure>
           <div className="lg:col-span-7 min-w-0 space-y-5">
             <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-neutral-500">Founder &amp; Owner</p>
