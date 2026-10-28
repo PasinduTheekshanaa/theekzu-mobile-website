@@ -54,19 +54,19 @@ export const CartDrawer: React.FC = () => {
       />
 
       {/* Slide-out Drawer */}
-      <aside className="fixed top-0 right-0 h-full w-full max-w-md glass-drawer z-50 transition-transform duration-300 flex flex-col border-l border-neutral-200 dark:border-neutral-500/20 shadow-2xl">
+      <aside className="fixed top-0 right-0 h-[100dvh] w-full max-w-md glass-drawer z-50 transition-transform duration-300 flex flex-col border-l border-neutral-200 dark:border-neutral-500/20 shadow-2xl">
         
         {/* Header */}
         <div className="p-5 border-b border-neutral-200 dark:border-neutral-500/15 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink dark:text-ink">
+            <div className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 flex items-center justify-center text-ink dark:text-ink">
               <ShoppingBag className="w-4 h-4" />
             </div>
             <h3 className="text-base font-bold text-ink dark:text-ink">Your Shopping Cart</h3>
           </div>
           <button data-ui="primary"
             onClick={() => setIsCartOpen(false)}
-            className="w-9 h-9 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors"
+            className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-white/10 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors"
             aria-label="Close cart"
           >
             <X className="w-4 h-4" />
@@ -74,7 +74,7 @@ export const CartDrawer: React.FC = () => {
         </div>
 
         {/* Items List */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-3.5">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5 space-y-3.5">
           {cart.length === 0 ? (
             <div className="py-20 text-center">
               <div className="w-16 h-16 rounded-2xl bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/20 mx-auto flex items-center justify-center text-ink dark:text-ink mb-4 shadow-xs">

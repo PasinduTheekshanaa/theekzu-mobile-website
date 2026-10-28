@@ -61,12 +61,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start justify-center p-3 sm:p-6 pt-16 sm:pt-20 animate-in fade-in duration-200">
-      <div className="glass-modal rounded-2xl sm:rounded-[2.5rem] w-full max-w-2xl border border-neutral-200 dark:border-neutral-500/20 p-4 sm:p-6 space-y-4 shadow-2xl">
+    <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md z-50 flex items-start justify-center p-3 sm:p-6 pt-3 sm:pt-20 overflow-y-auto animate-in fade-in duration-200">
+      <div className="glass-modal rounded-2xl sm:rounded-[2.5rem] w-full max-w-2xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-7rem)] flex flex-col border border-neutral-200 dark:border-neutral-500/20 p-4 sm:p-6 space-y-4 shadow-2xl">
         
         {/* Search Input Bar */}
         <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-500/15 pb-4">
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
             <Search className="w-5 h-5 text-ink dark:text-ink flex-shrink-0" />
             <input
               type="text"
@@ -79,7 +79,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
           </div>
           <button
             onClick={onClose}
-            className="text-ink dark:text-ink hover:text-ink dark:hover:text-ink p-1 transition-colors"
+            className="text-ink dark:text-ink hover:text-ink dark:hover:text-ink w-11 h-11 shrink-0 flex items-center justify-center transition-colors"
             aria-label="Close search"
           >
             <X className="w-5 h-5" />
@@ -87,7 +87,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
         </div>
 
         {/* Results Container */}
-        <div className="max-h-96 overflow-y-auto pt-2">
+        <div className="min-h-0 max-h-96 overflow-y-auto overscroll-contain pt-2">
           {query.trim() === "" ? (
             <div className="text-center py-12 text-ink dark:text-ink text-xs">
               <Smartphone className="w-8 h-8 mx-auto mb-2 text-ink dark:text-ink" />

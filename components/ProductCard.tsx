@@ -52,7 +52,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
 
   return (
     <div
-      className="glass-card product-card rounded-[2rem] px-4 py-3 sm:px-5 sm:py-4 w-full min-w-0 flex flex-col justify-between group relative shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
+      className="glass-card product-card rounded-[2rem] px-3 py-3 sm:px-5 sm:py-4 w-full min-w-0 flex flex-col justify-between group relative shadow-xs hover:shadow-xl dark:shadow-none dark:hover:shadow-[0_16px_40px_-10px_rgba(91,91,91,0.35)]"
     >
       {/* Top badges & Wishlist */}
       <div className="flex min-h-9 items-center justify-between gap-2 mb-2 z-10">
@@ -138,7 +138,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
       <div className="min-w-0 flex-1 flex flex-col justify-between text-left">
         <div>
           {/* Storage & Colors Preview */}
-          <div className="grid min-h-7 grid-cols-[minmax(0,1fr)_auto] items-start gap-2 mb-1.5 text-xs text-ink dark:text-ink">
+          <div className="grid min-h-7 grid-cols-1 min-[480px]:grid-cols-[minmax(0,1fr)_auto] items-start gap-2 mb-1.5 text-xs text-ink dark:text-ink">
             <span className="text-ink dark:text-ink font-semibold leading-5 break-words">
               {product.storageOptions ? product.storageOptions.join(" • ") : product.storage}
             </span>
@@ -181,7 +181,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
               <span className="text-xs leading-4 text-ink font-medium empty:hidden">
                 {hasVariants ? "From" : ""}
               </span>
-              <span className="whitespace-nowrap text-xl leading-7 font-black tabular-nums text-ink">
+              <span className="break-words text-lg sm:text-xl leading-7 font-black tabular-nums text-ink">
                 {minPrice > 0 ? formatCurrency(minPrice) : "Price not available"}
               </span>
             </div>

@@ -64,6 +64,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1280px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setMobileMenuOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -116,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 <span className="text-[15px] sm:text-base md:text-lg font-black tracking-wider text-ink dark:text-ink">
                   THEEKZU
                 </span>
-                <span className="max-[359px]:hidden text-[15px] sm:text-base md:text-lg font-black tracking-wider text-brand">
+                <span className="max-[419px]:hidden text-[15px] sm:text-base md:text-lg font-black tracking-wider text-brand">
                   MOBILE
                 </span>
               </div>
@@ -126,8 +135,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             </div>
           </Link>
 
-          {/* CENTER: Desktop Navigation Links (Visible >= 1024px) */}
-          <nav className="hidden lg:flex items-center justify-center gap-3 xl:gap-5 2xl:gap-6">
+          {/* CENTER: Desktop Navigation Links (Visible >= 1280px) */}
+          <nav className="hidden xl:flex items-center justify-center gap-3 xl:gap-5 2xl:gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -154,10 +163,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           {/* RIGHT: Action Icons */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             
-            {/* Desktop-only Search Trigger */}
+            {/* Search available on every screen */}
             <button
               onClick={onOpenSearch}
-              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors shadow-xs active:scale-95 btn-press group"
+              className="flex w-11 h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors shadow-xs active:scale-95 btn-press group"
               title="Search Products"
               aria-label="Search Products"
             >
@@ -167,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             {/* Desktop Wishlist Trigger (Visible >= 1024px) */}
             <button
               onClick={() => setIsWishlistOpen(true)}
-              className="hidden lg:flex w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 items-center justify-center text-ink dark:text-ink hover:text-ink transition-colors relative shadow-xs active:scale-95 btn-press group"
+              className="hidden lg:flex w-11 h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 items-center justify-center text-ink dark:text-ink hover:text-ink transition-colors relative shadow-xs active:scale-95 btn-press group"
               title="Saved Wishlist"
               aria-label="Saved Wishlist"
             >
@@ -182,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             {/* Cart Trigger (Always visible on mobile, tablet, desktop) */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors relative shadow-xs active:scale-95 btn-press group"
+              className="w-11 h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/20 dark:hover:border-neutral-400/60 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink transition-colors relative shadow-xs active:scale-95 btn-press group"
               title="Shopping Cart"
               aria-label="Shopping Cart"
             >
@@ -194,10 +203,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               )}
             </button>
 
-            {/* Mobile / Tablet Hamburger Button (< 1024px) */}
+            {/* Mobile / Tablet Hamburger Button (< 1280px) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/30 flex items-center justify-center text-ink dark:text-ink shadow-xs active:scale-95 transition-colors btn-press"
+              className="xl:hidden w-11 h-11 rounded-xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas border border-neutral-200 dark:border-neutral-500/30 flex items-center justify-center text-ink dark:text-ink shadow-xs active:scale-95 transition-colors btn-press"
               aria-label={mobileMenuOpen ? "Close Menu" : "Open Navigation Menu"}
               aria-expanded={mobileMenuOpen}
             >
@@ -214,7 +223,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
       {/* Mobile Drawer Navigation Backdrop & Drawer */}
       {mobileMenuMounted && (
-        <div className={`fixed inset-0 z-50 lg:hidden flex transition-opacity duration-200 ${mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+        <div className={`fixed inset-0 z-50 xl:hidden flex transition-opacity duration-200 ${mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           {/* Dimmed backdrop - click to close */}
           <div
             className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm sm:backdrop-blur-md"
@@ -223,7 +232,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           />
 
           {/* Drawer Sheet */}
-          <div className={`relative ml-auto w-[min(88vw,360px)] h-full bg-canvas dark:bg-canvas border-l border-neutral-200 dark:border-neutral-500/20 shadow-2xl flex flex-col z-10 overflow-hidden transform-gpu will-change-transform transition-transform duration-[220ms] ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
+          <div className={`relative ml-auto w-[min(92vw,360px)] h-[100dvh] bg-canvas dark:bg-canvas border-l border-neutral-200 dark:border-neutral-500/20 shadow-2xl flex flex-col z-10 overflow-hidden transform-gpu will-change-transform transition-transform duration-[220ms] ease-out ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
             
             {/* Drawer Header */}
             <div className="p-4 sm:p-5 border-b border-neutral-200 dark:border-white/10 flex items-center justify-between bg-canvas dark:bg-canvas">
@@ -249,7 +258,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
               <button data-ui="primary"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-9 h-9 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink flex items-center justify-center transition-colors"
+                className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas text-ink dark:text-ink hover:text-ink dark:hover:text-ink flex items-center justify-center transition-colors"
                 aria-label="Close Navigation"
               >
                 <X className="w-4 h-4" />
@@ -295,7 +304,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             </div>
 
             {/* Nav Links Scroll Area */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-1">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-ink dark:text-ink px-3 py-1 block">
                 Explore Store
               </span>
@@ -325,8 +334,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
             </div>
 
             {/* Drawer Contact Details */}
-            <div className="p-4 sm:p-5 border-t border-neutral-200 dark:border-white/10 bg-canvas dark:bg-canvas space-y-3">
-              <div className="flex items-center justify-between text-[11px] text-ink dark:text-ink px-1 pt-1">
+            <div className="shrink-0 p-4 sm:p-5 pb-[max(1rem,env(safe-area-inset-bottom))] border-t border-neutral-200 dark:border-white/10 bg-canvas dark:bg-canvas space-y-3">
+              <div className="flex flex-wrap gap-2 items-center justify-between text-[11px] text-ink dark:text-ink px-1 pt-1">
                 <span>Hotline: {storeConfig.phone}</span>
                 <span>Mon - Sun: 9AM - 9PM</span>
               </div>

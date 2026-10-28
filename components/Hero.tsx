@@ -8,7 +8,7 @@ import { HeroVideo } from "./HeroVideo";
 
 export const Hero: React.FC = () => {
   return (
-    <section data-surface="media" className="relative min-h-[680px] sm:min-h-[720px] md:min-h-[650px] lg:min-h-[700px] flex items-center py-10 sm:py-14 md:py-16 overflow-hidden bg-white w-full">
+    <section data-surface="media" className="relative min-h-[min(680px,100svh)] sm:min-h-[720px] md:min-h-[650px] lg:min-h-[700px] flex items-center py-10 sm:py-14 md:py-16 overflow-hidden bg-white w-full">
       <HeroVideo />
       <div className="absolute inset-0 bg-slate-950/35 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-slate-950/88 via-slate-950/52 to-transparent dark:from-slate-950/82 dark:via-slate-950/45 pointer-events-none" />
@@ -22,13 +22,13 @@ export const Hero: React.FC = () => {
             
             {/* Announcement Badge */}
             <div className="hero-animate-1 inline-flex px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-canvas border border-white/30 text-[11px] sm:text-xs font-bold text-ink shadow-lg backdrop-blur-md max-w-full dark:bg-canvas dark:border-white/20">
-              <span className="tracking-wide truncate">Official Brand New &amp; Certified iPhones • Sri Lanka</span>
+              <span className="tracking-wide text-center leading-relaxed">Official Brand New &amp; Certified iPhones • Sri Lanka</span>
             </div>
 
             {/* Single Primary H1 */}
             <h1
               className="hero-animate-2 font-black tracking-tight leading-[0.98] sm:leading-[1.05] md:leading-[1.08] text-white break-words"
-              style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.5rem)", textShadow: "0 4px 12px rgba(0,0,0,0.9), 0 12px 32px rgba(0,0,0,0.75)" }}
+              style={{ fontSize: "clamp(2rem, 5.5vw, 4.5rem)", textShadow: "0 4px 12px rgba(0,0,0,0.9), 0 12px 32px rgba(0,0,0,0.75)" }}
             >
               Upgrade Your World with <br className="hidden sm:inline" />
               <span className="text-white drop-shadow-[0_4px_16px_rgba(23,23,23,0.7)]">Theekzu</span>{" "}

@@ -587,3 +587,25 @@ input[type="file"]::file-selector-button {
 }
 :root [data-ui="whatsapp-link"][data-ui] [data-brand-color],
 :root [data-ui="whatsapp-link"][data-ui] [data-brand-color] svg { color: var(--contact-color); background: transparent; }
+
+
+/* Readable phone controls also avoid iOS focus zoom. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  .glass-drawer {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* Anchored content clears the sticky header. */
+:where(main [id]) { scroll-margin-top: 5rem; }
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
