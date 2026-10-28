@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Heart, ShoppingBag, Menu, X, ArrowRight, ShieldCheck } from "lucide-react";
+import { Search, Heart, ShoppingBag, X, ArrowRight, ShieldCheck } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { storeConfig } from "@/config/store";
@@ -89,6 +89,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   return (
     <>
       <header
+        data-scrolled={isScrolled}
         className={`site-navbar sticky top-0 left-0 right-0 z-40 w-full h-[64px] flex items-center px-[14px] sm:px-6 border-b backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ${
           isScrolled
             ? "bg-neutral-200/95 border-neutral-300 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
@@ -98,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
         <div className="w-full max-w-[1280px] mx-auto flex items-center justify-between gap-2">
           
           {/* LEFT: Theekzu Mobile Official Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 min-w-0">
+          <Link href="/" className="navbar-brand flex items-center gap-2 sm:gap-3 group flex-shrink-0 min-w-0">
             <div className="relative w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] rounded-xl sm:rounded-2xl p-[1px] bg-canvas    shadow-[0_0_15px_rgba(91,91,91,0.2)] dark:shadow-[0_0_20px_rgba(147,147,147,0.35)] group-hover:scale-105 transition-all flex-shrink-0">
               <div className="w-full h-full bg-canvas rounded-[11px] sm:rounded-[15px] p-1 flex items-center justify-center overflow-hidden">
                 <Image
@@ -132,7 +133,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-xs xl:text-sm font-medium transition-all duration-200 relative py-1.5 whitespace-nowrap flex items-center gap-1.5 group ${
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={`navbar-link text-xs xl:text-sm font-medium transition-all duration-200 relative py-1.5 whitespace-nowrap flex items-center gap-1.5 group ${
                   isActive(link.href)
                     ? "text-ink dark:text-ink font-bold"
                     : "text-ink hover:text-ink dark:text-ink dark:hover:text-ink"
@@ -141,10 +143,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 <span>{link.name}</span>
                 {/* Subtle animated underline with glow */}
                 <span
-                  className={`absolute bottom-0 left-0 h-[2px] rounded-full transition-all duration-300 ${
+                  className={`absolute bottom-0 left-0 h-[2px] w-full origin-left rounded-full transition-transform duration-300 ${
                     isActive(link.href)
-                      ? "w-full bg-canvas     shadow-[0_0_8px_rgba(91,91,91,0.4)] dark:shadow-[0_0_8px_rgba(169,169,169,0.6)]"
-                      : "w-0 bg-canvas dark:bg-canvas group-hover:w-full group-hover:shadow-[0_0_6px_rgba(91,91,91,0.3)]"
+                      ? "scale-x-100 bg-canvas     shadow-[0_0_8px_rgba(91,91,91,0.4)] dark:shadow-[0_0_8px_rgba(169,169,169,0.6)]"
+                      : "scale-x-0 bg-canvas dark:bg-canvas group-hover:scale-x-100 group-hover:shadow-[0_0_6px_rgba(91,91,91,0.3)]"
                   }`}
                 />
               </Link>
@@ -201,11 +203,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               aria-label={mobileMenuOpen ? "Close Menu" : "Open Navigation Menu"}
               aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5 text-ink dark:text-ink" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              <span className="navbar-menu-icon" data-open={mobileMenuOpen} aria-hidden="true">
+                <span /><span /><span />
+              </span>
             </button>
           </div>
 
@@ -300,14 +300,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
                 Explore Store
               </span>
               
-              {navLinks.map((link) => {
+              {navLinks.map((link, index) => {
                 const active = isActive(link.href);
                 return (
                   <Link
                     key={link.name}
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                    aria-current={active ? "page" : undefined}
+                    style={{ animationDelay: `${index * 35}ms` }}
+                    className={`navbar-drawer-link flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-semibold transition-colors ${
                       active
                         ? "bg-canvas dark:bg-canvas text-ink dark:text-ink font-bold border border-neutral-200 dark:border-neutral-500/30"
                         : "text-ink hover:bg-canvas dark:text-ink dark:hover:bg-canvas dark:hover:text-ink"
