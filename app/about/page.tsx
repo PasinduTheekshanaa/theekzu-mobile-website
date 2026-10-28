@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowUpRight, Target, Eye, ShieldCheck, MessageCircle, Users, Smartphone, Zap, Truck, Mail, Phone } from "lucide-react";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
@@ -168,7 +167,17 @@ export default function AboutPage() {
             <p className="text-sm sm:text-base leading-relaxed text-neutral-600">Pasindu Theekshana is the Founder &amp; Owner of Theekzu Mobile, an online mobile business serving customers across Sri Lanka.</p>
             <p className="text-sm sm:text-base leading-relaxed text-neutral-600">The business focuses on quality smartphones, premium Apple devices and accessories, with clear communication and reliable customer service at the heart of the experience.</p>
             <p className="text-sm sm:text-base leading-relaxed text-neutral-600">From choosing a model to checking its condition and arranging your order, our approach is simple: explain the details, answer your questions and help you choose with confidence.</p>
-            <Link href="/contact" className="inline-flex items-center gap-2 text-sm font-semibold border-b border-black pb-1 min-h-11">Talk to Theekzu Mobile <ArrowUpRight className="w-4 h-4" /></Link>
+            <a
+              href="https://pasindutheekshana.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-ui="primary"
+              className="group inline-flex w-full sm:w-auto items-center justify-center gap-3 rounded-full border border-black px-6 py-3.5 min-h-12 text-sm font-semibold shadow-md transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 motion-reduce:transform-none"
+            >
+              who is pasindu theekshana...?
+              <ArrowUpRight className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" aria-hidden="true" />
+              <span className="sr-only"> (opens portfolio in a new tab)</span>
+            </a>
           </div>
         </div>
       </section>
