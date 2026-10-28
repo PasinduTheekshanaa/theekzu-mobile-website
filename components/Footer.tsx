@@ -146,7 +146,7 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/#delivery" className="hover:text-ink dark:hover:text-ink transition-colors">
+                <Link href="/contact" className="hover:text-ink dark:hover:text-ink transition-colors">
                   Islandwide Delivery Info
                 </Link>
               </li>

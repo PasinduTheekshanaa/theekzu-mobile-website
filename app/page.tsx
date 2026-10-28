@@ -12,7 +12,6 @@ import { CustomerReviews } from "@/components/CustomerReviews";
 import { SocialSection } from "@/components/SocialSection";
 import { FinalCTA } from "@/components/FinalCTA";
 import { FAQSection } from "@/components/FAQSection";
-import { DeliveryInfo } from "@/components/DeliveryInfo";
 
 export const revalidate = 30;
 
@@ -77,11 +76,6 @@ export default function HomePage() {
 
       {/* 8. Customer Reviews */}
       <CustomerReviews />
-
-      {/* Delivery Information Section */}
-      <div id="delivery">
-        <DeliveryInfo />
-      </div>
 
       {/* FAQs Section */}
       <div id="faqs">
