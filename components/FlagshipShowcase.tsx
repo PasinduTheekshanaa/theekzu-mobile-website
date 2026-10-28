@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ResilientProductImage } from "@/components/ResilientProductImage";
-import { ArrowRight, Cpu, Eye, Camera, BatteryCharging, Sparkles, MessageCircle } from "lucide-react";
+import { ArrowRight, Cpu, Eye, Camera, BatteryCharging, MessageCircle } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig } from "@/config/store";
 import { useProducts } from "@/context/ProductContext";
@@ -31,7 +31,7 @@ export const FlagshipShowcase: React.FC = () => {
           {/* Left Details */}
           <div className="lg:col-span-6 space-y-5 sm:space-y-6">
             <span className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold uppercase tracking-wider shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-ink dark:text-ink" /> Flagship Showcase
+              Flagship Showcase
             </span>
             
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-ink dark:text-ink tracking-tight leading-tight">

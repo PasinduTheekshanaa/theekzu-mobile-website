@@ -3,7 +3,7 @@ import { getProductConditions, productForCondition } from "@/data/products";
 
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Search, Filter, RotateCcw, PackageSearch, Sparkles, ChevronDown } from "lucide-react";
+import { Search, Filter, RotateCcw, PackageSearch, ChevronDown } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
 import { getAccessoryTypes } from "@/lib/accessoryTypes";
@@ -181,7 +181,7 @@ export default function ShopPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-neutral-200 dark:border-white/10">
         <div>
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold text-ink dark:text-ink tracking-widest uppercase mb-2 shadow-xs">
-            <Sparkles className="w-3 h-3" /> Theekzu Mobile iPhone Catalog
+            Theekzu Mobile iPhone Catalog
           </span>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-1">
             Shop All iPhones & Accessories

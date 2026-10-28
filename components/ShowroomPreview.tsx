@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Eye, Sparkles, MessageCircle, ShieldCheck } from "lucide-react";
+import { ArrowRight, Eye, MessageCircle, ShieldCheck } from "lucide-react";
 import { getWhatsAppUrl } from "@/config/store";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
@@ -27,7 +27,6 @@ export const ShowroomPreview: React.FC = () => {
               {/* Left Column: Information & CTAs */}
               <div className="lg:col-span-6 space-y-5 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold tracking-wide">
-                  <Sparkles className="w-3.5 h-3.5" />
                   <span>Theekzu Mobile Experience</span>
                   <span className="w-1 h-1 rounded-full bg-canvas dark:bg-canvas" />
                   <span className="text-ink dark:text-ink font-medium">Sri Lanka</span>

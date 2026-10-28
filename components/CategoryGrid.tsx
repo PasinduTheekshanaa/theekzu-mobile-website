@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Smartphone, ShieldCheck, Zap, Shield, Sparkles } from "lucide-react";
+import { ArrowRight, Smartphone, ShieldCheck, Zap, Shield } from "lucide-react";
 
 import { ScrollReveal } from "@/components/ScrollReveal";
 
@@ -57,7 +57,7 @@ export const CategoryGrid: React.FC = () => {
       <ScrollReveal direction="up">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
-            <Sparkles className="w-3 h-3" /> Explore The Ecosystem
+            Explore The Ecosystem
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-3">
             Shop By Category

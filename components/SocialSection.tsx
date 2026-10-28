@@ -1,5 +1,5 @@
 import React from "react";
-import { Instagram, Facebook, MessageCircle, Sparkles, ExternalLink } from "lucide-react";
+import { Instagram, Facebook, MessageCircle, ExternalLink } from "lucide-react";
 import { storeConfig } from "@/config/store";
 
 export const SocialSection: React.FC = () => {
@@ -47,7 +47,7 @@ export const SocialSection: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-4">
         <div>
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
-            <Sparkles className="w-3 h-3" /> Official Channels
+            Official Channels
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-3">
             Follow Theekzu Mobile

@@ -284,7 +284,7 @@ select {
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -298,8 +298,7 @@ select {
 
 /* Every App Router page receives this transition through app/template.tsx. */
 .page-transition {
-  animation: page-enter 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: opacity, transform;
+  animation: page-enter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* =============================================
@@ -348,7 +347,23 @@ a {
 .hero-animate-img { animation: hero-in 0.80s cubic-bezier(0.16,1,0.3,1) 0.20s both; }
 
 /* Respect prefers-reduced-motion */
+.site-reveal {
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.site-reveal-pending {
+  opacity: 0;
+  transform: translateY(22px);
+}
+.site-reveal-visible {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .site-reveal, .site-reveal-pending {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
   html { scroll-behavior: auto; }
   .hero-animate-1, .hero-animate-2, .hero-animate-3,
   .hero-animate-4, .hero-animate-5, .hero-animate-img,

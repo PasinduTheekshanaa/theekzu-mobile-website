@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Sparkles,
   Info,
   ExternalLink,
   ShieldCheck,
@@ -116,7 +115,6 @@ export const ShowroomGallery: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold">
-              <Sparkles className="w-3.5 h-3.5" />
               <span>Real Showroom Photography</span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-ink dark:text-ink tracking-tight">

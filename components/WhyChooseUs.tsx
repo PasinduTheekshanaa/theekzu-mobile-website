@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle2, BadgeDollarSign, HeartHandshake, ShieldAlert, Truck, MessageCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, BadgeDollarSign, HeartHandshake, ShieldAlert, Truck, MessageCircle } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 export const WhyChooseUs: React.FC = () => {
@@ -53,7 +53,7 @@ export const WhyChooseUs: React.FC = () => {
       <ScrollReveal direction="up">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
-            <Sparkles className="w-3.5 h-3.5" /> The Theekzu Advantage
+            The Theekzu Advantage
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-3">
             Why Choose Theekzu Mobile?

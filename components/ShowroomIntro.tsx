@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MessageCircle, ShieldCheck, Cpu, Smartphone, Sparkles, CheckCircle2 } from "lucide-react";
+import { MessageCircle, ShieldCheck, Cpu, Smartphone, CheckCircle2 } from "lucide-react";
 import { getWhatsAppUrl, storeConfig } from "@/config/store";
 
 export const ShowroomIntro: React.FC = () => {
@@ -19,7 +19,6 @@ export const ShowroomIntro: React.FC = () => {
         {/* Intro Header */}
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold tracking-wide">
-            <Sparkles className="w-3.5 h-3.5" />
             <span>The Theekzu Experience</span>
           </div>
 

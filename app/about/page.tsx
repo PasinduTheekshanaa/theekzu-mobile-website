@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Target, Eye, ShieldCheck, Users, Smartphone, Zap, Truck, Sparkles } from "lucide-react";
+import { Target, Eye, ShieldCheck, Users, Smartphone, Zap, Truck } from "lucide-react";
 import { storeConfig } from "@/config/store";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 
@@ -85,7 +85,7 @@ export default function AboutPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-7 space-y-6">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold text-ink dark:text-ink tracking-widest uppercase shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-ink dark:text-ink" /> Our Story & Heritage
+            Our Story & Heritage
           </span>
           <h1 className="text-4xl sm:text-5xl font-black text-ink dark:text-ink leading-tight">
             About <span className="text-brand">Theekzu</span> <span className="text-brand">Mobile</span>

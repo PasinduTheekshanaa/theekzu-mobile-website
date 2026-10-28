@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, Calculator, Check, MessageCircle, Sparkles, RefreshCw } from "lucide-react";
+import { ArrowRight, Calculator, Check, MessageCircle, RefreshCw } from "lucide-react";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
 import { ScrollReveal } from "@/components/ScrollReveal";
 

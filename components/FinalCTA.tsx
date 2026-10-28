@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { MessageCircle, Grid, Sparkles, Clock, Phone } from "lucide-react";
+import { MessageCircle, Grid, Clock, Phone } from "lucide-react";
 import { storeConfig } from "@/config/store";
 
 export const FinalCTA: React.FC = () => {
@@ -15,7 +15,7 @@ export const FinalCTA: React.FC = () => {
         <div className="max-w-3xl mx-auto space-y-5 sm:space-y-6 relative z-10">
           
           <span className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-canvas dark:bg-canvas border border-white/25 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold uppercase tracking-wider shadow-sm backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-ink dark:text-ink" /> Start Your Apple Upgrade Today
+            Start Your Apple Upgrade Today
           </span>
 
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-ink leading-tight">

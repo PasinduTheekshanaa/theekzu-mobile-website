@@ -3,7 +3,6 @@ import { getProductConditions } from "@/data/products";
 
 
 import React, { useState } from "react";
-import { Sparkles } from "lucide-react";
 import { useProducts } from "@/context/ProductContext";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -24,7 +23,7 @@ export default function IPhonesPage() {
       {/* Header Banner */}
       <div className="rounded-2xl sm:rounded-[2.5rem] bg-canvas      p-5 sm:p-8 md:p-12 border border-neutral-200 dark:border-neutral-500/20 relative overflow-hidden shadow-sm dark:shadow-none">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold text-ink dark:text-ink tracking-widest uppercase mb-2 shadow-xs">
-          <Sparkles className="w-3 h-3" /> Apple Smartphone Lineup
+          Apple Smartphone Lineup
         </span>
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-ink dark:text-ink mt-1">
           Apple iPhones in Sri Lanka

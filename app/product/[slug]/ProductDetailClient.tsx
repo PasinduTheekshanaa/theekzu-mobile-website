@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ResilientProductImage } from "@/components/ResilientProductImage";
 import Link from "next/link";
-import { Star, MessageCircle, ShoppingBag, ShieldCheck, ChevronRight, Plus, Minus, Heart, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Star, MessageCircle, ShoppingBag, ShieldCheck, ChevronRight, Plus, Minus, Heart, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Product, ProductVariant, ProductCondition, getProductConditions, getConditionVariants } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
@@ -474,7 +474,6 @@ Please confirm availability and islandwide delivery options!`;
       {/* Specifications Detailed Accordion / Table */}
       <div className="glass-card rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-10 border border-neutral-200 dark:border-neutral-500/20 space-y-6 shadow-sm">
         <h3 className="text-xl font-bold text-ink dark:text-ink border-b border-neutral-200 dark:border-neutral-500/15 pb-4 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-ink dark:text-ink" />
           <span>Detailed Specifications</span>
         </h3>
 

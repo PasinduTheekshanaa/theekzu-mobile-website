@@ -9,7 +9,6 @@ import {
   MapPin,
   Clock,
   Send,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
   Loader2
@@ -184,7 +183,7 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
       {/* Header */}
       <div>
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold text-ink dark:text-ink tracking-widest uppercase shadow-xs">
-          <Sparkles className="w-3.5 h-3.5" /> Get in Touch
+          Get in Touch
         </span>
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-ink dark:text-ink mt-3">
           Contact <span className="text-brand">Theekzu</span> <span className="text-brand">Mobile</span>

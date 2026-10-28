@@ -10,6 +10,7 @@ import { StoreOverlays } from "@/components/StoreOverlays";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
+import { SiteScrollReveal } from "@/components/SiteScrollReveal";
 import { storeConfig } from "@/config/store";
 import { getServerCatalog } from "@/lib/serverCatalog";
 
@@ -177,7 +178,7 @@ export default async function RootLayout({
               <WishlistProvider>
 
                 <NavbarWrapper />
-                <main className="flex-1 animate-in fade-in duration-300">{children}</main>
+                <main data-site-content className="flex-1 animate-in fade-in duration-300">{children}<SiteScrollReveal /></main>
                 <Footer />
                 <StoreOverlays />
                 <FloatingWhatsApp />

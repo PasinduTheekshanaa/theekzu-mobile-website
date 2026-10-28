@@ -27,7 +27,6 @@ import {
   Trash2,
   Plus,
   Layers,
-  Sparkles,
   ChevronDown,
   ChevronUp,
   Image as ImageIcon,
@@ -1052,7 +1051,6 @@ export default function AdminProductsPage() {
       {isLiveDatabase && products.length < 29 && (
         <div className="bg-canvas border-b border-neutral-500/30 px-4 py-3 text-xs flex flex-wrap items-center justify-between gap-3 text-ink dark:text-ink">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-ink flex-shrink-0 animate-pulse" />
             <span>
               <strong>Price List & Catalog Update Ready:</strong> Database currently has {products.length} products. 8 new iPhone models (SE 2nd Gen, X, XS, XS Max, 12 Mini, 13 Mini, 14 Plus, 15 Plus) and revised prices are ready to sync into Supabase.
             </span>
@@ -1149,7 +1147,6 @@ export default function AdminProductsPage() {
                 className="px-3.5 py-2 rounded-xl bg-canvas hover:bg-canvas text-ink text-xs font-bold flex items-center gap-1.5 shadow-md shadow-neutral-500/20 active:scale-95 transition-all"
                 title="Add two editable sample products: a charger and a protective case"
               >
-                <Sparkles className="w-3.5 h-3.5" />
                 <span>Add Sample Data</span>
               </button>
             )}
@@ -1501,7 +1498,6 @@ export default function AdminProductsPage() {
                       className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-200 dark:border-white/10 hover:text-ink"
                       title="Generate storage x color combinations"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-ink" />
                       <span className="hidden sm:inline">Generator</span>
                     </button>
 
@@ -1853,7 +1849,6 @@ export default function AdminProductsPage() {
           >
             <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-ink" />
                 <span>Variant Generator: {variantGenProduct.name}</span>
               </h3>
               <button data-ui="primary"
@@ -2258,7 +2253,6 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="text-[11px] text-ink dark:text-ink bg-canvas dark:bg-canvas p-2.5 rounded-xl border border-neutral-500/10 dark:border-neutral-500/10 flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-ink dark:text-ink flex-shrink-0" />
               <span>Edits save directly to Supabase and immediately reflect on the live storefront. No catalog sync needed.</span>
             </div>
 

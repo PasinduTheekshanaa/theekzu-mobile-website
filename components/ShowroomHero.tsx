@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, ShieldCheck, Sparkles, ArrowRight, Eye, CheckCircle2 } from "lucide-react";
+import { MessageCircle, ShieldCheck, ArrowRight, Eye, CheckCircle2 } from "lucide-react";
 import { getWhatsAppUrl } from "@/config/store";
 
 export const ShowroomHero: React.FC = () => {
@@ -23,7 +23,6 @@ export const ShowroomHero: React.FC = () => {
           <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
             {/* Badges */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-ink dark:text-ink animate-pulse" />
               <span>Official Theekzu Mobile Showroom</span>
               <span className="w-1 h-1 rounded-full bg-canvas dark:bg-canvas" />
               <span className="text-ink dark:text-ink font-medium">Sri Lanka</span>

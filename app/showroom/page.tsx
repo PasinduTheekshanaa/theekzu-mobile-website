@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { MessageCircle, ShoppingBag, ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
+import { MessageCircle, ShoppingBag, ArrowRight, ShieldCheck } from "lucide-react";
 import { ShowroomHero } from "@/components/ShowroomHero";
 import { ShowroomIntro } from "@/components/ShowroomIntro";
 import { ShowroomGallery } from "@/components/ShowroomGallery";
@@ -99,7 +99,6 @@ export default function ShowroomPage() {
           <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-8">
             <div className="space-y-3 max-w-xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-canvas border border-neutral-500/20 text-ink text-xs font-bold">
-                <Sparkles className="w-3.5 h-3.5" />
                 <span>Ready to Get Your Next iPhone?</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight">

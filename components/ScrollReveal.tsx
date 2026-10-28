@@ -57,6 +57,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   return (
     <div
+      data-scroll-reveal
       ref={ref}
       style={{
         transitionDuration: "500ms",

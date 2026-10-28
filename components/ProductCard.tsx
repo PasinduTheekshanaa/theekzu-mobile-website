@@ -5,7 +5,7 @@ import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import { ResilientProductImage } from "@/components/ResilientProductImage";
 import { useRouter } from "next/navigation";
-import { Heart, Eye, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
+import { Heart, Eye, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Product } from "@/data/products";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { storeConfig } from "@/config/store";
@@ -63,9 +63,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
               : "bg-canvas dark:bg-canvas text-ink dark:text-ink border border-neutral-500/20 dark:border-neutral-500/40"
           }`}
         >
-          {product.condition === "Brand New" ? (
-            <Sparkles className="w-3 h-3 text-ink dark:text-ink" />
-          ) : (
+          {product.condition !== "Brand New" && (
             <ShieldCheck className="w-3 h-3 text-ink dark:text-ink" />
           )}
           {product.conditionBadge || product.condition}

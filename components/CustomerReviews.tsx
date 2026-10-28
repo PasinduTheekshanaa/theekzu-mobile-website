@@ -5,7 +5,6 @@ import {
   Star,
   CheckCircle2,
   Quote,
-  Sparkles,
   ChevronLeft,
   ChevronRight,
   MessageSquarePlus,
@@ -272,7 +271,7 @@ export const CustomerReviews: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
-              <Sparkles className="w-3 h-3" /> Real Client Feedback
+              Real Client Feedback
             </span>
           </div>
 

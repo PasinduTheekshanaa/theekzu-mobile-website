@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, HelpCircle, Sparkles } from "lucide-react";
+import { ChevronDown, HelpCircle } from "lucide-react";
 import { faqs } from "@/data/faqs";
 
 export const FAQSection: React.FC = () => {
@@ -15,7 +15,7 @@ export const FAQSection: React.FC = () => {
     <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="text-center mb-10">
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
-          <Sparkles className="w-3 h-3" /> Got Questions?
+          Got Questions?
         </span>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-ink dark:text-ink mt-3">
           Frequently Asked Questions
