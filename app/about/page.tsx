@@ -133,18 +133,19 @@ export default function AboutPage() {
           <p className="text-[11px] uppercase tracking-[0.2em] font-bold mb-3 text-neutral-500">Behind the brand</p>
           <h2 id="founder-heading" className="text-3xl sm:text-4xl font-bold tracking-tight">Meet our founder.</h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
-        <figure className="lg:col-span-5 min-w-0 w-full max-w-lg mx-auto lg:ml-auto">
-          <div className="relative aspect-[4/5] rounded-[1.75rem] sm:rounded-[2rem] overflow-hidden bg-neutral-200">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-x-16 lg:gap-y-0 items-center">
+        <figure className="min-w-0 w-full max-w-lg mx-auto lg:contents">
+          <div className="lg:col-span-5 lg:col-start-1 lg:row-start-1 relative aspect-[4/5] rounded-[1.75rem] sm:rounded-[2rem] overflow-hidden bg-neutral-200">
             <Image src="/team/pasindu-theekshana.webp" alt="Pasindu Theekshana, Founder and Owner of Theekzu Mobile" fill sizes="(min-width: 1280px) 440px, (min-width: 1024px) 40vw, (min-width: 640px) 512px, 100vw" className="object-cover object-[50%_35%]" />
           </div>
-          <figcaption className="flex justify-between items-center gap-4 pt-5 px-1">
+          <figcaption className="lg:col-span-5 lg:col-start-1 lg:row-start-2 pt-5 px-1">
+            <div className="flex justify-between items-center gap-4">
             <div>
               <h2 className="font-bold text-xl sm:text-2xl tracking-tight">Pasindu Theekshana</h2>
               <p className="mt-1 text-xs sm:text-sm text-neutral-500">Founder &amp; Owner · Theekzu Mobile</p>
             </div>
             <Image src="/brand-logo-small.webp" alt="Theekzu Mobile" width={44} height={44} className="rounded-xl shrink-0" />
-          </figcaption>
+            </div>
           <a
             href={`mailto:${storeConfig.email}`}
             className="mt-5 flex w-full min-h-12 items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white px-3 py-3.5 text-xs sm:text-sm font-semibold shadow-sm transition-colors hover:bg-neutral-100 focus-visible:outline-offset-4"
@@ -159,8 +160,9 @@ export default function AboutPage() {
             <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span>{storeConfig.phone}</span>
           </a>
+          </figcaption>
         </figure>
-          <div className="lg:col-span-7 min-w-0 space-y-5">
+          <div className="lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:self-center min-w-0 space-y-5">
             <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-neutral-500">Founder &amp; Owner</p>
             <h3 className="text-3xl sm:text-4xl font-bold tracking-tight">Pasindu Theekshana</h3>
             <p className="text-lg sm:text-xl font-medium leading-relaxed">A real person. A clear commitment.</p>
