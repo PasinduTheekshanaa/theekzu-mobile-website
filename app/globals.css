@@ -645,3 +645,8 @@ input[type="file"]::file-selector-button {
   outline: 2px solid currentColor;
   outline-offset: 3px;
 }
+
+/* About already provides its own space below the final contact card. */
+main:has(.about-page) + footer {
+  margin-top: 0;
+}
