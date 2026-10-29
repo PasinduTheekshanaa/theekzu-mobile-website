@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import type { Metadata } from "next";
-import { ArrowUpRight, Target, Eye, ShieldCheck, MessageCircle, Users, Smartphone, Zap, Truck, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, Target, Eye, ShieldCheck, MessageCircle, Users, Smartphone, Zap, Truck, Mail, Phone, Award } from "lucide-react";
 import { storeConfig, getWhatsAppUrl } from "@/config/store";
 
 export const metadata: Metadata = {
@@ -69,6 +69,7 @@ const stats = [
   { value: "500+", target: 500, suffix: "+", label: "Happy customers", icon: Users },
   { value: "700+", target: 700, suffix: "+", label: "Devices sold", icon: Smartphone },
   { value: "8AM – 8PM", label: "Fast customer support", icon: Zap },
+  { value: "11", target: 11, suffix: "", detail: "Years", label: "Experience", icon: Award },
   { value: "25", target: 25, suffix: "", detail: "Districts", label: "Islandwide online service", icon: Truck },
 ];
 
@@ -114,9 +115,9 @@ export default function AboutPage() {
       </section>
 
       <section aria-label="Theekzu Mobile in numbers" className="rounded-3xl border border-neutral-200 bg-white p-3 sm:p-6 lg:p-10 shadow-[0_12px_40px_-20px_rgba(0,0,0,0.15)]">
-        <dl className="grid grid-cols-2 lg:grid-cols-4">
+        <dl className="grid grid-cols-2 lg:grid-cols-5">
           {stats.map(({ value, target, suffix, detail, label, icon: Icon }, index) => (
-            <div key={label} className={`flex flex-col items-center text-center px-2 sm:px-5 py-6 sm:py-8 min-w-0 ${index % 2 === 1 ? "border-l border-neutral-200" : ""} ${index > 1 ? "border-t lg:border-t-0" : ""} ${index === 2 ? "lg:border-l" : ""} border-neutral-200`}>
+            <div key={label} className={`flex flex-col items-center text-center px-2 sm:px-5 py-6 sm:py-8 min-w-0 ${index % 2 === 1 ? "border-l border-neutral-200" : ""} ${index > 1 ? "border-t lg:border-t-0" : ""} ${index > 0 ? "lg:border-l" : ""} ${index === stats.length - 1 ? "col-span-2 lg:col-span-1" : ""} border-neutral-200`}>
               <Icon className="w-6 h-6 sm:w-7 sm:h-7 mb-4 sm:mb-5" strokeWidth={1.8} aria-hidden="true" />
               <dt className="order-last mt-3 text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.1em] leading-relaxed max-w-[180px]">{label}</dt>
               <dd className="text-[clamp(1.5rem,3.3vw,3.5rem)] font-black tracking-tight leading-[1.12] tabular-nums">
