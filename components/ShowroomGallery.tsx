@@ -165,6 +165,8 @@ export const ShowroomGallery: React.FC = () => {
                   }`}
                 >
                   <Image
+                    unoptimized
+                    priority={idx === 0}
                     src={photo.src}
                     alt={photo.alt}
                     fill
@@ -289,6 +291,7 @@ export const ShowroomGallery: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <Image
+                unoptimized
                 src={activePhoto.src}
                 alt={activePhoto.alt}
                 width={activePhoto.width}
