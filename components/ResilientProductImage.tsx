@@ -5,8 +5,8 @@ import { useState } from "react";
 
 type Props = Omit<ImageProps, "src" | "unoptimized"> & { src: string };
 
-// Prefer Next's small responsive images, but retain the original public image
-// when an optimizer request cannot reach Supabase Storage.
+// Supabase photos use the storage CDN directly: avoid a slow optimizer
+// request followed by a second download when the optimizer times out.
 export function ResilientProductImage({ src, onError, ...props }: Props) {
   const [fallbackSrc, setFallbackSrc] = useState<string | null>(null);
 
@@ -14,7 +14,7 @@ export function ResilientProductImage({ src, onError, ...props }: Props) {
     <Image
       {...props}
       src={src}
-      unoptimized={fallbackSrc === src}
+      unoptimized={src.startsWith("http") || fallbackSrc === src}
       onError={(event) => {
         if (src.startsWith("http") && fallbackSrc !== src) {
           setFallbackSrc(src);

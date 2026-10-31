@@ -1,4 +1,7 @@
 "use client";
+import dynamic from "next/dynamic";
+const DeviceViewer = dynamic(() => import("@/components/DeviceViewer").then(m=>m.DeviceViewer), {ssr:false});
+
 
 import React, { useState, useEffect } from "react";
 import { ResilientProductImage } from "@/components/ResilientProductImage";
@@ -199,6 +202,7 @@ Please confirm availability and islandwide delivery options!`;
             </button>
           </div>
 
+          {liveProduct.category === "iphones" && <DeviceViewer productId={liveProduct.id} color={selectedColor} key={liveProduct.id} name={liveProduct.name} images={allImages} frames={liveProduct.rotationFrames} />}
           {/* Thumbnails */}
           {allImages.length > 1 && (
             <div className="flex gap-3 overflow-x-auto pb-2">

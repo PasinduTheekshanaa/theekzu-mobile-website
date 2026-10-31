@@ -69,6 +69,8 @@ export interface Product {
   
   // Images (URLs from assets or cloud)
   images: string[];
+  // Ordered photographs of the same unit and color around a full turn.
+  rotationFrames?: string[];
   
   // Full description & specs
   description: string;

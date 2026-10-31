@@ -1,0 +1,2 @@
+export const inspectionCategories = ['Front Display','Back Glass','Camera System','Left Frame','Right Frame','Top Edge','Bottom Edge','Charging Port','Physical Condition'] as const;
+export interface ViewerMedia { id: string; product_id: string; image_url: string; media_type: 'photo'|'rotation'; viewing_angle: string | null; frame_sequence: number; display_order: number; inspection_category: string | null; color: string | null; markers: {x:number;y:number;label:string}[]; }

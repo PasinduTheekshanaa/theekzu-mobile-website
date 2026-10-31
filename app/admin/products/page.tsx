@@ -1565,6 +1565,7 @@ export default function AdminProductsPage() {
                 className="relative bg-canvas dark:bg-canvas text-ink dark:text-ink rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-neutral-200 dark:border-neutral-500/30 shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
               >
+                <Link href="/admin/viewer" className="p-3 text-sm underline">Manage 360° and inspection media →</Link>
                 {/* Modal Header */}
                 <div className="flex items-center justify-between border-b border-neutral-200 dark:border-white/10 p-5 sm:p-6 pb-4">
                   <div>

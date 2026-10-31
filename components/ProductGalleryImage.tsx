@@ -18,7 +18,7 @@ export function ProductGalleryImage({ src, alt, colorImages }: { src: string; al
     const image = new window.Image();
     image.decoding = "async";
     try {
-      const { props } = getImageProps({ src: url, alt: "", ...imageSize });
+      const { props } = getImageProps({ src: url, alt: "", ...imageSize, unoptimized: url.startsWith("http") });
       image.sizes = props.sizes || "";
       image.srcset = props.srcSet || "";
       image.src = props.src;
@@ -62,13 +62,13 @@ export function ProductGalleryImage({ src, alt, colorImages }: { src: string; al
     // Warm only this product's color photos, one at a time after the main
     // image loads, without competing with the initial page image.
     void (async () => {
-      for (const url of colorImages) {
+      for (const url of colorImages.filter(url => url !== src).slice(0, 2)) {
         if (cancelled) return;
         try { await prepare(url); } catch { /* A selected image can retry. */ }
       }
     })();
     return () => { cancelled = true; };
-  }, [loaded, colorImages, prepare]);
+  }, [loaded, colorImages, prepare, src]);
 
   return <>
     <ResilientProductImage src={displayed} alt={alt} {...imageSize} priority
