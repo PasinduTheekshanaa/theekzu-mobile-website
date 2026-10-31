@@ -12,6 +12,14 @@ export const Footer: React.FC = () => {
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-canvas dark:bg-canvas rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container-custom relative z-10">
+        <section id="whatsapp-community" aria-label="WhatsApp community" className="mb-10 rounded-3xl border border-neutral-200 p-5 sm:p-7">
+          <h2 className="text-xl font-bold">Stay connected with Theekzu</h2>
+          <p className="mt-2 text-sm text-neutral-600">Join our WhatsApp group and follow our channel for the latest updates.</p>
+          <div className="mt-5 flex flex-col sm:flex-row gap-3">
+            <a href={storeConfig.social.whatsappGroup} target="_blank" rel="noopener noreferrer" data-ui="whatsapp" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"><MessageCircle className="h-5 w-5" aria-hidden="true" />Join WhatsApp Group</a>
+            <a href={storeConfig.social.whatsappChannel} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-neutral-300 px-5 py-3 text-sm font-semibold hover:bg-neutral-100"><MessageCircle className="h-5 w-5" aria-hidden="true" />Follow WhatsApp Channel</a>
+          </div>
+        </section>
         
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 pb-12 border-b border-neutral-200 dark:border-neutral-500/15">
@@ -229,3 +237,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+

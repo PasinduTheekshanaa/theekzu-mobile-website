@@ -73,6 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
     { name: "iPhones", href: "/iphones" },
+    { name: "Compare", href: "/compare" },
     { name: "Showroom", href: "/showroom" },
     { name: "Accessories", href: "/accessories" },
     { name: "Trade-In", href: "/trade-in" },

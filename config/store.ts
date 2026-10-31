@@ -14,6 +14,8 @@ export interface StoreConfig {
     instagram: string;
     tiktok: string;
     whatsapp: string;
+    whatsappGroup: string;
+    whatsappChannel: string;
   };
 }
 
@@ -33,6 +35,8 @@ export const storeConfig: StoreConfig = {
     instagram: "https://www.instagram.com/theekzu_mobile?igsi=MThtZGd1OTM3dmJiMg==",
     tiktok: "https://www.tiktok.com/@theekzu?_r=1&_t=ZS-99Tf73AGf1l",
     whatsapp: "https://wa.me/94740245749",
+    whatsappGroup: "https://chat.whatsapp.com/EUqvp6rkNxHKzFJJ538ED2?s=cl&p=i&mlu=4&ilr=4&iam=2",
+    whatsappChannel: "https://whatsapp.com/channel/0029Vb7frkUAu3aOMVrhrW0d",
   },
 };
 
