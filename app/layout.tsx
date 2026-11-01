@@ -151,6 +151,10 @@ export default async function RootLayout({
   return (
     <html lang="en" className="scroll-smooth light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head>
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && <>
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+        </>}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

@@ -100,6 +100,9 @@ export const ProductProvider: React.FC<{
   );
   const [isLoading, setIsLoading] = useState(initialProducts === undefined);
 
+  const hasCatalog = React.useRef(Boolean(initialProducts?.length));
+  const lastCatalogLoad = React.useRef(initialProducts?.length ? Date.now() : 0);
+
   // Load from Supabase as single source of truth
   const loadCatalog = useCallback(async () => {
     const id = ++requestId.current;
@@ -109,6 +112,8 @@ export const ProductProvider: React.FC<{
       if (id !== requestId.current) return;
       setCatalogError(result.error);
       if (result.source === "Supabase") {
+        hasCatalog.current = true;
+        lastCatalogLoad.current = Date.now();
         setProducts(result.products);
         setImagesMap(result.imagesMap);
       }
@@ -132,7 +137,7 @@ export const ProductProvider: React.FC<{
 
     let refreshTimer: ReturnType<typeof setTimeout>;
     const scheduleRefresh = () => { clearTimeout(refreshTimer); refreshTimer = setTimeout(loadCatalog, 300); };
-    const onVisible = () => { if (document.visibilityState === "visible") scheduleRefresh(); };
+    const onVisible = () => { if (document.visibilityState === "visible" && Date.now() - lastCatalogLoad.current > 30000) scheduleRefresh(); };
     document.addEventListener("visibilitychange", onVisible);
     window.addEventListener("online", scheduleRefresh);
     // Supabase Realtime channel for instant cross-device updates
