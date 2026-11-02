@@ -1,5 +1,6 @@
 "use client";
 
+import { fastProductImage } from "@/lib/fastProductImage";
 import { getImageProps } from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ResilientProductImage } from "@/components/ResilientProductImage";
@@ -18,7 +19,7 @@ export function ProductGalleryImage({ src, alt, colorImages }: { src: string; al
     const image = new window.Image();
     image.decoding = "async";
     try {
-      const { props } = getImageProps({ src: url, alt: "", ...imageSize, unoptimized: url.startsWith("http") });
+      const { props } = getImageProps({ src: fastProductImage(url), alt: "", ...imageSize, unoptimized: true });
       image.sizes = props.sizes || "";
       image.srcset = props.srcSet || "";
       image.src = props.src;

@@ -11,15 +11,15 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 export const FeaturedProducts: React.FC = () => {
   const { products, isLoading, catalogError } = useProducts();
   const featuredIphones = React.useMemo(() => {
-    let list = products.filter((p) => p.category === "iphones" && p.featured);
-    if (list.length === 0) {
-      list = products.filter((p) => p.category === "iphones");
-    }
-    return list.slice(0, 6);
+    const models = ["iphone-14-pro-max", "iphone-15-pro-max", "iphone-16-pro-max", "iphone-17-pro-max"];
+    return models.flatMap(slug => {
+      const product = products.find(p => p.category === "iphones" && p.slug === slug);
+      return product ? [product] : [];
+    });
   }, [products]);
 
   return (
-    <section className="container-custom transition-colors duration-300 pb-2 sm:pb-4">
+    <section id="featured-iphones" className="container-custom transition-colors duration-300 pb-2 sm:pb-4">
       {(isLoading || catalogError || products.length === 0) && <p role="status" className="py-6 text-center">{isLoading ? "Loading products…" : catalogError ? "Products are temporarily unavailable. Please try again shortly." : "No products are currently available."}</p>}
       <ScrollReveal direction="up">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 md:mb-10 gap-3 sm:gap-4">
@@ -47,7 +47,7 @@ export const FeaturedProducts: React.FC = () => {
         </div>
       </ScrollReveal>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {featuredIphones.map((product, idx) => (
           <ScrollReveal key={product.id} direction="up" delay={idx * 60}>
             <ProductCard product={product} />

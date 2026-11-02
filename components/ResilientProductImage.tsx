@@ -1,6 +1,7 @@
 "use client";
 
 import Image, { type ImageProps } from "next/image";
+import { fastProductImage } from "@/lib/fastProductImage";
 import { useState } from "react";
 
 type Props = Omit<ImageProps, "src" | "unoptimized"> & { src: string };
@@ -13,8 +14,8 @@ export function ResilientProductImage({ src, onError, ...props }: Props) {
   return (
     <Image
       {...props}
-      src={src}
-      unoptimized={src.startsWith("http") || fallbackSrc === src}
+      src={fallbackSrc === src ? src : fastProductImage(src, Number(props.width) <= 128 ? 256 : 840)}
+      unoptimized={true}
       onError={(event) => {
         if (src.startsWith("http") && fallbackSrc !== src) {
           setFallbackSrc(src);
