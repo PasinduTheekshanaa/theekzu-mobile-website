@@ -5,18 +5,18 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search, Heart, ShoppingBag, X, ArrowRight, ShieldCheck, ChevronDown, Smartphone, Headphones } from "lucide-react";
+import { Search, Heart, ShoppingBag, X, ArrowRight, ShieldCheck, ChevronDown, Smartphone, Headphones, ArrowLeftRight, GitCompareArrows } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { storeConfig } from "@/config/store";
 
-function ShopDropdown({ mobile = false, close }: { mobile?: boolean; close?: () => void }) {
+function NavDropdown({ mobile = false, close, facilities = false }: { mobile?: boolean; close?: () => void; facilities?: boolean }) {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
   const root = React.useRef<HTMLDivElement>(null);
   const trigger = React.useRef<HTMLButtonElement>(null);
   const id = React.useId();
-  const active = ["/shop", "/iphones", "/accessories"].some(path => pathname.startsWith(path));
+  const active = (facilities ? ["/trade-in", "/compare"] : ["/shop", "/iphones", "/accessories"]).some(path => pathname.startsWith(path));
   useEffect(() => { setExpanded(false); }, [pathname]);
   useEffect(() => {
     if (!expanded) return;
@@ -24,11 +24,11 @@ function ShopDropdown({ mobile = false, close }: { mobile?: boolean; close?: () 
     document.addEventListener("pointerdown", outside);
     return () => document.removeEventListener("pointerdown", outside);
   }, [expanded]);
-  const links = [{label:"All Products", detail:"Explore the full collection", href:"/shop", icon:ShoppingBag},{label:"iPhones",detail:"Find your next iPhone",href:"/iphones",icon:Smartphone},{label:"Accessories",detail:"The essentials for your device",href:"/accessories",icon:Headphones}];
+  const links = facilities ? [{label:"Trade-In",detail:"Explore your trade-in options",href:"/trade-in",icon:ArrowLeftRight},{label:"Compare",detail:"Find the iPhone that suits you",href:"/compare",icon:GitCompareArrows}] : [{label:"All Products", detail:"Explore the full collection", href:"/shop", icon:ShoppingBag},{label:"iPhones",detail:"Find your next iPhone",href:"/iphones",icon:Smartphone},{label:"Accessories",detail:"The essentials for your device",href:"/accessories",icon:Headphones}];
   return <div ref={root} className={mobile ? "rounded-2xl" : "relative"} onKeyDown={event => {
     if (event.key === "Escape" && expanded) {event.stopPropagation();setExpanded(false);trigger.current?.focus();}
   }} onBlur={event => {if(event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node))setExpanded(false);}}>
-    <button ref={trigger} type="button" aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded(value=>!value)} className={`flex items-center justify-between gap-2 transition-colors duration-200 ${mobile ? "w-full min-h-12 rounded-xl px-3.5 py-3 text-sm font-semibold" : "navbar-link min-h-11 py-1.5 text-sm font-medium"} ${expanded && mobile ? "bg-neutral-100" : ""} ${active ? "font-bold" : ""}`}>Shop <ChevronDown aria-hidden="true" className={`h-4 w-4 transition-transform duration-300 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} /></button>
+    <button ref={trigger} type="button" aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded(value=>!value)} className={`flex items-center justify-between gap-2 transition-colors duration-200 ${mobile ? "w-full min-h-12 rounded-xl px-3.5 py-3 text-sm font-semibold" : "navbar-link min-h-11 py-1.5 text-sm font-medium"} ${expanded && mobile ? "bg-neutral-100" : ""} ${active ? "font-bold" : ""}`}>{facilities ? "Facilities" : "Shop"} <ChevronDown aria-hidden="true" className={`h-4 w-4 transition-transform duration-300 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} /></button>
     <div id={id} aria-hidden={!expanded} className={`grid transition-[grid-template-rows,opacity,transform] duration-300 ease-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr] opacity-100 translate-y-0" : "grid-rows-[0fr] opacity-0 -translate-y-1 pointer-events-none"} ${mobile ? "" : "absolute top-full left-0 mt-2 w-72 z-50"}`}>
       <div className="overflow-hidden min-h-0"><div className={mobile ? "pl-2 pt-2 pb-2 space-y-1" : "rounded-2xl border border-neutral-200 bg-white text-black p-2 shadow-xl"}>
         {links.map(({label,detail,href,icon:Icon}) => <Link key={href} href={href} tabIndex={expanded ? 0 : -1} aria-current={pathname===href ? "page" : undefined} onClick={()=>{setExpanded(false);close?.();}} className="group flex min-h-16 items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-neutral-100 active:bg-neutral-200 focus-visible:outline-offset-2">
@@ -101,9 +101,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
-    { name: "Compare", href: "/compare" },
+    { name: "Facilities", href: "#facilities" },
     { name: "Showroom", href: "/showroom" },
-    { name: "Trade-In", href: "/trade-in" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -157,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
           {/* CENTER: Desktop Navigation Links (Visible >= 1280px) */}
           <nav className="hidden xl:flex items-center justify-center gap-3 xl:gap-5 2xl:gap-6">
-            {navLinks.map((link) => link.href === "/shop" ? <ShopDropdown key="shop" /> : (
+            {navLinks.map((link) => link.href === "/shop" ? <NavDropdown key="shop" /> : link.href === "#facilities" ? <NavDropdown key="facilities" facilities /> : (
               <Link
                 key={link.name}
                 href={link.href}
@@ -329,7 +328,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               </span>
               
               {navLinks.map((link, index) => {
-                if (link.href === "/shop") return <ShopDropdown key="shop" mobile close={() => setMobileMenuOpen(false)} />;
+                if (link.href === "/shop") return <NavDropdown key="shop" mobile close={() => setMobileMenuOpen(false)} />;
+                if (link.href === "#facilities") return <NavDropdown key="facilities" facilities mobile close={() => setMobileMenuOpen(false)} />;
                 const active = isActive(link.href);
                 return (
                   <Link
