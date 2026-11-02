@@ -10,6 +10,19 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { storeConfig } from "@/config/store";
 
+function ShopDropdown({ mobile = false, close }: { mobile?: boolean; close?: () => void }) {
+  const pathname = usePathname();
+  const active = ["/shop", "/iphones", "/accessories"].some(path => pathname.startsWith(path));
+  return <details key={pathname} className={mobile ? "rounded-xl" : "relative"}
+    onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) event.currentTarget.open = false; }}
+    onKeyDown={event => { if (event.key === "Escape") { event.currentTarget.open = false; event.currentTarget.querySelector("summary")?.focus(); } }}>
+    <summary className={`list-none cursor-pointer flex items-center justify-between gap-2 [&::-webkit-details-marker]:hidden ${mobile ? "px-3.5 py-3 text-sm font-semibold" : "navbar-link py-1.5 text-sm font-medium"} ${active ? "font-bold" : ""}`}>Shop <span aria-hidden="true" className="text-xs">⌄</span></summary>
+    <div className={mobile ? "ml-4 border-l border-neutral-200 pl-2 pb-2" : "absolute top-full left-0 mt-2 w-52 rounded-2xl border border-neutral-200 bg-white text-black p-2 shadow-xl"}>
+      {[{label:"All Products", href:"/shop"},{label:"iPhones",href:"/iphones"},{label:"Accessories",href:"/accessories"}].map(item => <Link key={item.href} href={item.href} aria-current={pathname === item.href ? "page" : undefined} onClick={event => { const details=event.currentTarget.closest("details"); if(details) details.open=false; close?.(); }} className="block rounded-xl px-3.5 py-3 text-sm hover:bg-neutral-100 focus-visible:outline-offset-2">{item.label}</Link>)}
+    </div>
+  </details>;
+}
+
 interface NavbarProps {
   onOpenSearch: () => void;
 }
@@ -72,10 +85,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
-    { name: "iPhones", href: "/iphones" },
     { name: "Compare", href: "/compare" },
     { name: "Showroom", href: "/showroom" },
-    { name: "Accessories", href: "/accessories" },
     { name: "Trade-In", href: "/trade-in" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
@@ -130,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
 
           {/* CENTER: Desktop Navigation Links (Visible >= 1280px) */}
           <nav className="hidden xl:flex items-center justify-center gap-3 xl:gap-5 2xl:gap-6">
-            {navLinks.map((link) => (
+            {navLinks.map((link) => link.href === "/shop" ? <ShopDropdown key="shop" /> : (
               <Link
                 key={link.name}
                 href={link.href}
@@ -302,6 +313,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
               </span>
               
               {navLinks.map((link, index) => {
+                if (link.href === "/shop") return <ShopDropdown key="shop" mobile close={() => setMobileMenuOpen(false)} />;
                 const active = isActive(link.href);
                 return (
                   <Link
