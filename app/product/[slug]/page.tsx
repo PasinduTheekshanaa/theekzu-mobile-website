@@ -1,5 +1,5 @@
 import React from "react";
-import { getProductConditions, getProductConditionLabel } from "@/data/products";
+import { getProductConditions, getProductConditionLabel, getEnabledVariants } from "@/data/products";
 import { notFound } from "next/navigation";
 import { getServerCatalog } from "@/lib/serverCatalog";
 import { ProductDetailClient } from "./ProductDetailClient";
@@ -117,7 +117,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
       name: "Apple",
     } : undefined,
     category: product.category === "accessories" ? "Mobile Accessories" : "Smartphones",
-    offers: {
+    offers: product.price > 0 ? {
       "@type": "Offer",
       url: `https://theekzu.vercel.app/product/${product.slug}`,
       priceCurrency: "LKR",
@@ -128,7 +128,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
           ? "https://schema.org/UsedCondition"
           : "https://schema.org/NewCondition",
       availability:
-        product.stock === "In Stock"
+        (product.variants.length ? getEnabledVariants(product).some(v => v.stock > 0) : product.stock === "In Stock")
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
       seller: {
@@ -136,7 +136,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         name: "Theekzu Mobile",
         url: "https://theekzu.vercel.app",
       },
-    },
+    } : undefined,
   };
 
   const breadcrumbJsonLd = {

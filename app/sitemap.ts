@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://theekzu.vercel.app";
 
   const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/compare`, changeFrequency: "weekly", priority: 0.7 },
     {
       url: `${baseUrl}/`,
       changeFrequency: "daily",

@@ -1,3 +1,3 @@
-export const HOME_SEO_TITLE = "Theekzu Mobile | iPhones in Sri Lanka";
+export const HOME_SEO_TITLE = "Theekzu Mobile | Premium Used iPhones in Sri Lanka";
 export const HOME_SEO_DESCRIPTION =
-  "Explore Theekzu Mobile, an online iPhone store in Sri Lanka. Browse new and used iPhones, accessories, islandwide delivery and WhatsApp ordering.";
+  "Discover quality-tested used iPhones and accessories at Theekzu Mobile Sri Lanka. Explore iPhone deals, trade-in options, and trusted customer service.";
