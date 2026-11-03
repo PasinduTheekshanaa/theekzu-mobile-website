@@ -11,3 +11,6 @@ node_modules/
 Theekzu/
 theekzu-mobile/
 Theekzu-Mobile-App/
+
+# Local Next.js preview build output
+.next-preview/
