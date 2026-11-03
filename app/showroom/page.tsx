@@ -119,15 +119,7 @@ export default function ShowroomPage() {
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
 
-              <a data-ui="whatsapp"
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-canvas hover:bg-canvas active:scale-95 text-ink font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-neutral-600/25 transition-all"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Chat on WhatsApp</span>
-              </a>
+              
             </div>
           </div>
         </div>

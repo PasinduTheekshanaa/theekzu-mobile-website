@@ -60,15 +60,7 @@ export const ShowroomHero: React.FC = () => {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-4">
-              <a data-ui="whatsapp"
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-canvas hover:bg-canvas text-ink font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-neutral-600/25 active:scale-95 transition-all"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Chat on WhatsApp</span>
-              </a>
+              
 
               <a data-ui="primary"
                 href="#gallery"

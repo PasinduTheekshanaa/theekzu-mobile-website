@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, MessageCircle, Mail, MapPin, Clock, Instagram, Facebook, ShieldCheck } from "lucide-react";
-import { storeConfig } from "@/config/store";
+import { storeConfig, getWhatsAppUrl } from "@/config/store";
 
 export const Footer: React.FC = () => {
   return (
@@ -15,9 +15,10 @@ export const Footer: React.FC = () => {
         <section id="whatsapp-community" aria-label="WhatsApp community" className="mb-10 rounded-3xl border border-neutral-200 p-5 sm:p-7">
           <h2 className="text-xl font-bold">Stay connected with Theekzu</h2>
           <p className="mt-2 text-sm text-neutral-600">Join our WhatsApp group and follow our channel for the latest updates.</p>
-          <div className="mt-5 flex flex-col sm:flex-row gap-3">
-            <a href={storeConfig.social.whatsappGroup} target="_blank" rel="noopener noreferrer" data-ui="whatsapp" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"><MessageCircle className="h-5 w-5" aria-hidden="true" />Join WhatsApp Group</a>
-            <a href={storeConfig.social.whatsappChannel} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-neutral-300 px-5 py-3 text-sm font-semibold hover:bg-neutral-100"><MessageCircle className="h-5 w-5" aria-hidden="true" />Follow WhatsApp Channel</a>
+          <div className="mt-5 grid grid-cols-1 lg:grid-cols-3 items-stretch gap-3">
+            <a href={getWhatsAppUrl("Hello Theekzu Mobile, I would like help choosing my next iPhone.")} target="_blank" rel="noopener noreferrer" data-ui="whatsapp" className="inline-flex w-full min-h-12 h-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"><MessageCircle className="h-5 w-5" aria-hidden="true" />Let’s talk on WhatsApp</a>
+            <a href={storeConfig.social.whatsappGroup} target="_blank" rel="noopener noreferrer" data-ui="whatsapp" className="inline-flex w-full min-h-12 h-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"><MessageCircle className="h-5 w-5" aria-hidden="true" />Join WhatsApp Group</a>
+            <a href={storeConfig.social.whatsappChannel} target="_blank" rel="noopener noreferrer" className="inline-flex w-full min-h-12 h-full items-center justify-center gap-2 rounded-full border border-neutral-300 px-5 py-3 text-sm font-semibold hover:bg-neutral-100"><MessageCircle className="h-5 w-5" aria-hidden="true" />Follow WhatsApp Channel</a>
           </div>
         </section>
         

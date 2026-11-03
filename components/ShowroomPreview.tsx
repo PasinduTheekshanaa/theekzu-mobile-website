@@ -56,22 +56,14 @@ export const ShowroomPreview: React.FC = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-3">
                   <Link data-ui="primary"
                     href="/showroom"
-                    className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-canvas hover:bg-canvas active:scale-95 text-ink font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-neutral-500/20 transition-all group"
+                    className="showcase-action inline-flex items-center justify-center rounded-full shadow-md transition-transform active:scale-95"
                   >
                     <Eye className="w-4 h-4" />
                     <span>Explore Our Showroom</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </Link>
 
-                  <a data-ui="whatsapp"
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-5 py-3.5 rounded-2xl bg-canvas hover:bg-canvas dark:bg-canvas dark:hover:bg-canvas text-ink dark:text-ink font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-neutral-200 dark:border-white/10 active:scale-95 transition-all"
-                  >
-                    <MessageCircle data-brand-color="#059669" className="w-4 h-4 text-ink" />
-                    <span>Chat on WhatsApp</span>
-                  </a>
+                  
                 </div>
               </div>
 

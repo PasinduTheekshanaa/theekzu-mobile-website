@@ -46,15 +46,7 @@ export const FinalCTA: React.FC = () => {
               <span>Browse All iPhones</span>
             </Link>
 
-            <a data-ui="whatsapp"
-              href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent("Hello Theekzu Mobile, I would like to inquire about buying an iPhone.")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full bg-canvas     text-ink text-xs sm:text-sm font-bold shadow-xl transition-all active:scale-95"
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span>Chat on WhatsApp</span>
-            </a>
+            
           </div>
 
         </div>

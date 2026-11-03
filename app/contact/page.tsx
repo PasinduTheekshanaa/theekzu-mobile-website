@@ -147,7 +147,7 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
       title: "WhatsApp Chat",
       val: "0740245749",
       sub: "Active: 8:00 AM – 8:00 PM",
-      href: "https://wa.me/94740245749",
+      href: "#whatsapp-community",
       icon: MessageCircle,
       color: "text-ink dark:text-ink bg-canvas dark:bg-canvas border-neutral-500/20 dark:border-neutral-500/30",
     },

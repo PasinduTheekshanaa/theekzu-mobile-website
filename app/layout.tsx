@@ -7,7 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { NavbarWrapper } from "@/components/NavbarWrapper";
 import { StoreOverlays } from "@/components/StoreOverlays";
-import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+
 import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
 import { SiteScrollReveal } from "@/components/SiteScrollReveal";
@@ -185,7 +185,7 @@ export default async function RootLayout({
                 <main data-site-content className="flex-1 animate-in fade-in duration-300">{children}<SiteScrollReveal /></main>
                 <Footer />
                 <StoreOverlays />
-                <FloatingWhatsApp />
+                
                 <BackToTop />
               </WishlistProvider>
             </CartProvider>

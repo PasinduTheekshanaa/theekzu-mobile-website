@@ -28,7 +28,7 @@ function NavDropdown({ mobile = false, close, facilities = false }: { mobile?: b
   return <div ref={root} className={mobile ? "rounded-2xl" : "relative"} onKeyDown={event => {
     if (event.key === "Escape" && expanded) {event.stopPropagation();setExpanded(false);trigger.current?.focus();}
   }} onBlur={event => {if(event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node))setExpanded(false);}}>
-    <button ref={trigger} type="button" aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded(value=>!value)} className={`flex items-center justify-between gap-2 transition-colors duration-200 ${mobile ? "w-full min-h-12 rounded-xl px-3.5 py-3 text-sm font-semibold" : "navbar-link min-h-11 py-1.5 text-sm font-medium"} ${expanded && mobile ? "bg-neutral-100" : ""} ${active ? "font-bold" : ""}`}>{facilities ? "Facilities" : "Shop"} <ChevronDown aria-hidden="true" className={`h-4 w-4 transition-transform duration-300 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} /></button>
+    <button ref={trigger} type="button" aria-expanded={expanded} data-active={active} aria-controls={id} onClick={() => setExpanded(value=>!value)} className={`flex items-center justify-between gap-2 transition-colors duration-200 ${mobile ? "w-full min-h-12 rounded-xl px-3.5 py-3 text-sm font-semibold" : "navbar-link min-h-11 py-1.5 text-sm font-medium"} ${expanded && mobile ? "bg-neutral-100" : ""} ${active ? "font-bold" : ""}`}>{facilities ? "Facilities" : "Shop"} <ChevronDown aria-hidden="true" className={`h-4 w-4 transition-transform duration-300 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`} /></button>
     <div id={id} aria-hidden={!expanded} className={`grid transition-[grid-template-rows,opacity,transform] duration-300 ease-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr] opacity-100 translate-y-0" : "grid-rows-[0fr] opacity-0 -translate-y-1 pointer-events-none"} ${mobile ? "" : "absolute top-full left-0 mt-2 w-72 z-50"}`}>
       <div className="overflow-hidden min-h-0"><div className={mobile ? "pl-2 pt-2 pb-2 space-y-1" : "rounded-2xl border border-neutral-200 bg-white text-black p-2 shadow-xl"}>
         {links.map(({label,detail,href,icon:Icon}) => <Link key={href} href={href} tabIndex={expanded ? 0 : -1} aria-current={pathname===href ? "page" : undefined} onClick={()=>{setExpanded(false);close?.();}} className="group flex min-h-16 items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-neutral-100 active:bg-neutral-200 focus-visible:outline-offset-2">
@@ -117,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
     <>
       <header
         data-scrolled={isScrolled}
-        className={`site-navbar sticky top-0 left-0 right-0 z-40 w-full h-[64px] flex items-center px-[14px] sm:px-6 border-b backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ${
+        className={`site-navbar sticky top-0 left-0 right-0 z-40 w-full h-[68px] sm:h-[72px] flex items-center px-[14px] sm:px-6 border-b backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 ${
           isScrolled
             ? "bg-neutral-200/95 border-neutral-300 shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
             : "bg-neutral-100/95 border-neutral-200 shadow-[0_3px_16px_rgba(0,0,0,0.08)]"
@@ -155,7 +155,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           </Link>
 
           {/* CENTER: Desktop Navigation Links (Visible >= 1280px) */}
-          <nav className="hidden xl:flex items-center justify-center gap-3 xl:gap-5 2xl:gap-6">
+          <nav className="navbar-desktop hidden xl:flex items-center justify-center gap-1 2xl:gap-2">
             {navLinks.map((link) => link.href === "/shop" ? <NavDropdown key="shop" /> : link.href === "#facilities" ? <NavDropdown key="facilities" facilities /> : (
               <Link
                 key={link.name}
@@ -181,7 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSearch }) => {
           </nav>
 
           {/* RIGHT: Action Icons */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <div className="navbar-actions flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             
             {/* Search available on every screen */}
             <button

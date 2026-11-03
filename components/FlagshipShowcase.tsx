@@ -93,24 +93,11 @@ export const FlagshipShowcase: React.FC = () => {
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <Link data-ui="primary"
                   href={`/product/${flagship.slug}`}
-                  className="flex-1 sm:flex-none min-h-[44px] inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-full bg-canvas       text-ink text-xs sm:text-sm font-bold shadow-md shadow-neutral-600/25 transition-all active:scale-95"
+                  className="showcase-action inline-flex items-center justify-center rounded-full shadow-md transition-transform active:scale-95"
                 >
                   <span>Shop Now</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
-
-                <a data-ui="whatsapp"
-                  href={`https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(
-                    `Hello Theekzu Mobile, I would like to inquire about purchasing the ${flagship.name}.`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 p-3 rounded-full bg-canvas hover:bg-canvas text-ink shadow-md transition-all active:scale-95"
-                  title="Order via WhatsApp"
-                  aria-label="Order flagship via WhatsApp"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                </a>
               </div>
             </div>
 

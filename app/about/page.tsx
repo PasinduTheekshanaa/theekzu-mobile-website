@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import type { Metadata } from "next";
-import { ArrowUpRight, Target, Eye, ShieldCheck, MessageCircle, Users, Smartphone, Zap, Truck, Mail, Phone, Award } from "lucide-react";
-import { storeConfig, getWhatsAppUrl } from "@/config/store";
+import { ArrowUpRight, Target, Eye, ShieldCheck, Users, Smartphone, Zap, Truck, Mail, Phone, Award } from "lucide-react";
+import { storeConfig } from "@/config/store";
 
 export const metadata: Metadata = {
   title: {
@@ -183,11 +183,6 @@ export default function AboutPage() {
             </a>
           </div>
         </div>
-      </section>
-
-      <section aria-labelledby="about-contact-heading" className="rounded-3xl border border-neutral-200 bg-neutral-50 p-6 sm:p-10 lg:p-12 flex flex-col md:flex-row md:items-center justify-between gap-7">
-        <div className="max-w-xl"><p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-500 mb-3">{storeConfig.tagline}</p><h2 id="about-contact-heading" className="text-2xl sm:text-3xl font-bold tracking-tight">Let’s find your next iPhone.</h2><p className="text-sm text-neutral-600 mt-3 leading-relaxed">Questions about a device? We’re here to help, {storeConfig.businessHours} daily.</p></div>
-        <a href={getWhatsAppUrl("Hello Theekzu Mobile, I would like help choosing my next iPhone.")} target="_blank" rel="noopener noreferrer" data-ui="whatsapp" className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-4 min-h-12 text-sm font-semibold shrink-0"><MessageCircle className="w-5 h-5" /> Let’s talk on WhatsApp</a>
       </section>
     </div>
   );

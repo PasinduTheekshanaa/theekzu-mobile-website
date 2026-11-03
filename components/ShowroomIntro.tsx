@@ -90,15 +90,7 @@ export const ShowroomIntro: React.FC = () => {
             </p>
           </div>
 
-          <a data-ui="whatsapp"
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-shrink-0 px-6 py-3.5 rounded-2xl bg-canvas hover:bg-canvas active:scale-95 text-ink font-black text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-neutral-500/25 transition-all"
-          >
-            <MessageCircle className="w-4 h-4 fill-neutral-950" />
-            <span>Chat on WhatsApp ({storeConfig.whatsappNumber})</span>
-          </a>
+          
         </div>
 
       </div>
