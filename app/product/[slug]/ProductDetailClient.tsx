@@ -231,6 +231,7 @@ Please confirm availability and islandwide delivery options!`;
             <div>
               <strong className="text-ink dark:text-ink block font-bold">Theekzu Mobile Warranty:</strong>
               <span className="text-ink dark:text-ink">{PRODUCT_WARRANTY_NOTICE}</span>
+              {liveProduct.category === "iphones" && selectedCondition === "Used" && <p className="mt-2 text-xs font-semibold text-ink dark:text-ink">Grade A+ Pre-Owned</p>}
             </div>
           </div>
         </div>

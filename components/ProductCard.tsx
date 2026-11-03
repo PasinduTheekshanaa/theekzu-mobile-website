@@ -56,6 +56,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
     >
       {/* Top badges & Wishlist */}
       <div className="flex min-h-9 items-center justify-between gap-2 mb-2 z-10">
+        {product.condition !== "Used" ? (
         <span
           className={`min-w-0 text-left text-[11px] leading-4 font-bold px-3 py-1 rounded-full flex items-center gap-1.5 [&>svg]:shrink-0 shadow-xs ${
             product.condition === "Brand New"
@@ -68,6 +69,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
           )}
           {product.conditionBadge || product.condition}
         </span>
+        ) : <span aria-hidden="true" />}
 
         <button
           onClick={(e) => {
