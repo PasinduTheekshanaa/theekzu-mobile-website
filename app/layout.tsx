@@ -110,6 +110,7 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "OnlineStore",
+  "@id": "https://theekzu.vercel.app/#organization",
   name: "Theekzu Mobile",
   alternateName: "Theekzu",
   url: "https://theekzu.vercel.app/",
@@ -135,6 +136,8 @@ const organizationJsonLd = {
 const webSiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "https://theekzu.vercel.app/#website",
+  publisher: { "@id": "https://theekzu.vercel.app/#organization" },
   name: "Theekzu Mobile",
   alternateName: "Theekzu",
   url: "https://theekzu.vercel.app/",

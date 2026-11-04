@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
 
       <div className="container-custom relative z-10">
         <section id="whatsapp-community" aria-label="WhatsApp community" className="mb-10 rounded-3xl border border-neutral-200 p-5 sm:p-7">
-          <h2 className="text-xl font-bold">Stay connected with Theekzu</h2>
+          <h2 className="text-xl font-bold">Stay connected with Theekzu Mobile</h2>
           <p className="mt-2 text-sm text-neutral-600">Join our WhatsApp group and follow our channel for the latest updates.</p>
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-3 items-stretch gap-3">
             <a href={getWhatsAppUrl("Hello Theekzu Mobile, I would like help choosing my next iPhone.")} target="_blank" rel="noopener noreferrer" data-ui="whatsapp" className="inline-flex w-full min-h-12 h-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"><MessageCircle className="h-5 w-5" aria-hidden="true" />Let’s talk on WhatsApp</a>
