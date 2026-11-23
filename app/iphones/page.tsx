@@ -1,5 +1,7 @@
 "use client";
-import { getProductConditions } from "@/data/products";
+import { StockFilter, StockSelection } from "@/components/StockFilter";
+import { matchesStock } from "@/lib/stockFilter";
+import { getProductConditions, productForCondition } from "@/data/products";
 
 
 import React, { useState } from "react";
@@ -8,6 +10,7 @@ import { ProductCard } from "@/components/ProductCard";
 
 export default function IPhonesPage() {
   const { products } = useProducts();
+  const [stockSelection, setStockSelection] = useState<StockSelection>({inStock:false,outOfStock:false});
   const [filter, setFilter] = useState<"all" | "new" | "used">("all");
 
   const iphones = products.filter((p) => {
@@ -69,6 +72,8 @@ export default function IPhonesPage() {
         </div>
       </div>
 
+      <StockFilter value={stockSelection} onChange={setStockSelection} />
+      <p role="status" className="text-sm">{iphones.length} products found</p>
       {/* Grid */}
       <div
         key={filter}

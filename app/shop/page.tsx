@@ -1,4 +1,6 @@
 "use client";
+import { StockFilter, StockSelection } from "@/components/StockFilter";
+import { matchesStock } from "@/lib/stockFilter";
 import { sortStorages } from "@/lib/storageOrder";
 import { getProductConditions, productForCondition } from "@/data/products";
 
@@ -66,6 +68,7 @@ function CatalogSelect({ label, value, options, onChange }: { label: string; val
 
 export default function ShopPage() {
   const { products, getLowestPrice } = useProducts();
+  const [stockSelection, setStockSelection] = useState<StockSelection>({inStock:false,outOfStock:false});
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => { setSearchQuery(new URLSearchParams(window.location.search).get("q") || ""); }, []);
   const [selectedSeries, setSelectedSeries] = useState("all");
@@ -140,6 +143,8 @@ export default function ShopPage() {
       });
     }
 
+    result = result.filter(p => matchesStock(p, stockSelection));
+
     // Price range using lowest available variant price
     result = result.filter((p) => getLowestPrice(p) <= maxPrice);
 
@@ -156,9 +161,10 @@ export default function ShopPage() {
     }
 
     return result;
-  }, [products, searchQuery, selectedSeries, selectedCategory, selectedCondition, selectedStorage, maxPrice, sortBy, getLowestPrice]);
+  }, [products, searchQuery, selectedSeries, selectedCategory, selectedCondition, selectedStorage, maxPrice, sortBy, getLowestPrice, stockSelection]);
 
   const resetFilters = () => {
+    setStockSelection({inStock:false,outOfStock:false});
     setSearchQuery("");
     setSelectedSeries("all");
     setSelectedCategory("all");
@@ -308,6 +314,7 @@ export default function ShopPage() {
 
       </div>
 
+      <StockFilter value={stockSelection} onChange={setStockSelection} />
       {/* Product Results Grid */}
       {filteredProducts.length === 0 ? (
         <div className="glass-card rounded-3xl p-16 text-center space-y-4 border border-neutral-200 dark:border-white/10 shadow-sm">

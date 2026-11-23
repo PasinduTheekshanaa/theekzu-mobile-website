@@ -1,4 +1,6 @@
 "use client";
+import { StockFilter, StockSelection } from "@/components/StockFilter";
+import { matchesStock } from "@/lib/stockFilter";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useProducts } from "@/context/ProductContext";
@@ -7,6 +9,7 @@ import { getAccessoryTypes } from "@/lib/accessoryTypes";
 
 export default function AccessoriesPage() {
   const { products } = useProducts();
+  const [stockSelection, setStockSelection] = useState<StockSelection>({inStock:false,outOfStock:false});
   const [subcat, setSubcat] = useState<string>("all");
 
   const accessoryTypes = useMemo(() => getAccessoryTypes(products), [products]);
@@ -16,7 +19,7 @@ export default function AccessoriesPage() {
     if (p.category !== "accessories") return false;
     if (subcat === "all") return true;
     return p.subcategory.toLowerCase() === subcat.toLowerCase();
-  });
+  }).filter(p => matchesStock(p, stockSelection));
 
   return (
     <div className="container-custom py-6 sm:py-10 space-y-8 sm:space-y-10 transition-colors duration-300">
@@ -55,6 +58,8 @@ export default function AccessoriesPage() {
         </div>
       </div>
 
+      <StockFilter value={stockSelection} onChange={setStockSelection} />
+      <p role="status" className="text-sm">{accessories.length} products found</p>
       {/* Grid */}
       <div
         key={subcat}
