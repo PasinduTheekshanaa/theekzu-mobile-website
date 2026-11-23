@@ -1,4 +1,5 @@
 "use client";
+import { isProductInStock } from "@/lib/stockFilter";
 import { getEnabledVariants, productForCondition, ProductCondition } from "@/data/products";
 
 import React, { useState, useCallback } from "react";
@@ -30,9 +31,7 @@ export const ProductCardComponent: React.FC<ProductCardProps> = ({ product: orig
   const hasVariants = product.variants && product.variants.length > 1;
 
   // Check overall stock
-  const isOutOfStock =
-    product.stock === "Out of Stock" ||
-    (product.variants && product.variants.length > 0 && product.variants.every((v) => (Number(v.stock) || 0) <= 0));
+  const isOutOfStock = !isProductInStock(product);
 
   const [imgLoaded, setImgLoaded] = useState(false);
   const [isOpeningDetails, setIsOpeningDetails] = useState(false);

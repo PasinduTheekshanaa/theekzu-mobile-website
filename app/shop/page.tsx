@@ -68,7 +68,7 @@ function CatalogSelect({ label, value, options, onChange }: { label: string; val
 
 export default function ShopPage() {
   const { products, getLowestPrice } = useProducts();
-  const [stockSelection, setStockSelection] = useState<StockSelection>({inStock:false,outOfStock:false});
+  const [stockSelection, setStockSelection] = useState<StockSelection>("all");
   const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => { setSearchQuery(new URLSearchParams(window.location.search).get("q") || ""); }, []);
   const [selectedSeries, setSelectedSeries] = useState("all");
@@ -164,7 +164,7 @@ export default function ShopPage() {
   }, [products, searchQuery, selectedSeries, selectedCategory, selectedCondition, selectedStorage, maxPrice, sortBy, getLowestPrice, stockSelection]);
 
   const resetFilters = () => {
-    setStockSelection({inStock:false,outOfStock:false});
+    setStockSelection("all");
     setSearchQuery("");
     setSelectedSeries("all");
     setSelectedCategory("all");

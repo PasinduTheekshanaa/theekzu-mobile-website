@@ -9,7 +9,7 @@ import { getAccessoryTypes } from "@/lib/accessoryTypes";
 
 export default function AccessoriesPage() {
   const { products } = useProducts();
-  const [stockSelection, setStockSelection] = useState<StockSelection>({inStock:false,outOfStock:false});
+  const [stockSelection, setStockSelection] = useState<StockSelection>("all");
   const [subcat, setSubcat] = useState<string>("all");
 
   const accessoryTypes = useMemo(() => getAccessoryTypes(products), [products]);

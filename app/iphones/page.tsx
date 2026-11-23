@@ -10,7 +10,7 @@ import { ProductCard } from "@/components/ProductCard";
 
 export default function IPhonesPage() {
   const { products } = useProducts();
-  const [stockSelection, setStockSelection] = useState<StockSelection>({inStock:false,outOfStock:false});
+  const [stockSelection, setStockSelection] = useState<StockSelection>("all");
   const [filter, setFilter] = useState<"all" | "new" | "used">("all");
 
   const iphones = products.filter((p) => {
@@ -18,6 +18,11 @@ export default function IPhonesPage() {
     if (filter === "new") return getProductConditions(p).includes("Brand New");
     if (filter === "used") return getProductConditions(p).includes("Used");
     return true;
+  }).filter((product) => {
+    const displayedProduct = filter === "all"
+      ? product
+      : productForCondition(product, filter === "new" ? "Brand New" : "Used");
+    return matchesStock(displayedProduct, stockSelection);
   });
 
   return (
