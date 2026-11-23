@@ -21,7 +21,7 @@ export default function ComparePage() {
     ...[ ["chip", "Chip"], ["display", "Display"], ["camera", "Camera"], ["battery", "Battery"], ["build", "Build"] ].map(([key,label]) => ({ label, values: chosen.map(p => p ? p.specifications[key] || "Details coming soon" : "—") })),
   ];
   const count = chosen.filter(Boolean).length;
-  return <div className="container-custom py-8 sm:py-12 space-y-8">
+  return <div className="desktop-page container-custom py-8 sm:py-12 space-y-8">
     <header className="max-w-2xl space-y-4"><p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Find your fit</p><h1 className="text-3xl sm:text-5xl font-black tracking-tight">Advanced iPhone Comparison</h1><p className="text-neutral-600">Compare up to three iPhones side by side. Explore prices, storage and specifications to find the right model for you.</p></header>
     <section className="rounded-3xl border border-neutral-200 p-5 sm:p-7 space-y-5" aria-label="Find models within your budget">
       <label className="block text-sm font-semibold">Your maximum budget (LKR)<input type="number" min="0" step="1000" value={budget} onChange={e => setBudget(e.target.value)} placeholder="Any budget" className="mt-2 block w-full sm:max-w-xs rounded-xl border border-neutral-300 p-3" /></label>

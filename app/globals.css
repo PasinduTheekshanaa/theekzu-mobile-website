@@ -795,3 +795,90 @@ main a.showcase-action[data-ui="primary"] > svg { width: 16px; height: 16px; }
   [data-nav-dropdown] a, .navbar-desktop .navbar-link::after, [data-nav-dropdown] a > span:first-child { transition: none; }
   .navbar-brand:hover > div:first-child, [data-nav-dropdown] a:hover > span:first-child { transform: none; }
 }
+
+/* Showcase motion stays within its own image area. */
+.flagship-motion { padding: 18px 10px 30px; transition: scale 500ms ease; }
+.flagship-motion:hover { scale: 1.035; }
+.flagship-phone { animation: flagship-hover 5s ease-in-out infinite; transform-origin: 50% 60%; will-change: transform; }
+.flagship-motion::after { content: ''; position: absolute; bottom: 8px; left: 24%; width: 52%; height: 16px; background: radial-gradient(ellipse, rgb(0 0 0 / 0.14), transparent 70%); animation: flagship-shadow 5s ease-in-out infinite; pointer-events: none; }
+@keyframes flagship-hover { 0%,100% { transform: translateY(4px) rotate(-1deg); } 50% { transform: translateY(-16px) rotate(1deg); } }
+@keyframes flagship-shadow { 0%,100% { transform: scaleX(1); opacity: .8; } 50% { transform: scaleX(.8); opacity: .4; } }
+@media (prefers-reduced-motion: reduce) { .flagship-phone, .flagship-motion::after { animation: none; will-change: auto; } .flagship-motion { transition: none; } .flagship-motion:hover { scale: 1; } }
+
+.flagship-motion { perspective: 1000px; }
+.flagship-tilt { display: flex; justify-content: center; width: 100%; transform: translate3d(var(--phone-x, 0px), var(--phone-y, 0px), 0) rotateX(var(--phone-rx, 0deg)) rotateY(var(--phone-ry, 0deg)); transition: transform 250ms ease-out, filter 350ms ease; }
+@media (hover: hover) and (pointer: fine) {
+ .flagship-motion:hover .flagship-tilt { filter: drop-shadow(0 18px 14px rgb(0 0 0 / .12)); }
+ .flagship-motion:hover .flagship-phone { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: reduce) { .flagship-tilt { transform: none; transition: none; } }
+
+/* Desktop showcase fills the viewport below the sticky navigation. */
+@media (min-width: 1024px) {
+ #flagship-showcase.container-custom { max-width: none; padding-left: 0; padding-right: 0; scroll-margin-top: 72px; }
+ #flagship-showcase .flagship-panel { min-height: calc(100svh - 72px); border-radius: 0; padding: clamp(28px, 4vw, 72px); display: flex; align-items: center; }
+ #flagship-showcase .flagship-layout { width: 100%; max-width: 1600px; margin-inline: auto; }
+ #flagship-showcase .flagship-motion { max-width: none; }
+ #flagship-showcase .flagship-phone { width: auto; max-width: 100%; max-height: min(740px, calc(100svh - 160px)); }
+}
+
+/* Desktop sections use their content height while retaining full width. */
+@media (min-width: 1024px) {
+ .homepage-sections { padding-bottom: 0; }
+ .homepage-sections > :not([hidden]) ~ :not([hidden]) { margin-top: 0; margin-bottom: 0; }
+ .homepage-sections > section:not(#flagship-showcase),
+ .homepage-sections > #faqs {
+   min-height: 0;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   padding-top: 28px;
+   padding-bottom: 28px;
+   scroll-margin-top: 72px;
+ }
+ .homepage-sections .container-custom {
+   max-width: none;
+   padding-left: clamp(32px, 5vw, 120px);
+   padding-right: clamp(32px, 5vw, 120px);
+ }
+ .homepage-sections > #faqs > section { width: 100%; max-width: 1100px; }
+ .homepage-sections > #flagship-showcase { padding-inline: 0; }
+}
+
+/* Wide public pages on desktop; keep mobile sizing and readable inner text. */
+@media (min-width: 1024px) {
+ main .desktop-page {
+   width: 100%; max-width: none;
+   min-height: 0;
+   padding-top: 28px;
+   padding-bottom: 28px;
+   padding-left: clamp(32px, 5vw, 120px);
+   padding-right: clamp(32px, 5vw, 120px);
+ }
+ main .desktop-showroom { min-height: 0; padding-bottom: 28px; }
+ main .desktop-showroom .container-custom {
+   max-width: none;
+   padding-left: clamp(32px, 5vw, 120px);
+   padding-right: clamp(32px, 5vw, 120px);
+ }
+}
+
+/* Shorter informational sections need no viewport-height blank space. */
+@media (min-width: 1024px) {
+ .homepage-sections > #faqs,
+ .homepage-sections > #social-channels {
+   min-height: 0;
+   padding-top: 32px;
+   padding-bottom: 32px;
+   justify-content: flex-start;
+ }
+}
+
+@media (min-width: 1024px) {
+ .desktop-page > :not([hidden]) ~ :not([hidden]),
+ .desktop-showroom > :not([hidden]) ~ :not([hidden]) { margin-top: 32px; margin-bottom: 0; }
+ .desktop-page.about-page > section[aria-labelledby="founder-heading"] { padding-top: 32px; }
+ .desktop-showroom #gallery { padding-block: 28px; }
+ .homepage-sections > section:not(#flagship-showcase) > .container-custom > .glass-panel { padding-block: 32px; }
+ body > footer, main + footer { margin-top: 16px; padding-top: 24px; }
+}

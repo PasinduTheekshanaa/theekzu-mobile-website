@@ -81,7 +81,7 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="about-page container-custom pt-6 pb-8 sm:pt-8 sm:pb-10 space-y-12 sm:space-y-16">
+    <div className="desktop-page about-page container-custom pt-6 pb-8 sm:pt-8 sm:pb-10 space-y-12 sm:space-y-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
       <section aria-labelledby="about-heading" className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">

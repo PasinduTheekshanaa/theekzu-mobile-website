@@ -76,7 +76,7 @@ export default function ShowroomPage() {
   );
 
   return (
-    <div className="space-y-12 sm:space-y-16 pb-16">
+    <div className="desktop-showroom space-y-12 sm:space-y-16 pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}

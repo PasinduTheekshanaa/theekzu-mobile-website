@@ -178,7 +178,7 @@ Message: ${message || "Hello, I am interested in your iPhones and services."}`;
   ];
 
   return (
-    <div className="container-custom py-6 sm:py-10 space-y-8 sm:space-y-12 transition-colors duration-300">
+    <div className="desktop-page container-custom py-6 sm:py-10 space-y-8 sm:space-y-12 transition-colors duration-300">
 
       {/* Header */}
       <div>

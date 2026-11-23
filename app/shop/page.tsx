@@ -175,7 +175,7 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="container-custom py-6 sm:py-10 space-y-6 sm:space-y-8 transition-colors duration-300">
+    <div className="desktop-page container-custom py-6 sm:py-10 space-y-6 sm:space-y-8 transition-colors duration-300">
       
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-neutral-200 dark:border-white/10">

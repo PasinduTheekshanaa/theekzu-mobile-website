@@ -10,7 +10,7 @@ import { ShowroomPreview } from "@/components/ShowroomPreview";
 import { FlagshipShowcase } from "@/components/FlagshipShowcase";
 import { CustomerReviews } from "@/components/CustomerReviews";
 import { SocialSection } from "@/components/SocialSection";
-import { FinalCTA } from "@/components/FinalCTA";
+
 import { FAQSection } from "@/components/FAQSection";
 
 export const revalidate = 30;
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="space-y-10 sm:space-y-14 md:space-y-20 lg:space-y-24 pb-4 md:pb-12">
+    <div className="homepage-sections space-y-10 sm:space-y-14 md:space-y-20 lg:space-y-24 pb-4 md:pb-12">
       {/* 1. Hero Section */}
       <Hero />
 
@@ -84,9 +84,6 @@ export default function HomePage() {
 
       {/* 9. Social Media Hub */}
       <SocialSection />
-
-      {/* 10. Final CTA */}
-      <FinalCTA />
     </div>
   );
 }
