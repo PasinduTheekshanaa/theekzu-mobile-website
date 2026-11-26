@@ -6,13 +6,13 @@ import { storeConfig, getWhatsAppUrl } from "@/config/store";
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="relative bg-canvas dark:bg-canvas border-t border-neutral-200 dark:border-neutral-500/20 pt-6 md:pt-8 pb-12 mt-6 md:mt-8 overflow-hidden transition-colors duration-300">
+    <footer className="relative bg-canvas dark:bg-canvas border-t border-neutral-200 dark:border-neutral-500/20 pt-6 md:pt-8 pb-8 mt-4 overflow-hidden transition-colors duration-300">
       {/* Background ambient lighting */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-canvas dark:bg-canvas rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-canvas dark:bg-canvas rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container-custom relative z-10">
-        <section id="whatsapp-community" aria-label="WhatsApp community" className="mb-10 rounded-3xl border border-neutral-200 p-5 sm:p-7">
+        <section id="whatsapp-community" aria-label="WhatsApp community" className="mb-6 sm:mb-8 rounded-3xl border border-neutral-200 p-5 sm:p-7">
           <h2 className="text-xl font-bold">Stay connected with Theekzu Mobile</h2>
           <p className="mt-2 text-sm text-neutral-600">Join our WhatsApp group and follow our channel for the latest updates.</p>
           <div className="mt-5 grid grid-cols-1 lg:grid-cols-3 items-stretch gap-3">
@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
         </section>
         
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 pb-12 border-b border-neutral-200 dark:border-neutral-500/15">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 pb-8 border-b border-neutral-200 dark:border-neutral-500/15">
           
           {/* Brand Summary (2 cols on lg) */}
           <div className="lg:col-span-2 space-y-4">

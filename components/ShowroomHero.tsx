@@ -12,7 +12,7 @@ export const ShowroomHero: React.FC = () => {
   );
 
   return (
-    <section className="relative overflow-hidden pt-6 pb-12 sm:pt-10 sm:pb-16 lg:pb-20">
+    <section className="relative overflow-hidden py-6 sm:py-8">
       {/* Background ambient neon glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-canvas    rounded-full blur-[140px] pointer-events-none" />
 

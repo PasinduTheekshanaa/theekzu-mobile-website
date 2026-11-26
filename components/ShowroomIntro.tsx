@@ -10,14 +10,14 @@ export const ShowroomIntro: React.FC = () => {
   );
 
   return (
-    <section className="py-12 sm:py-16 border-y border-neutral-200/70 dark:border-neutral-500/10 bg-canvas dark:bg-canvas relative overflow-hidden">
+    <section className="py-6 sm:py-8 border-y border-neutral-200/70 dark:border-neutral-500/10 bg-canvas dark:bg-canvas relative overflow-hidden">
       {/* Background glow accent */}
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-80 h-80 bg-canvas dark:bg-canvas rounded-full blur-[100px] pointer-events-none" />
 
       <div className="container-custom relative z-10">
         
         {/* Intro Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
+        <div className="max-w-3xl mx-auto text-center space-y-4 mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold tracking-wide">
             <span>The Theekzu Experience</span>
           </div>

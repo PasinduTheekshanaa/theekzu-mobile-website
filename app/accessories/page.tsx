@@ -22,7 +22,7 @@ export default function AccessoriesPage() {
   }).filter(p => matchesStock(p, stockSelection));
 
   return (
-    <div className="desktop-page container-custom py-6 sm:py-10 space-y-8 sm:space-y-10 transition-colors duration-300">
+    <div className="desktop-page container-custom py-6 sm:py-10 space-y-6 sm:space-y-8 transition-colors duration-300">
       
       {/* Header Banner */}
       <div className="rounded-2xl sm:rounded-[2.5rem] bg-canvas      p-5 sm:p-8 md:p-12 border border-neutral-200 dark:border-neutral-500/20 relative overflow-hidden shadow-sm dark:shadow-none">

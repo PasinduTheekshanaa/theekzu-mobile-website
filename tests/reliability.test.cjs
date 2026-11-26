@@ -9,11 +9,11 @@ const resolve = Module._resolveFilename;
 Module._resolveFilename = function(name, ...args) { return resolve.call(this, name.startsWith('@/') ? path.join(root, name.slice(2)) : name, ...args); };
 require.extensions['.ts'] = (module, file) => module._compile(ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true } }).outputText, file);
 
-let inserts = [], uploads = [], removed = [], writeError = null, catalogResult, savedCatalog, cachedCallback;
+let inserts = [], uploads = [], removed = [], writeError = null, failUploadAt = -1, catalogResult, savedCatalog, cachedCallback;
 const fakeDb = {
  from(table) { assert.equal(table, 'customer_reviews'); return { async insert(row) { inserts.push(row); return { error: writeError }; } }; },
  storage: { from(bucket) { assert.equal(bucket, 'review-images'); return {
-  async upload(name, bytes, opts) { uploads.push({ name, bytes, opts }); return { error: null }; },
+  async upload(name, bytes, opts) { uploads.push({ name, bytes, opts }); return { error: uploads.length === failUploadAt ? { message: "upload failed" } : null }; },
   async remove(names) { removed.push(...names); return { error: null }; }
  }; } }
 };
@@ -69,6 +69,46 @@ test('photo reviews retain moderation and failed writes clean up the uploaded ph
   writeError = null;
   if (previousUrl === undefined) delete process.env.NEXT_PUBLIC_SUPABASE_URL; else process.env.NEXT_PUBLIC_SUPABASE_URL = previousUrl;
   if (previousKey === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY = previousKey;
+ }
+});
+
+test('review galleries accept zero or five photos, reject six and clean up partial uploads', async () => {
+ const previousUrl = process.env.NEXT_PUBLIC_SUPABASE_URL, previousKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+ process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-only';
+ const bytes = await require('sharp')({ create: { width: 40, height: 40, channels: 3, background: '#2299aa' } }).png().toBuffer();
+ const makeRequest = (count, invalid = false) => {
+  const form = new FormData();
+  for (const [key,value] of Object.entries(valid)) form.set(key,String(value));
+  for(let i=0;i<count;i++) form.append('images',new File([invalid && i===count-1 ? 'not a photo' : bytes], 'photo.png', {type:'image/png'}));
+  return new NextRequest('https://store.example/api/reviews',{method:'POST',headers:{origin:'https://store.example'},body:form});
+ };
+ try {
+  for (const count of [0,5]) {
+   const before = uploads.length;
+   const result = await POST(makeRequest(count));
+   assert.equal(result.status,200);
+   const row = inserts.at(-1);
+   assert.equal(row.status,'pending');
+   assert.equal(uploads.length-before,count);
+   if(count) { assert.equal(row.image_paths.length,5); assert.equal(new Set(row.image_paths).size,5); assert.equal(row.image_path,row.image_paths[0]); }
+   else assert.equal(row.image_path,null);
+  }
+  let before = uploads.length, insertCount = inserts.length;
+  assert.equal((await POST(makeRequest(6))).status,400);
+  assert.equal((await POST(makeRequest(5,true))).status,400);
+  assert.equal(uploads.length,before); assert.equal(inserts.length,insertCount);
+  failUploadAt = before + 3;
+  assert.equal((await POST(makeRequest(5))).status,503);
+  assert.equal(inserts.length,insertCount);
+  assert.ok(uploads.slice(before,before+2).every(item=>removed.includes(item.name)));
+  failUploadAt = -1;
+  before=uploads.length; writeError={code:'TEST_GALLERY_FAILURE'};
+  assert.equal((await POST(makeRequest(5))).status,503);
+  assert.ok(uploads.slice(before).every(item=>removed.includes(item.name)));
+ } finally {
+  failUploadAt = -1; writeError = null;
+  if(previousUrl===undefined) delete process.env.NEXT_PUBLIC_SUPABASE_URL; else process.env.NEXT_PUBLIC_SUPABASE_URL=previousUrl;
+  if(previousKey===undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY; else process.env.SUPABASE_SERVICE_ROLE_KEY=previousKey;
  }
 });
 

@@ -1,3 +1,4 @@
+import { compressReviewPhoto, MAX_REVIEW_PHOTOS } from "@/lib/reviewPhotos";
 import { sortStorages } from "./storageOrder";
 import { supabase, isSupabaseConfigured, STORAGE_BUCKET } from "./supabaseClient";
 import { PRODUCT_WARRANTY_NOTICE } from "@/config/warranty";
@@ -1147,7 +1148,9 @@ export interface CustomerReview {
   rating: number;
   review_text: string;
   image_path?: string;
+  image_paths?: string[];
   image_url?: string;
+  image_urls?: string[];
   review?: string; // Backwards compatible alias
   status: "pending" | "approved" | "rejected";
   created_at: string;
@@ -1195,6 +1198,7 @@ export async function fetchApprovedCustomerReviews(page = 0, pageSize = 12): Pro
       review_text: r.review_text || r.review || "",
       review: r.review_text || r.review || "",
       image_path: r.image_path || undefined,
+      image_paths: Array.isArray(r.image_paths) ? r.image_paths.filter((path: unknown): path is string => typeof path === "string") : undefined,
       status: r.status,
       created_at: r.created_at,
       updated_at: r.updated_at || r.created_at,
@@ -1215,17 +1219,19 @@ export async function fetchApprovedCustomerReviews(page = 0, pageSize = 12): Pro
 /**
  * Submit a new customer review (always pending status by default)
  */
-export async function submitCustomerReview(params: { customerName: string; rating: number; review: string; image?: File | null }): Promise<{ success: boolean; error?: string; tableNotCreated?: boolean }> {
+export async function submitCustomerReview(params: { customerName: string; rating: number; review: string; image?: File | null; images?: File[] }): Promise<{ success: boolean; error?: string; tableNotCreated?: boolean }> {
   try {
     const form = new FormData();
     form.set("customerName", params.customerName);
     form.set("rating", String(params.rating));
     form.set("review", params.review);
-    if (params.image) form.set("image", params.image);
+    const photos = params.images || (params.image ? [params.image] : []);
+    if (photos.length > MAX_REVIEW_PHOTOS) return { success: false, error: "You can add up to 5 photos." };
+    for (const photo of photos) form.append("images", await compressReviewPhoto(photo));
     const response = await fetch("/api/reviews", { method: "POST", body: form });
     const result = await response.json();
     return { success: response.ok, error: result.error };
-  } catch { return { success: false, error: "Could not connect. Please try again." }; }
+  } catch (error) { return { success: false, error: error instanceof Error ? error.message : "Could not connect. Please try again." }; }
 }
 
 /**
@@ -1265,6 +1271,7 @@ export async function fetchAdminCustomerReviews(): Promise<{
       review_text: r.review_text || r.review || "",
       review: r.review_text || r.review || "",
       image_path: r.image_path || undefined,
+      image_paths: Array.isArray(r.image_paths) ? r.image_paths.filter((path: unknown): path is string => typeof path === "string") : undefined,
       status: r.status,
       created_at: r.created_at,
       updated_at: r.updated_at || r.created_at,
@@ -1429,9 +1436,16 @@ export async function updateVariantStockInSupabase(
 
 
 async function attachReviewImages(reviews: CustomerReview[]) {
-  const paths = reviews.flatMap(r => r.image_path ? [r.image_path] : []);
+  const reviewPaths = (review: CustomerReview) => Array.from(new Set([
+    ...(review.image_path ? [review.image_path] : []),
+    ...(review.image_paths || []),
+  ])).slice(0, MAX_REVIEW_PHOTOS);
+  const paths = Array.from(new Set(reviews.flatMap(reviewPaths)));
   if (!paths.length) return;
   const { data } = await supabase.storage.from("review-images").createSignedUrls(paths, 300);
   const urls = new Map((data || []).map(item => [item.path, item.signedUrl]));
-  for (const review of reviews) review.image_url = urls.get(review.image_path || "") || undefined;
+  for (const review of reviews) {
+    review.image_urls = reviewPaths(review).map(path => urls.get(path)).filter((url): url is string => !!url);
+    review.image_url = review.image_urls[0];
+  }
 }

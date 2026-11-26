@@ -11,6 +11,8 @@ import {
   X,
   ShieldCheck,
 } from "lucide-react";
+import { MAX_REVIEW_PHOTOS, MAX_REVIEW_PHOTO_BYTES } from "@/lib/reviewPhotos";
+import { ReviewPhotoGallery } from "@/components/ReviewPhotoGallery";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
@@ -27,7 +29,7 @@ export interface UnifiedReview {
   rating: number;
   productBought?: string;
   reviewText: string;
-  imageUrl?: string;
+  imageUrls?: string[];
   verified: boolean;
   date?: string;
   isRealReview?: boolean;
@@ -69,15 +71,14 @@ export const CustomerReviews: React.FC = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState(false);
 
-  const [formImage, setFormImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [formImages, setFormImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const imageInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (!formImage) { setImagePreview(null); return; }
-    const url = URL.createObjectURL(formImage);
-    setImagePreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [formImage]);
+    const urls = formImages.map(file => URL.createObjectURL(file));
+    setImagePreviews(urls);
+    return () => urls.forEach(url => URL.revokeObjectURL(url));
+  }, [formImages]);
 
   // Load approved reviews from Supabase
   const loadApprovedReviews = async () => {
@@ -150,7 +151,7 @@ export const CustomerReviews: React.FC = () => {
         rating: r.rating || 5,
         productBought: undefined,
         reviewText: r.review_text || r.review || "",
-        imageUrl: r.image_url,
+        imageUrls: r.image_urls || (r.image_url ? [r.image_url] : []),
         verified: false,
         date: formatDate(r.created_at),
         isRealReview: true,
@@ -191,7 +192,7 @@ export const CustomerReviews: React.FC = () => {
         customerName: trimmedName,
         rating: formRating,
         review: trimmedReview,
-        image: formImage,
+        images: formImages,
       });
 
       if (res.success) {
@@ -200,7 +201,7 @@ export const CustomerReviews: React.FC = () => {
         setFormName("");
         setFormReview("");
         setFormRating(5);
-        setFormImage(null);
+        setFormImages([]);
         if (imageInput.current) imageInput.current.value = "";
         // Refresh reviews in background
         loadApprovedReviews();
@@ -337,18 +338,33 @@ export const CustomerReviews: React.FC = () => {
                   </div>
                 )}
 
-                <div className="rounded-xl border border-neutral-200 dark:border-neutral-500/20 p-4 space-y-3">
-                  <label htmlFor="review-photo" className="block text-sm font-bold text-ink dark:text-ink">Add a photo <span className="font-normal">(optional)</span></label>
-                  <p id="review-photo-help" className="text-xs text-ink dark:text-ink">JPG, PNG or WebP, up to 3 MB. Your photo is published only after approval.</p>
-                  <input ref={imageInput} id="review-photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={isSubmitting} aria-describedby="review-photo-help" className="block w-full text-xs text-ink dark:text-ink file:mr-3 file:rounded-lg file:border-0 file:bg-canvas file:px-3 file:py-2 file:text-ink" onChange={e => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 3 * 1024 * 1024) {
-                      setFormError("Choose a JPG, PNG or WebP image up to 3 MB."); e.target.value = ""; return;
+                <div className="rounded-xl border border-neutral-200 p-4 space-y-3">
+                  <label htmlFor="review-photo" className="block text-sm font-bold">Add photos <span className="font-normal">(optional, up to 5)</span></label>
+                  <p id="review-photo-help" className="text-xs text-neutral-600">No photos required. JPG, PNG or WebP, up to 3 MB each. Photos appear only after approval.</p>
+                  <input ref={imageInput} id="review-photo" type="file" multiple accept="image/jpeg,image/png,image/webp" disabled={isSubmitting || formImages.length >= MAX_REVIEW_PHOTOS} aria-describedby="review-photo-help" className="block w-full text-xs file:mr-3 file:rounded-lg file:border-0 file:bg-neutral-100 file:px-3 file:py-2" onChange={e => {
+                    const files = Array.from(e.target.files || []);
+                    e.target.value = "";
+                    if (!files.length) return;
+                    if (files.length + formImages.length > MAX_REVIEW_PHOTOS) {
+                      setFormError("You can add up to 5 photos. Remove a photo to choose another."); return;
                     }
-                    setFormError(null); setFormImage(file);
+                    if (files.some(file => !["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size === 0 || file.size > MAX_REVIEW_PHOTO_BYTES)) {
+                      setFormError("Choose JPG, PNG or WebP photos up to 3 MB each."); return;
+                    }
+                    setFormError(null);
+                    setFormImages(current => [...current, ...files]);
                   }} />
-                  {imagePreview && <div className="space-y-2"><img src={imagePreview} alt="Selected review photo preview" className="max-h-48 max-w-full rounded-xl object-contain" /><button type="button" disabled={isSubmitting} className="text-xs font-semibold text-ink" onClick={() => { setFormImage(null); if (imageInput.current) imageInput.current.value = ""; }}>Remove photo</button></div>}
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs text-neutral-500" aria-live="polite">{formImages.length} / 5 photos selected</p>
+                    {formImages.length > 0 && <button type="button" disabled={isSubmitting} className="min-h-11 rounded-lg px-2 text-xs font-semibold underline underline-offset-4 hover:bg-neutral-100 disabled:opacity-50" onClick={() => { setFormImages([]); setFormError(null); }}>Remove all photos</button>}
+                  </div>
+                  {imagePreviews.length > 0 && <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {imagePreviews.map((url, index) => <div key={url} className="relative rounded-xl border border-neutral-200 bg-neutral-100 p-1">
+                      <img src={url} alt={"Selected review photo " + (index + 1)} className="h-28 w-full rounded-xl object-contain bg-neutral-100" />
+                      <button type="button" disabled={isSubmitting} aria-label={"Remove photo " + (index + 1)} title={"Remove photo " + (index + 1)} className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 bg-white text-black shadow-md transition-colors hover:bg-neutral-200 focus-visible:outline-offset-2 disabled:opacity-50" onClick={() => { setFormImages(current => current.filter((_, position) => position !== index)); setFormError(null); }}><X className="h-5 w-5" aria-hidden="true" /></button>
+                      <p className="truncate px-2 py-1 text-xs text-neutral-600">{formImages[index]?.name}</p>
+                    </div>)}
+                  </div>}
                 </div>
 
                 {/* Customer Name */}
@@ -467,12 +483,8 @@ export const CustomerReviews: React.FC = () => {
         {allReviews.map((review) => (
           <ScrollReveal key={review.id} direction="up">
             <article className="review-feed-card overflow-hidden rounded-3xl border border-neutral-200 bg-canvas shadow-sm">
-              <div className={review.imageUrl ? "grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]" : ""}>
-                {review.imageUrl && (
-                  <div className="bg-neutral-100 p-4 sm:p-6 flex items-center justify-center">
-                    <img src={review.imageUrl} alt={"Photo shared by " + review.name} loading="lazy" decoding="async" className="w-full max-h-96 rounded-2xl object-contain" />
-                  </div>
-                )}
+              <div className={review.imageUrls?.length ? "grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]" : ""}>
+                {!!review.imageUrls?.length && <ReviewPhotoGallery photos={review.imageUrls} customerName={review.name} />}
                 <div className="flex min-w-0 flex-col p-6 sm:p-8">
                   <div className="mb-5 flex items-center justify-between gap-4">
                     <div className="flex gap-1" role="img" aria-label={review.rating + " out of 5 stars"}>

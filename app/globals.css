@@ -822,18 +822,22 @@ main a.showcase-action[data-ui="primary"] > svg { width: 16px; height: 16px; }
  #flagship-showcase .flagship-phone { width: auto; max-width: 100%; max-height: min(740px, calc(100svh - 160px)); }
 }
 
+/* One section gap instead of stacking outer margins with section padding. */
+.homepage-sections { display: flex; flex-direction: column; gap: 32px; padding-bottom: 24px; }
+@media (min-width: 640px) { .homepage-sections { gap: 40px; } }
+
 /* Desktop sections use their content height while retaining full width. */
 @media (min-width: 1024px) {
- .homepage-sections { padding-bottom: 0; }
+ .homepage-sections { gap: 48px; padding-bottom: 24px; }
  .homepage-sections > :not([hidden]) ~ :not([hidden]) { margin-top: 0; margin-bottom: 0; }
- .homepage-sections > section:not(#flagship-showcase),
+ .homepage-sections > section:not(#flagship-showcase):not([data-surface="media"]),
  .homepage-sections > #faqs {
    min-height: 0;
    display: flex;
    flex-direction: column;
    justify-content: flex-start;
-   padding-top: 28px;
-   padding-bottom: 28px;
+   padding-top: 0;
+   padding-bottom: 0;
    scroll-margin-top: 72px;
  }
  .homepage-sections .container-custom {
@@ -868,15 +872,14 @@ main a.showcase-action[data-ui="primary"] > svg { width: 16px; height: 16px; }
  .homepage-sections > #faqs,
  .homepage-sections > #social-channels {
    min-height: 0;
-   padding-top: 32px;
-   padding-bottom: 32px;
+   padding-top: 0;
+   padding-bottom: 0;
    justify-content: flex-start;
  }
 }
 
 @media (min-width: 1024px) {
- .desktop-page > :not([hidden]) ~ :not([hidden]),
- .desktop-showroom > :not([hidden]) ~ :not([hidden]) { margin-top: 32px; margin-bottom: 0; }
+ .desktop-page > :not([hidden]) ~ :not([hidden]) { margin-top: 28px; margin-bottom: 0; }
  .desktop-page.about-page > section[aria-labelledby="founder-heading"] { padding-top: 32px; }
  .desktop-showroom #gallery { padding-block: 28px; }
  .homepage-sections > section:not(#flagship-showcase) > .container-custom > .glass-panel { padding-block: 32px; }
@@ -894,3 +897,5 @@ main a.showcase-action[data-ui="primary"] > svg { width: 16px; height: 16px; }
 
 .review-feed-card { transition: border-color 220ms ease, box-shadow 220ms ease; }
 @media (hover: hover) { .review-feed-card:hover { border-color: #bcbcbc; box-shadow: 0 12px 32px rgb(0 0 0 / 0.06); } }
+
+.review-photo-track::-webkit-scrollbar { display: none; }

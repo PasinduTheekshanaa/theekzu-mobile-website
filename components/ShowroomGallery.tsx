@@ -108,7 +108,7 @@ export const ShowroomGallery: React.FC = () => {
     activePhotoIndex !== null ? filteredPhotos[activePhotoIndex] : undefined;
 
   return (
-    <section id="gallery" className="py-12 sm:py-16 lg:py-20 relative">
+    <section id="gallery" className="py-6 sm:py-8 relative">
       <div className="container-custom">
         
         {/* Section Header */}

@@ -525,7 +525,7 @@ export default function AdminReviewsPage() {
                       </span>
                     </div>
 
-                    {rev.image_url && <a href={rev.image_url} target="_blank" rel="noreferrer" aria-label={"View photo from " + rev.customer_name}><img src={rev.image_url} alt={"Photo submitted by " + rev.customer_name} loading="lazy" className="max-h-64 w-full rounded-xl object-contain bg-slate-100 dark:bg-slate-900" /></a>}
+                    {!!(rev.image_urls?.length || rev.image_url) && <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">{(rev.image_urls || [rev.image_url!]).map((url, index) => <a key={url} href={url} target="_blank" rel="noreferrer" aria-label={"View photo " + (index + 1) + " from " + rev.customer_name}><img src={url} alt={"Photo " + (index + 1) + " submitted by " + rev.customer_name} loading="lazy" className="h-40 w-full rounded-xl object-contain bg-neutral-100" /></a>)}</div>}
                     {/* Review Text */}
                     <p className="text-xs sm:text-sm text-ink dark:text-ink leading-relaxed bg-canvas dark:bg-canvas p-3.5 rounded-xl border border-neutral-200/70 dark:border-white/5">
                       "{rev.review_text || rev.review}"

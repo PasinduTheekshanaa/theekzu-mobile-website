@@ -13,7 +13,7 @@ export const FAQSection: React.FC = () => {
 
   return (
     <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div className="text-center mb-10">
+      <div className="text-center mb-6 sm:mb-8">
         <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
           Got Questions?
         </span>

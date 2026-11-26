@@ -13,7 +13,7 @@ export const ShowroomPreview: React.FC = () => {
   );
 
   return (
-    <section className="relative overflow-hidden py-10 sm:py-14">
+    <section className="relative overflow-hidden">
       <div className="container-custom">
         <ScrollReveal>
           <div className="glass-card rounded-3xl p-6 sm:p-8 lg:p-10 border border-neutral-200 dark:border-neutral-500/25 bg-canvas       shadow-xl backdrop-blur-xl relative overflow-hidden">

@@ -51,7 +51,7 @@ export const WhyChooseUs: React.FC = () => {
   return (
     <section className="container-custom transition-colors duration-300">
       <ScrollReveal direction="up">
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-xs font-bold tracking-widest text-ink dark:text-ink uppercase shadow-xs">
             The Theekzu Advantage
           </span>

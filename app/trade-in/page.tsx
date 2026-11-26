@@ -86,7 +86,7 @@ export default function TradeInPage() {
   ];
 
   return (
-    <div className="desktop-page container-custom py-8 sm:py-12 space-y-12 sm:space-y-16 transition-colors duration-300">
+    <div className="desktop-page container-custom py-8 sm:py-12 space-y-6 sm:space-y-8 transition-colors duration-300">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
