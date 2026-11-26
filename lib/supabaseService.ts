@@ -1157,7 +1157,7 @@ export interface CustomerReview {
 /**
  * Fetch approved reviews for public display on the storefront
  */
-export async function fetchApprovedCustomerReviews(page = 0): Promise<{
+export async function fetchApprovedCustomerReviews(page = 0, pageSize = 12): Promise<{
   reviews: CustomerReview[];
   averageRating: number;
   totalCount: number;
@@ -1173,7 +1173,7 @@ export async function fetchApprovedCustomerReviews(page = 0): Promise<{
       .select("*")
       .eq("status", "approved")
       .order("created_at", { ascending: false }).order("id")
-      .range(page * 12, page * 12 + 11);
+      .range(page * pageSize, (page + 1) * pageSize - 1);
 
     if (error) {
       if (

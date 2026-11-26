@@ -5,8 +5,6 @@ import {
   Star,
   CheckCircle2,
   Quote,
-  ChevronLeft,
-  ChevronRight,
   MessageSquarePlus,
   Send,
   AlertCircle,
@@ -61,12 +59,6 @@ export const CustomerReviews: React.FC = () => {
   const [page, setPage] = useState(0);
   const reviewRequest = useRef(0);
 
-  // Carousel State
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
   // Feedback Form State
   const [showForm, setShowForm] = useState(false);
   const [formName, setFormName] = useState("");
@@ -92,9 +84,10 @@ export const CustomerReviews: React.FC = () => {
     const request = ++reviewRequest.current;
     try {
       setIsLoading(true);
-      const res = await fetchApprovedCustomerReviews(page);
+      const res = await fetchApprovedCustomerReviews(0, (page + 1) * 12);
       if (request !== reviewRequest.current) return;
       setLoadError(!res.tableReady);
+      if (!res.tableReady) return;
       if (res && res.reviews) {
         // Strict requirement: Only approved Supabase reviews can be shown
         const approvedOnly = res.reviews.filter((r) => r.status === "approved");
@@ -109,7 +102,6 @@ export const CustomerReviews: React.FC = () => {
 
   useEffect(() => {
     if (!nearViewport) return;
-    setCurrentIndex(0);
     loadApprovedReviews();
 
     const timer = setInterval(() => { if (document.visibilityState === "visible") loadApprovedReviews(); }, 60000);
@@ -148,7 +140,7 @@ export const CustomerReviews: React.FC = () => {
 
   // Display only moderated reviews; approval does not imply a verified purchase.
   const allReviews: UnifiedReview[] = useMemo(() => {
-    // 1. Approved reviews from Supabase (displayed at front of carousel)
+    // Approved customer reviews, newest first.
     const liveItems: UnifiedReview[] = supabaseApprovedReviews
       .filter((r) => r.status === "approved")
       .map((r) => ({
@@ -166,43 +158,6 @@ export const CustomerReviews: React.FC = () => {
 
     return liveItems;
   }, [supabaseApprovedReviews]);
-
-  // Carousel Auto-play every 5 seconds, pauses on mouse hover
-  useEffect(() => {
-    if (isPaused || allReviews.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % allReviews.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isPaused, allReviews.length]);
-
-  const prevSlide = () => {
-    if (allReviews.length === 0) return;
-    setCurrentIndex((prev) => (prev === 0 ? allReviews.length - 1 : prev - 1));
-  };
-
-  const nextSlide = () => {
-    if (allReviews.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % allReviews.length);
-  };
-
-  // Touch handlers for mobile swipe
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.targetTouches[0].clientX;
-    touchEndX.current = touchStartX.current;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (touchStartX.current - touchEndX.current > 50) {
-      nextSlide();
-    } else if (touchEndX.current - touchStartX.current > 50) {
-      prevSlide();
-    }
-  };
 
   // Handle Review Submission to Supabase
   const handleSubmitReview = async (e: React.FormEvent) => {
@@ -259,14 +214,11 @@ export const CustomerReviews: React.FC = () => {
     }
   };
 
-  const currentReview = allReviews[currentIndex] || allReviews[0];
-
   // No rating is displayed until approved reviews exist.
   const displayedAverage = totalApproved > 0 ? averageRating.toFixed(1) : "—";
 
   return (
-    <section ref={sectionRef} onFocusCapture={() => setIsPaused(true)} onBlurCapture={() => setIsPaused(false)} className="container-custom transition-colors duration-300 relative">
-      {totalApproved > 12 && <div className="flex justify-center gap-4 py-3"><button disabled={page === 0 || isLoading} onClick={() => setPage(p => p - 1)}>Previous reviews</button><span>Page {page + 1}</span><button disabled={(page + 1) * 12 >= totalApproved || isLoading} onClick={() => setPage(p => p + 1)}>More reviews</button></div>}
+    <section ref={sectionRef} className="container-custom transition-colors duration-300 relative">
       <ScrollReveal direction="up">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
@@ -511,111 +463,52 @@ export const CustomerReviews: React.FC = () => {
         </div>
       )}
 
-      {/* CAROUSEL CONTAINER (Preserves exact design & styling) */}
-      <div
-        className="relative max-w-4xl mx-auto"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Main Review Card */}
-        <div className="glass-panel rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-12 border border-neutral-200 dark:border-neutral-500/25 shadow-xl relative overflow-hidden transition-all duration-500">
-          
-          {/* Ambient Lighting */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-canvas dark:bg-canvas rounded-full blur-[90px] pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col justify-between min-h-[180px] sm:min-h-[200px]">
-            <div>
-              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <div className="flex text-ink dark:text-ink gap-1">
-                  {Array.from({ length: currentReview?.rating || 0 }).map((_, i) => (
-                    <Star key={i} className="w-4 sm:w-5 h-4 sm:h-5 fill-[#FFC107] text-[#FFC107]" />
-                  ))}
-                </div>
-
-                {currentReview?.verified && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-canvas dark:bg-canvas border border-neutral-500/20 dark:border-neutral-500/30 text-ink dark:text-ink text-xs font-bold shadow-xs">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Verified Purchase
-                  </span>
+      <div className="max-w-5xl mx-auto space-y-5 sm:space-y-7" aria-busy={isLoading}>
+        {allReviews.map((review) => (
+          <ScrollReveal key={review.id} direction="up">
+            <article className="review-feed-card overflow-hidden rounded-3xl border border-neutral-200 bg-canvas shadow-sm">
+              <div className={review.imageUrl ? "grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]" : ""}>
+                {review.imageUrl && (
+                  <div className="bg-neutral-100 p-4 sm:p-6 flex items-center justify-center">
+                    <img src={review.imageUrl} alt={"Photo shared by " + review.name} loading="lazy" decoding="async" className="w-full max-h-96 rounded-2xl object-contain" />
+                  </div>
                 )}
-              </div>
-
-              {currentReview?.imageUrl && <img src={currentReview.imageUrl} alt={"Photo shared by " + currentReview.name} loading="lazy" className="mb-5 w-full max-h-80 rounded-2xl object-contain bg-slate-100 dark:bg-slate-900" />}
-              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-ink dark:text-ink mb-2 sm:mb-3" />
-
-              <p className="text-sm sm:text-lg md:text-xl text-ink dark:text-ink italic leading-relaxed font-normal">
-                {currentReview?.reviewText || (isLoading ? "Loading reviews…" : loadError ? "Reviews are temporarily unavailable." : "No published reviews yet. Share your experience below.")}
-              </p>
-            </div>
-
-            <div className="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-neutral-200 dark:border-neutral-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h4 className="text-sm sm:text-base font-bold text-ink dark:text-ink">
-                  {currentReview?.name}
-                </h4>
-                <p className="text-xs text-ink dark:text-ink mt-0.5">
-                  {currentReview?.location ? `${currentReview.location} • ` : ""}
-                  {currentReview?.productBought ? (
-                    <>
-                      Purchased{" "}
-                      <span className="text-ink dark:text-ink font-semibold">
-                        {currentReview.productBought}
-                      </span>
-                    </>
-                  ) : null}
-                  {currentReview?.date ? (
-                    <span className="text-ink dark:text-ink">
-                      {currentReview?.productBought ? " • " : ""}
-                      {currentReview.date}
+                <div className="flex min-w-0 flex-col p-6 sm:p-8">
+                  <div className="mb-5 flex items-center justify-between gap-4">
+                    <div className="flex gap-1" role="img" aria-label={review.rating + " out of 5 stars"}>
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <Star key={index} aria-hidden="true" className={"h-4 w-4 sm:h-5 sm:w-5 " + (index < review.rating ? "fill-[#FFC107] text-[#FFC107]" : "text-neutral-300")} />
+                      ))}
+                    </div>
+                    <Quote aria-hidden="true" className="h-7 w-7 text-neutral-300" />
+                  </div>
+                  <blockquote className="flex-1 whitespace-pre-line break-words text-base leading-relaxed sm:text-lg">
+                    {review.reviewText}
+                  </blockquote>
+                  <footer className="mt-6 flex items-center gap-3 border-t border-neutral-200 pt-5">
+                    <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-sm font-bold">
+                      {review.name.trim().charAt(0).toUpperCase()}
                     </span>
-                  ) : null}
-                </p>
+                    <div className="min-w-0">
+                      <h3 className="break-words text-sm font-bold sm:text-base">{review.name}</h3>
+                      {review.date && <p className="mt-1 text-xs text-neutral-500">{review.date}</p>}
+                    </div>
+                  </footer>
+                </div>
               </div>
-
-              {/* Navigation Arrows */}
-              <div className="flex items-center gap-2 self-end sm:self-auto">
-                <button
-                  disabled={allReviews.length < 2}
-                  onClick={prevSlide}
-                  className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink hover:border-neutral-400 transition-colors active:scale-95 shadow-xs"
-                  aria-label="Previous review"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  disabled={allReviews.length < 2}
-                  onClick={nextSlide}
-                  className="w-11 h-11 rounded-xl bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 flex items-center justify-center text-ink dark:text-ink hover:text-ink dark:hover:text-ink hover:border-neutral-400 transition-colors active:scale-95 shadow-xs"
-                  aria-label="Next review"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Carousel Indicators Dots */}
-        {allReviews.length > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-6">
-            {allReviews.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  idx === currentIndex
-                    ? "w-8 bg-canvas    "
-                    : "w-2 bg-canvas dark:bg-canvas hover:bg-canvas"
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
+            </article>
+          </ScrollReveal>
+        ))}
+        {allReviews.length === 0 && (
+          <div role="status" className="rounded-3xl border border-neutral-200 p-8 text-center text-neutral-600">
+            {isLoading ? "Loading reviews…" : loadError ? "Reviews are temporarily unavailable." : "No published reviews yet. Be the first to share your experience."}
           </div>
         )}
-
+        <div className="review-pages flex flex-col items-center gap-3 py-4" aria-live="polite">
+          {loadError && !isLoading && <><p className="text-sm text-neutral-600">Unable to load reviews. Please try again.</p><button type="button" onClick={loadApprovedReviews}>Try again</button></>}
+          {allReviews.length > 0 && <p className="text-sm text-neutral-500">Showing {allReviews.length} of {totalApproved} reviews</p>}
+          {allReviews.length < totalApproved && !loadError && <button type="button" disabled={isLoading} onClick={() => setPage(value => value + 1)}>{isLoading ? "Loading reviews…" : "Load more reviews"}</button>}
+        </div>
       </div>
     </section>
   );

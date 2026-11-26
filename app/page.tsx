@@ -8,7 +8,7 @@ import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { TradeInBanner } from "@/components/TradeInBanner";
 import { ShowroomPreview } from "@/components/ShowroomPreview";
 import { FlagshipShowcase } from "@/components/FlagshipShowcase";
-import { CustomerReviews } from "@/components/CustomerReviews";
+
 import { SocialSection } from "@/components/SocialSection";
 
 import { FAQSection } from "@/components/FAQSection";
@@ -73,9 +73,6 @@ export default function HomePage() {
 
       {/* 8. Flagship Showcase (iPhone 16 Pro Max) */}
       <FlagshipShowcase />
-
-      {/* 8. Customer Reviews */}
-      <CustomerReviews />
 
       {/* FAQs Section */}
       <div id="faqs">
