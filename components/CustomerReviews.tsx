@@ -128,12 +128,12 @@ export const CustomerReviews: React.FC = () => {
     return () => { clearInterval(timer); ++reviewRequest.current; };
   }, [page, nearViewport]);
 
-  // Format submission date nicely (e.g. "Sep 24, 2026")
+  // Display only the review month and year (e.g. "Sep 2026").
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
     try {
       const d = new Date(dateString);
-      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
     } catch {
       return dateString;
     }
