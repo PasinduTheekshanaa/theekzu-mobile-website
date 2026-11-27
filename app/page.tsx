@@ -5,8 +5,6 @@ import { Hero } from "@/components/Hero";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
-import { TradeInBanner } from "@/components/TradeInBanner";
-import { ShowroomPreview } from "@/components/ShowroomPreview";
 import { FlagshipShowcase } from "@/components/FlagshipShowcase";
 
 import { SocialSection } from "@/components/SocialSection";
@@ -65,13 +63,7 @@ export default function HomePage() {
       {/* 5. Why Choose Theekzu Mobile */}
       <WhyChooseUs />
 
-      {/* 6. Trade-In Banner with Interactive Form */}
-      <TradeInBanner />
-
-      {/* 7. Showroom Experience Preview */}
-      <ShowroomPreview />
-
-      {/* 8. Flagship Showcase (iPhone 16 Pro Max) */}
+      {/* Flagship Showcase */}
       <FlagshipShowcase />
 
       {/* FAQs Section */}
