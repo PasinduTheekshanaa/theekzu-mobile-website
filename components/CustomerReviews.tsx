@@ -11,7 +11,7 @@ import {
   X,
   ShieldCheck,
 } from "lucide-react";
-import { MAX_REVIEW_PHOTOS, MAX_REVIEW_PHOTO_BYTES } from "@/lib/reviewPhotos";
+import { MAX_REVIEW_PHOTOS, compressReviewPhoto } from "@/lib/reviewPhotos";
 import { ReviewPhotoGallery } from "@/components/ReviewPhotoGallery";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
@@ -73,6 +73,8 @@ export const CustomerReviews: React.FC = () => {
 
   const [formImages, setFormImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isProcessingPhotos, setIsProcessingPhotos] = useState(false);
+  const [photoProgress, setPhotoProgress] = useState("");
   const imageInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const urls = formImages.map(file => URL.createObjectURL(file));
@@ -163,6 +165,7 @@ export const CustomerReviews: React.FC = () => {
   // Handle Review Submission to Supabase
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isProcessingPhotos) return;
     setFormError(null);
 
     const trimmedName = formName.trim();
@@ -340,28 +343,39 @@ export const CustomerReviews: React.FC = () => {
 
                 <div className="rounded-xl border border-neutral-200 p-4 space-y-3">
                   <label htmlFor="review-photo" className="block text-sm font-bold">Add photos <span className="font-normal">(optional, up to 5)</span></label>
-                  <p id="review-photo-help" className="text-xs text-neutral-600">No photos required. JPG, PNG or WebP, up to 3 MB each. Photos appear only after approval.</p>
-                  <input ref={imageInput} id="review-photo" type="file" multiple accept="image/jpeg,image/png,image/webp" disabled={isSubmitting || formImages.length >= MAX_REVIEW_PHOTOS} aria-describedby="review-photo-help" className="block w-full text-xs file:mr-3 file:rounded-lg file:border-0 file:bg-neutral-100 file:px-3 file:py-2" onChange={e => {
+                  <p id="review-photo-help" className="text-xs text-neutral-600">No photos required. JPG, PNG, HEIC, WebP, AVIF, GIF, BMP, TIFF and SVG photos are supported. Large photos are automatically resized for upload.</p>
+                  <input ref={imageInput} id="review-photo" type="file" multiple accept="image/*,.heic,.heif,.hif,.tif,.tiff" disabled={isSubmitting || isProcessingPhotos || formImages.length >= MAX_REVIEW_PHOTOS} aria-describedby="review-photo-help" className="block w-full text-xs file:mr-3 file:rounded-lg file:border-0 file:bg-neutral-100 file:px-3 file:py-2" onChange={async e => {
                     const files = Array.from(e.target.files || []);
                     e.target.value = "";
                     if (!files.length) return;
                     if (files.length + formImages.length > MAX_REVIEW_PHOTOS) {
                       setFormError("You can add up to 5 photos. Remove a photo to choose another."); return;
                     }
-                    if (files.some(file => !["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size === 0 || file.size > MAX_REVIEW_PHOTO_BYTES)) {
-                      setFormError("Choose JPG, PNG or WebP photos up to 3 MB each."); return;
-                    }
                     setFormError(null);
-                    setFormImages(current => [...current, ...files]);
+                    setIsProcessingPhotos(true);
+                    try {
+                      const prepared: File[] = [];
+                      for (const [index, file] of files.entries()) {
+                        setPhotoProgress("Preparing photo " + (index + 1) + " of " + files.length + "…");
+                        prepared.push(await compressReviewPhoto(file));
+                      }
+                      setFormImages(current => [...current, ...prepared]);
+                    } catch (error) {
+                      setFormError(error instanceof Error ? error.message : "This image could not be opened. Please choose another photo.");
+                    } finally {
+                      setIsProcessingPhotos(false);
+                      setPhotoProgress("");
+                    }
                   }} />
+                  {isProcessingPhotos && <p role="status" className="text-xs font-semibold">{photoProgress}</p>}
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs text-neutral-500" aria-live="polite">{formImages.length} / 5 photos selected</p>
-                    {formImages.length > 0 && <button type="button" disabled={isSubmitting} className="min-h-11 rounded-lg px-2 text-xs font-semibold underline underline-offset-4 hover:bg-neutral-100 disabled:opacity-50" onClick={() => { setFormImages([]); setFormError(null); }}>Remove all photos</button>}
+                    {formImages.length > 0 && <button type="button" disabled={isSubmitting || isProcessingPhotos} className="min-h-11 rounded-lg px-2 text-xs font-semibold underline underline-offset-4 hover:bg-neutral-100 disabled:opacity-50" onClick={() => { setFormImages([]); setFormError(null); }}>Remove all photos</button>}
                   </div>
                   {imagePreviews.length > 0 && <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {imagePreviews.map((url, index) => <div key={url} className="relative rounded-xl border border-neutral-200 bg-neutral-100 p-1">
                       <img src={url} alt={"Selected review photo " + (index + 1)} className="h-28 w-full rounded-xl object-contain bg-neutral-100" />
-                      <button type="button" disabled={isSubmitting} aria-label={"Remove photo " + (index + 1)} title={"Remove photo " + (index + 1)} className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 bg-white text-black shadow-md transition-colors hover:bg-neutral-200 focus-visible:outline-offset-2 disabled:opacity-50" onClick={() => { setFormImages(current => current.filter((_, position) => position !== index)); setFormError(null); }}><X className="h-5 w-5" aria-hidden="true" /></button>
+                      <button type="button" disabled={isSubmitting || isProcessingPhotos} aria-label={"Remove photo " + (index + 1)} title={"Remove photo " + (index + 1)} className="absolute right-1 top-1 flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 bg-white text-black shadow-md transition-colors hover:bg-neutral-200 focus-visible:outline-offset-2 disabled:opacity-50" onClick={() => { setFormImages(current => current.filter((_, position) => position !== index)); setFormError(null); }}><X className="h-5 w-5" aria-hidden="true" /></button>
                       <p className="truncate px-2 py-1 text-xs text-neutral-600">{formImages[index]?.name}</p>
                     </div>)}
                   </div>}
@@ -457,7 +471,7 @@ export const CustomerReviews: React.FC = () => {
 
                   <button data-ui="primary"
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || isProcessingPhotos}
                     className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-canvas     text-ink font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-neutral-500/20 active:scale-95 transition-all disabled:opacity-60"
                   >
                     {isSubmitting ? (
