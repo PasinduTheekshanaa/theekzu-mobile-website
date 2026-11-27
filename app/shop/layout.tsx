@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,28 +6,28 @@ export const metadata: Metadata = {
     absolute: "Shop iPhones & Apple Accessories | Theekzu Mobile Sri Lanka",
   },
   description:
-    "Browse our full catalog of brand new sealed and certified pre-owned Apple iPhones, AirPods, Apple Watches, and fast chargers at the best prices in Sri Lanka.",
+    "Buy new and used iPhones in Sri Lanka at Theekzu Mobile. Browse available models, chargers, cables, cases and screen protectors, with islandwide delivery and WhatsApp ordering.",
   keywords: [
     "Shop iPhones Sri Lanka",
     "iPhone price Sri Lanka",
-    "Buy Apple iPhone Colombo",
+    "Buy iPhones in Sri Lanka",
     "Apple accessories Sri Lanka",
     "Theekzu Mobile shop",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/shop",
+    canonical: siteUrl("/shop"),
   },
   openGraph: {
     title: "Shop iPhones & Apple Accessories | Theekzu Mobile Sri Lanka",
     description:
-      "Browse our full catalog of brand new sealed and certified pre-owned Apple iPhones, AirPods, Apple Watches, and fast chargers at the best prices in Sri Lanka.",
-    url: "https://theekzu.vercel.app/shop",
+      "Buy new and used iPhones in Sri Lanka at Theekzu Mobile. Browse available models, chargers, cables, cases and screen protectors, with islandwide delivery and WhatsApp ordering.",
+    url: siteUrl("/shop"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Shop iPhones & Apple Accessories - Theekzu Mobile Sri Lanka",
       },
     ],
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Shop iPhones & Apple Accessories | Theekzu Mobile Sri Lanka",
     description:
-      "Browse our full catalog of brand new sealed and certified pre-owned Apple iPhones, AirPods, and accessories with genuine warranty in Sri Lanka.",
+      "Browse new and used iPhones, chargers, cables and phone accessories at Theekzu Mobile in Sri Lanka.",
     images: ["/brand-logo.png"],
   },
 };
@@ -50,13 +51,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://theekzu.vercel.app",
+      item: siteUrl("/"),
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "Shop",
-      item: "https://theekzu.vercel.app/shop",
+      item: siteUrl("/shop"),
     },
   ],
 };

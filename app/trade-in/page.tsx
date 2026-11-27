@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import React from "react";
 import type { Metadata } from "next";
 import { TradeInBanner } from "@/components/TradeInBanner";
@@ -16,19 +17,19 @@ export const metadata: Metadata = {
     "Upgrade to iPhone 16 Sri Lanka",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/trade-in",
+    canonical: siteUrl("/trade-in"),
   },
   openGraph: {
     title: "iPhone Trade-In Sri Lanka | Exchange & Upgrade | Theekzu Mobile",
     description:
       "Upgrade your old smartphone to a newer Apple iPhone in Sri Lanka. Get an instant, high-value trade-in estimate on WhatsApp and pay only the difference with Theekzu Mobile.",
-    url: "https://theekzu.vercel.app/trade-in",
+    url: siteUrl("/trade-in"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "iPhone Trade-In Sri Lanka - Theekzu Mobile",
       },
     ],
@@ -52,13 +53,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://theekzu.vercel.app",
+      item: siteUrl("/"),
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "Trade-In",
-      item: "https://theekzu.vercel.app/trade-in",
+      item: siteUrl("/trade-in"),
     },
   ],
 };

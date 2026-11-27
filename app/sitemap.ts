@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import { MetadataRoute } from "next";
 import { getServerCatalog } from "@/lib/serverCatalog";
 
@@ -6,48 +7,47 @@ export const dynamic = "force-dynamic";
 export const revalidate = 3600; // revalidate at most every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://theekzu.vercel.app";
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/reviews`, changeFrequency: "weekly", priority: 0.7 },
-    { url: `${baseUrl}/compare`, changeFrequency: "weekly", priority: 0.7 },
+    { url: siteUrl(`/reviews`), changeFrequency: "weekly", priority: 0.7 },
+    { url: siteUrl(`/compare`), changeFrequency: "weekly", priority: 0.7 },
     {
-      url: `${baseUrl}/`,
+      url: siteUrl(`/`),
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/shop`,
+      url: siteUrl(`/shop`),
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/iphones`,
+      url: siteUrl(`/iphones`),
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/accessories`,
+      url: siteUrl(`/accessories`),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/trade-in`,
+      url: siteUrl(`/trade-in`),
       changeFrequency: "weekly",
       priority: 0.75,
     },
     {
-      url: `${baseUrl}/about`,
+      url: siteUrl(`/about`),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/contact`,
+      url: siteUrl(`/contact`),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/showroom`,
+      url: siteUrl(`/showroom`),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -56,9 +56,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { products: productList, error } = await getServerCatalog();
   if (error) throw new Error("Sitemap data is temporarily unavailable.");
 
-  const productRoutes: MetadataRoute.Sitemap = productList.map((p) => ({
-    url: `${baseUrl}/product/${p.slug}`,
-    lastModified: p.updatedAt ? new Date(p.updatedAt) : undefined,
+  const productRoutes: MetadataRoute.Sitemap = Array.from(new Map(productList.filter(p => p.slug && !/[/?#]/.test(p.slug) && ![".", ".."].includes(p.slug)).map(p => [p.slug, p])).values()).map((p) => ({
+    url: siteUrl(`/product/${encodeURIComponent(p.slug)}`),
+    lastModified: p.updatedAt && Number.isFinite(Date.parse(p.updatedAt)) ? new Date(p.updatedAt) : undefined,
     changeFrequency: "daily",
     priority: 0.8,
   }));

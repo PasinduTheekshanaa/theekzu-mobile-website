@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -5,28 +6,28 @@ export const metadata: Metadata = {
     absolute: "Buy Apple iPhones in Sri Lanka | Theekzu Mobile",
   },
   description:
-    "Explore the complete Apple iPhone lineup in Sri Lanka. From the flagship iPhone 16 Pro Max to certified pre-owned iPhone 13. Genuine warranty & islandwide delivery.",
+    "Buy iPhones in Sri Lanka at Theekzu Mobile. Compare new and quality-tested used iPhones, storage options and current prices with islandwide delivery.",
   keywords: [
     "iPhone Sri Lanka",
     "Buy iPhone Sri Lanka",
     "iPhone 16 Pro Max price Sri Lanka",
-    "Used iPhones Colombo",
+    "Used iPhones Sri Lanka",
     "Apple iPhone warranty Sri Lanka",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/iphones",
+    canonical: siteUrl("/iphones"),
   },
   openGraph: {
     title: "Buy Apple iPhones in Sri Lanka | Theekzu Mobile",
     description:
-      "Explore the complete Apple iPhone lineup in Sri Lanka. From the flagship iPhone 16 Pro Max to certified pre-owned iPhone 13. Genuine warranty & islandwide delivery.",
-    url: "https://theekzu.vercel.app/iphones",
+      "Buy iPhones in Sri Lanka at Theekzu Mobile. Compare new and quality-tested used iPhones, storage options and current prices with islandwide delivery.",
+    url: siteUrl("/iphones"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Apple iPhones in Sri Lanka - Theekzu Mobile",
       },
     ],
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Buy Apple iPhones in Sri Lanka | Theekzu Mobile",
     description:
-      "Explore the complete Apple iPhone lineup in Sri Lanka. Brand new sealed & certified pre-owned with genuine warranty.",
+      "Explore new and used iPhones in Sri Lanka at Theekzu Mobile. Compare models, prices and storage options.",
     images: ["/brand-logo.png"],
   },
 };
@@ -50,13 +51,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://theekzu.vercel.app",
+      item: siteUrl("/"),
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "iPhones",
-      item: "https://theekzu.vercel.app/iphones",
+      item: siteUrl("/iphones"),
     },
   ],
 };

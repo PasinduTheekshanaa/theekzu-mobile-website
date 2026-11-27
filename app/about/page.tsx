@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import Image from "next/image";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import type { Metadata } from "next";
@@ -14,22 +15,22 @@ export const metadata: Metadata = {
     "About Theekzu Mobile",
     "iPhone seller Sri Lanka",
     "Genuine Apple warranty Sri Lanka",
-    "Trusted iPhone shop Colombo",
+    "Trusted iPhone shop Sri Lanka",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/about",
+    canonical: siteUrl("/about"),
   },
   openGraph: {
     title: "About Theekzu Mobile | Trusted iPhone Store Sri Lanka",
     description:
       "Meet Pasindu Theekshana, Founder and Owner of Theekzu Mobile. Discover our commitment to quality iPhones, honest advice and personal service across Sri Lanka.",
-    url: "https://theekzu.vercel.app/about",
+    url: siteUrl("/about"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "About Theekzu Mobile Sri Lanka",
       },
     ],
@@ -53,13 +54,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://theekzu.vercel.app",
+      item: siteUrl("/"),
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "About Us",
-      item: "https://theekzu.vercel.app/about",
+      item: siteUrl("/about"),
     },
   ],
 };

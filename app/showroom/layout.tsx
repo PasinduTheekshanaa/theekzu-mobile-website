@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,13 +16,13 @@ export const metadata: Metadata = {
     "iPhone shop Sri Lanka",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/showroom",
+    canonical: siteUrl("/showroom"),
   },
   openGraph: {
     title: "Our Showroom Experience | Theekzu Mobile Sri Lanka",
     description:
       "Explore the official Theekzu Mobile showroom gallery in Sri Lanka. View authentic Apple iPhones, live display counters, illuminated Apple brand setup, and verified hardware diagnostics.",
-    url: "https://theekzu.vercel.app/showroom",
+    url: siteUrl("/showroom"),
     siteName: "Theekzu Mobile",
     images: [
       {

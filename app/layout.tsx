@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import { HOME_SEO_TITLE, HOME_SEO_DESCRIPTION } from "@/config/seo";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
@@ -24,30 +25,15 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theekzu.vercel.app"),
+  metadataBase: new URL(siteUrl("/")),
   title: {
     default: HOME_SEO_TITLE,
     template: "%s | Theekzu Mobile",
   },
   description:
     HOME_SEO_DESCRIPTION,
-  keywords: [
-    "Theekzu Mobile",
-    "Theekzu",
-    "Theekzu Mobile Sri Lanka",
-    "Theekzu iPhone Sri Lanka",
-    "iPhone Store Sri Lanka",
-    "iPhone Sri Lanka",
-    "iPhone price Sri Lanka",
-    "Buy iPhone Sri Lanka",
-    "Apple iPhone Sri Lanka",
-    "Apple devices Sri Lanka",
-    "iPhone 16 Pro Max Sri Lanka",
-    "Used iPhones Colombo",
-    "Apple accessories Sri Lanka",
-    "iPhone warranty Sri Lanka",
-  ],
-  authors: [{ name: "Theekzu Mobile", url: "https://theekzu.vercel.app/" }],
+  keywords: ["Theekzu", "Theekzu Mobile", "Theekzu Mobile Sri Lanka", "iPhones Sri Lanka", "Buy iPhones in Sri Lanka", "Used iPhones Sri Lanka", "iPhone accessories Sri Lanka"],
+  authors: [{ name: "Theekzu Mobile", url: siteUrl("/") }],
   creator: "Theekzu Mobile",
   publisher: "Theekzu Mobile",
   formatDetection: {
@@ -56,7 +42,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: "https://theekzu.vercel.app/",
+    canonical: siteUrl("/"),
   },
   icons: {
     icon: [
@@ -74,7 +60,7 @@ export const metadata: Metadata = {
     title: HOME_SEO_TITLE,
     description:
       HOME_SEO_DESCRIPTION,
-    url: "https://theekzu.vercel.app/",
+    url: siteUrl("/"),
     siteName: "Theekzu Mobile",
     images: [
       {
@@ -110,12 +96,12 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "OnlineStore",
-  "@id": "https://theekzu.vercel.app/#organization",
+  "@id": siteUrl("/#organization"),
   name: "Theekzu Mobile",
   alternateName: "Theekzu",
-  url: "https://theekzu.vercel.app/",
-  logo: "https://theekzu.vercel.app/brand-logo.png",
-  image: "https://theekzu.vercel.app/brand-logo.png",
+  url: siteUrl("/"),
+  logo: siteUrl("/brand-logo.png"),
+  image: siteUrl("/brand-logo.png"),
   description:
     HOME_SEO_DESCRIPTION,
   telephone: "+94740245749",
@@ -136,11 +122,11 @@ const organizationJsonLd = {
 const webSiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://theekzu.vercel.app/#website",
-  publisher: { "@id": "https://theekzu.vercel.app/#organization" },
+  "@id": siteUrl("/#website"),
+  publisher: { "@id": siteUrl("/#organization") },
   name: "Theekzu Mobile",
   alternateName: "Theekzu",
-  url: "https://theekzu.vercel.app/",
+  url: siteUrl("/"),
 
 };
 

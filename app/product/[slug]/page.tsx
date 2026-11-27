@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import React from "react";
 import { getProductConditions, getProductConditionLabel, getEnabledVariants } from "@/data/products";
 import { notFound } from "next/navigation";
@@ -20,8 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { products, error } = await getServerCatalog();
   if (error) return {
     title: { absolute: "Product | Theekzu Mobile" },
-    alternates: { canonical: `https://theekzu.vercel.app/product/${encodeURIComponent(slug)}` },
-    openGraph: { title: "Product | Theekzu Mobile", url: `https://theekzu.vercel.app/product/${encodeURIComponent(slug)}`, siteName: "Theekzu Mobile" },
+    alternates: { canonical: siteUrl(`/product/${encodeURIComponent(slug)}`) },
+    openGraph: { title: "Product | Theekzu Mobile", url: siteUrl(`/product/${encodeURIComponent(slug)}`), siteName: "Theekzu Mobile" },
   };
   const product = products.find((p) => p.slug === slug);
   if (!product) {
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const primaryImage = product.images?.[0] || "/brand-logo.png";
+  const primaryImage = siteUrl(product.images?.[0] || "/brand-logo.png");
   const formattedPrice = `Rs. ${product.price.toLocaleString("en-LK")}`;
   const storageInfo =
     product.storageOptions && product.storageOptions.length > 0
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const pageTitle = `${product.name} Price in Sri Lanka | Theekzu Mobile`;
   const description = `Explore ${product.name} (${getProductConditionLabel(product)}) at Theekzu Mobile in Sri Lanka${product.price > 0 ? ` from ${formattedPrice}` : ""}.${storageInfo} 6-month Theekzu Mobile warranty, islandwide delivery and WhatsApp ordering.`;
-  const canonicalUrl = `https://theekzu.vercel.app/product/${product.slug}`;
+  const canonicalUrl = siteUrl(`/product/${encodeURIComponent(product.slug)}`);
 
   return {
     title: {
@@ -97,10 +98,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
     .filter((p) => p.id !== product.id && p.category === product.category)
     .slice(0, 3);
 
-  const primaryImage = product.images?.[0] || "https://theekzu.vercel.app/brand-logo.png";
-  const fullImageUrl = primaryImage.startsWith("http")
-    ? primaryImage
-    : `https://theekzu.vercel.app${primaryImage}`;
+  const fullImageUrl = siteUrl(product.images?.[0] || "/brand-logo.png");
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -108,7 +106,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
     name: product.name,
     image:
       product.images && product.images.length > 0
-        ? product.images.map((img) => (img.startsWith("http") ? img : `https://theekzu.vercel.app${img}`))
+        ? product.images.map(img => siteUrl(img))
         : [fullImageUrl],
     description: product.description || `Buy ${product.name} in Sri Lanka with a 6-month warranty from Theekzu Mobile.`,
     sku: product.variants?.[0]?.sku || `TM-${product.slug}`,
@@ -119,7 +117,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
     category: product.category === "accessories" ? "Mobile Accessories" : "Smartphones",
     offers: product.price > 0 ? {
       "@type": "Offer",
-      url: `https://theekzu.vercel.app/product/${product.slug}`,
+      url: siteUrl(`/product/${encodeURIComponent(product.slug)}`),
       priceCurrency: "LKR",
       price: product.price,
 
@@ -132,9 +130,10 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
       seller: {
+        "@id": siteUrl("/#organization"),
         "@type": "OnlineStore",
         name: "Theekzu Mobile",
-        url: "https://theekzu.vercel.app",
+        url: siteUrl("/"),
       },
     } : undefined,
   };
@@ -147,7 +146,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://theekzu.vercel.app",
+        item: siteUrl("/"),
       },
       {
         "@type": "ListItem",
@@ -155,14 +154,14 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         name: product.category === "accessories" ? "Accessories" : "iPhones",
         item:
           product.category === "accessories"
-            ? "https://theekzu.vercel.app/accessories"
-            : "https://theekzu.vercel.app/iphones",
+            ? siteUrl("/accessories")
+            : siteUrl("/iphones"),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: product.name,
-        item: `https://theekzu.vercel.app/product/${product.slug}`,
+        item: siteUrl(`/product/${encodeURIComponent(product.slug)}`),
       },
     ],
   };

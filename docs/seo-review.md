@@ -1,3 +1,5 @@
+> Historical audit before the custom-domain migration. For the current domain and launch steps, see [domain-migration.md](./domain-migration.md). Old-domain references below describe the earlier deployment.
+
 # Theekzu Mobile SEO review — 19 October 2026
 
 ## Changes

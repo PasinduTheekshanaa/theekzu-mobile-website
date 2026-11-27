@@ -1,0 +1,528 @@
+{
+  "localOrigin": "http://localhost:3005",
+  "canonicalOrigin": "https://www.theekzumobile.com",
+  "auditedPublicPages": 48,
+  "productPages": 38,
+  "publicMetadataAndSchemas": "passed",
+  "robots": "passed",
+  "filteredPageCanonicals": "passed",
+  "adminNoindex": "passed",
+  "existingOffersRedirect": "passed",
+  "migrationRedirects": "inactive",
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com",
+      "schemas": [
+        "OnlineStore",
+        "WebSite"
+      ]
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/about",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/accessories",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/accessories",
+      "schemas": [
+        "OnlineStore",
+        "WebSite"
+      ]
+    },
+    {
+      "path": "/compare",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/compare",
+      "schemas": [
+        "OnlineStore",
+        "WebSite"
+      ]
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/contact",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/iphones",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/iphones",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/anker-soundcore-r50i-tws-earbuds",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/anker-soundcore-r50i-tws-earbuds",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/anker-ultra-protect-tempered-glass-for-iphone-screen-protector",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/anker-ultra-protect-tempered-glass-for-iphone-screen-protector",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/anker-zolo-20w-pd-3-0-fast-adapter-a2699-charger",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/anker-zolo-20w-pd-3-0-fast-adapter-a2699-charger",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/apple-20w-usb-c-power-adapter",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/apple-20w-usb-c-power-adapter",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/apple-20w-usb-c-power-adapter-charger",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/apple-20w-usb-c-power-adapter-charger",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/aspor-a316-20000mah-22-5w-portable-power-bank",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/aspor-a316-20000mah-22-5w-portable-power-bank",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/aspor-micro-usb-type-c-lightning-cable-1m-3-1a-fast-charge-ac27-ac25-ac26",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/aspor-micro-usb-type-c-lightning-cable-1m-3-1a-fast-charge-ac27-ac25-ac26",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-11",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-11",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-11-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-11-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-11-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-11-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-12",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-12",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-12-mini",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-12-mini",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-12-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-12-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-12-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-12-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-13",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-13",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-13-mini",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-13-mini",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-13-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-13-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-13-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-13-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-14",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-14",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-14-plus",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-14-plus",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-14-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-14-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-14-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-14-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-15",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-15",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-15-plus",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-15-plus",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-15-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-15-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-15-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-15-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-16",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-16",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-16-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-16-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-16-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-16-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-17",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-17",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-17-pro",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-17-pro",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-17-pro-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-17-pro-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-se2",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-se2",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-x",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-x",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-xs",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-xs",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/iphone-xs-max",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/iphone-xs-max",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/magsafe-clear-case",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/magsafe-clear-case",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/product/ugreen-type-c-cable",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/product/ugreen-type-c-cable",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "Product",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/reviews",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/reviews",
+      "schemas": [
+        "OnlineStore",
+        "WebSite"
+      ]
+    },
+    {
+      "path": "/shop",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/shop",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/showroom",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/showroom",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "BreadcrumbList"
+      ]
+    },
+    {
+      "path": "/trade-in",
+      "status": 200,
+      "canonical": "https://www.theekzumobile.com/trade-in",
+      "schemas": [
+        "OnlineStore",
+        "WebSite",
+        "BreadcrumbList"
+      ]
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+> Historical audit before the custom-domain migration. For the current domain and launch steps, see [domain-migration.md](./domain-migration.md). Old-domain references below describe the earlier deployment.
+
 # SEO audit — 2026-11-03
 
 ## Existing setup

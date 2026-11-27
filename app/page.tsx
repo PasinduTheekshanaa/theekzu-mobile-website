@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import { HOME_SEO_TITLE, HOME_SEO_DESCRIPTION } from "@/config/seo";
 import React from "react";
 import type { Metadata } from "next";
@@ -20,13 +21,13 @@ export const metadata: Metadata = {
   description:
     HOME_SEO_DESCRIPTION,
   alternates: {
-    canonical: "https://theekzu.vercel.app/",
+    canonical: siteUrl("/"),
   },
   openGraph: {
     title: HOME_SEO_TITLE,
     description:
       HOME_SEO_DESCRIPTION,
-    url: "https://theekzu.vercel.app/",
+    url: siteUrl("/"),
     siteName: "Theekzu Mobile",
     images: [
       {

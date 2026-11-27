@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -23,19 +24,19 @@ export const metadata: Metadata = {
     "Theekzu Mobile",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/showroom",
+    canonical: siteUrl("/showroom"),
   },
   openGraph: {
     title: "Our Showroom | Theekzu Mobile Sri Lanka",
     description:
       "Experience Theekzu Mobile's showroom in Sri Lanka. Genuine Apple iPhones with official warranty and expert support.",
-    url: "https://theekzu.vercel.app/showroom",
+    url: siteUrl("/showroom"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Theekzu Mobile Showroom Sri Lanka",
       },
     ],
@@ -59,13 +60,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://theekzu.vercel.app",
+      item: siteUrl("/"),
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "Our Showroom",
-      item: "https://theekzu.vercel.app/showroom",
+      item: siteUrl("/showroom"),
     },
   ],
 };

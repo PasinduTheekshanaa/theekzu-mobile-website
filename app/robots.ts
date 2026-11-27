@@ -1,7 +1,7 @@
+import { siteUrl } from "@/config/site";
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://theekzu.vercel.app";
 
   return {
     rules: [
@@ -36,7 +36,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: siteUrl(`/sitemap.xml`),
+    host: siteUrl("/"),
   };
 }

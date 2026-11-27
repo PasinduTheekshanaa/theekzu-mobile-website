@@ -1,11 +1,12 @@
+import { siteUrl } from "@/config/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
+    absolute: "iPhone Accessories Sri Lanka | Theekzu Mobile",
   },
   description:
-    "Shop genuine chargers, cables, MagSafe cases, screen protectors and Apple accessories in Sri Lanka.",
+    "Shop iPhone accessories in Sri Lanka at Theekzu Mobile. Browse chargers, cables, cases, screen protectors, earbuds and power banks.",
   keywords: [
     "Apple accessories Sri Lanka",
     "Apple 20W charger Sri Lanka",
@@ -13,19 +14,19 @@ export const metadata: Metadata = {
     "iPhone cases Sri Lanka",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/accessories",
+    canonical: siteUrl("/accessories"),
   },
   openGraph: {
-    title: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
+    title: "iPhone Accessories Sri Lanka | Theekzu Mobile",
     description:
-      "Shop genuine chargers, cables, MagSafe cases, screen protectors and Apple accessories in Sri Lanka.",
-    url: "https://theekzu.vercel.app/accessories",
+      "Shop iPhone accessories in Sri Lanka at Theekzu Mobile. Browse chargers, cables, cases, screen protectors, earbuds and power banks.",
+    url: siteUrl("/accessories"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Original Apple Accessories - Theekzu Mobile Sri Lanka",
       },
     ],
@@ -34,9 +35,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Original Apple Accessories Sri Lanka | Theekzu Mobile",
+    title: "iPhone Accessories Sri Lanka | Theekzu Mobile",
     description:
-      "Shop genuine chargers, cables, MagSafe cases and screen protection in Sri Lanka.",
+      "Browse chargers, cables, cases and screen protection for your iPhone at Theekzu Mobile in Sri Lanka.",
     images: ["/brand-logo.png"],
   },
 };

@@ -1,3 +1,4 @@
+import { siteUrl } from "@/config/site";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,19 +14,19 @@ export const metadata: Metadata = {
     "iPhone customer service Sri Lanka",
   ],
   alternates: {
-    canonical: "https://theekzu.vercel.app/contact",
+    canonical: siteUrl("/contact"),
   },
   openGraph: {
     title: "Contact Theekzu Mobile | iPhone Store Customer Support Sri Lanka",
     description:
       "Contact Theekzu Mobile for iPhone inquiries, orders, trade-in valuations, and islandwide delivery assistance in Sri Lanka. Call or WhatsApp 0740245749.",
-    url: "https://theekzu.vercel.app/contact",
+    url: siteUrl("/contact"),
     siteName: "Theekzu Mobile",
     images: [
       {
         url: "/brand-logo.png",
-        width: 800,
-        height: 800,
+        width: 1024,
+        height: 1024,
         alt: "Contact Theekzu Mobile Sri Lanka",
       },
     ],
@@ -49,13 +50,13 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       position: 1,
       name: "Home",
-      item: "https://theekzu.vercel.app",
+      item: siteUrl("/"),
     },
     {
       "@type": "ListItem",
       position: 2,
       name: "Contact Us",
-      item: "https://theekzu.vercel.app/contact",
+      item: siteUrl("/contact"),
     },
   ],
 };
