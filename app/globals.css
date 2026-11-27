@@ -901,7 +901,10 @@ main a.showcase-action[data-ui="primary"] > svg { width: 16px; height: 16px; }
 .review-photo-track::-webkit-scrollbar { display: none; }
 
 /* Four desktop cards, with more models revealed by horizontal scrolling. */
-.featured-product-track { display: grid; grid-auto-flow: column; grid-auto-columns: 85%; gap: 16px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding-block: 12px 24px; }
+.featured-product-track { display: grid; grid-auto-flow: column; grid-auto-columns: 85%; gap: 16px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: none; scrollbar-width: none; padding-block: 12px 24px; }
 .featured-product-track::-webkit-scrollbar { display: none; }
 @media (min-width: 640px) { .featured-product-track { grid-auto-columns: calc((100% - 24px) / 2); gap: 24px; } }
 @media (min-width: 1024px) { .featured-product-track { grid-auto-columns: calc((100% - 72px) / 4); } }
+
+/* Featured cards extend to both viewport edges. */
+#featured-iphones.container-custom { max-width: none; padding-inline: 0; }
