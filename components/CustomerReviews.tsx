@@ -256,7 +256,7 @@ export const CustomerReviews: React.FC = () => {
               </span>
               <span className="text-xs text-ink dark:text-ink">
                 ({totalApproved} {totalApproved === 1 ? "review" : "reviews"}
-                {totalApproved > 0 ? ` • ${totalApproved} approved` : ""})
+                )
               </span>
             </div>
 
