@@ -214,23 +214,10 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        {/* Bottom Payment Badges & Copyright */}
+        {/* Copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-xs text-ink dark:text-ink text-center sm:text-left">
             <span>© 2026 Theekzu Mobile. All Rights Reserved. Engineered with precision.</span>
-          </div>
-
-          {/* Payment Method Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-ink dark:text-ink font-semibold">
-            <span className="px-3 py-1 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 shadow-sm">
-              Cash on Delivery
-            </span>
-            <span className="px-3 py-1 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 text-ink dark:text-ink shadow-sm">
-              Bank Transfer (Commercial / Sampath / HNB)
-            </span>
-            <span className="px-3 py-1 rounded-lg bg-canvas dark:bg-canvas border border-neutral-200 dark:border-neutral-500/20 text-ink dark:text-ink shadow-sm">
-              Credit / Debit Card
-            </span>
           </div>
         </div>
 
