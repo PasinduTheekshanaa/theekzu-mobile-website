@@ -1,0 +1,19 @@
+Generated using the built-in ImageGen tool.
+Reference: public/brand-logo.png (existing brand artwork).
+Output: theekzu-new-domain-announcement-2026-11-28.png
+
+Final prompt:
+
+Use case: ads-marketing / compositing.
+Create one finished, high-quality SQUARE social media announcement poster for THEEKZU MOBILE, suitable for Facebook and Instagram. This is a new-official-domain announcement for an existing Sri Lankan iPhone and accessories business.
+Input image 1 is the actual brand artwork: preserve the exact existing Theekzu Mobile logo identity. Integrate it elegantly as a compact crisp logo lockup near the top with its black background blending seamlessly into the poster; do not redesign the logo. Derive the poster's restrained electric-blue and silver visual language from this artwork.
+Art direction: premium contemporary consumer-tech advertising, black and deep midnight navy backdrop, precise white typography, brushed silver highlights, a subtle luminous blue orbital arc inspired by the supplied logo. One handsome photographic/3D still life of two realistic premium iPhones (front and triple-camera back, graphite/silver finish, no model label), floating slightly above a low reflective stage. A beautiful glass browser-address pill anchors the lower composition, featuring the new URL in VERY LARGE, perfectly legible white lettering. The URL is the principal call to action, easily readable on a small mobile screen. A tiny globe icon before it is fine. Keep the phones and effects subordinate to the branding and the web address. Balanced editorial hierarchy, polished art direction, intentional negative space, clean alignment, generous safe margins, subtle depth and studio rim lighting. No busy space scene, no clutter, no enormous random letters, no mock social-media UI around the artwork.
+Use ONLY this exact text, with careful spelling:
+small top label: "OUR NEW ONLINE HOME"
+main headline over two lines: "New address." / "Same trusted service."
+supporting line: "iPhones & accessories. Now at:"
+large address: "www.theekzumobile.com"
+compact bottom line: "Shop online • Islandwide delivery"
+small contact line: "WhatsApp: 074 024 5749"
+The supplied logo already contains the brand name THEEKZU MOBILE and its original tagline; retain that identity without inventing a different name.
+Spell the domain exactly w-w-w dot t-h-e-e-k-z-u-m-o-b-i-l-e dot c-o-m. Do not use either old vercel.app domain. Do not invent prices, discounts, reviews, customer counts, addresses, authorization badges or performance claims. Do not add a QR code. Deliver the flat finished poster only, without frames, hands, watermarks or a device mockup holding the poster.
